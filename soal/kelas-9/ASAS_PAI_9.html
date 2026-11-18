@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Asesmen Sumatif Akhir Semester — PAI dan Budi Pekerti — SMP N 1 Dlingo</title>
+<link rel="icon" type="image/png" href="../../assets/img/logo-smpn1dlingo.png">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+  :root{
+    --navy:#2f6b4b; --blue:#3f9b6c; --blue-light:#e4f5e9; --green:#2e8b57;
+    --red:#b04a4a; --amber:#d9a23a; --gray:#4a5f54; --bg:#e6f4ea; --border:#cfe5d6; --radius:10px;
+    --card:#ffffff;
+  }
+  *{box-sizing:border-box;}
+  html,body{height:100%;}
+  body{margin:0;font-family:'Segoe UI',Roboto,Arial,sans-serif;background:var(--bg);color:#1b2430;-webkit-tap-highlight-color:transparent;}
+  /* anti-screenshot / anti-copy deterrents (best-effort; see note in app) */
+  #screen-exam, #screen-exam *{
+    -webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;
+    -webkit-touch-callout:none;
+  }
+  #screen-exam img{-webkit-user-drag:none;user-drag:none;pointer-events:none;}
+  #screen-exam.blurred{filter:blur(18px);transition:filter .15s;}
+  @media print{
+    #screen-exam, #screen-start, #screen-result{display:none !important;}
+    body::before{content:"Konten ujian tidak dapat dicetak.";display:block;text-align:center;padding:40px;font-size:18px;}
+  }
+  img{max-width:100%;height:auto;border-radius:6px;border:1px solid var(--border);}
+  button{font-family:inherit;cursor:pointer;}
+  .hidden{display:none !important;}
+
+  /* ===== START / INSTRUCTIONS ===== */
+  #screen-start{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;
+    background:linear-gradient(135deg,#e3f5e8,#c6e9d3);}
+  .start-card{background:var(--card);border-radius:16px;max-width:640px;width:100%;padding:34px 32px;box-shadow:0 20px 60px rgba(0,0,0,.25);}
+  .school-header{display:flex;align-items:center;gap:14px;margin-bottom:18px;}
+  .school-header img{width:56px;height:auto;border:none;border-radius:0;flex-shrink:0;}
+  .school-header .stxt{line-height:1.35;}
+  .school-header .stxt b{display:block;color:var(--navy);font-size:15px;}
+  .school-header .stxt span{color:var(--gray);font-size:12px;}
+  .start-card h1{margin:0 0 4px;font-size:21px;color:var(--navy);}
+  .start-card .sub{color:var(--gray);margin:0 0 20px;font-size:14px;}
+  .tabs{display:flex;gap:8px;margin-bottom:18px;border-bottom:1.5px solid var(--border);}
+  .tab-btn{padding:9px 16px;border:none;background:none;font-weight:700;font-size:13.5px;color:var(--gray);
+    border-bottom:3px solid transparent;margin-bottom:-2px;}
+  .tab-btn.active{color:var(--blue);border-bottom-color:var(--blue);}
+  .tab-panel{display:none;}
+  .tab-panel.active{display:block;}
+  .info-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px 18px;background:var(--blue-light);
+    border-radius:10px;padding:14px 16px;margin-bottom:18px;font-size:13px;}
+  .info-grid div b{display:block;color:var(--navy);font-size:13px;}
+  .info-grid div span{color:var(--gray);}
+  label{display:block;font-size:13px;font-weight:600;color:var(--navy);margin:14px 0 6px;}
+  input[type=text],input[type=password]{width:100%;padding:12px 14px;border:1.5px solid var(--border);
+    border-radius:8px;font-size:15px;}
+  input:focus{outline:none;border-color:var(--blue);}
+  select{width:100%;padding:12px 14px;border:1.5px solid var(--border);border-radius:8px;font-size:15px;
+    background:var(--card);color:#1b2430;appearance:none;
+    background-image:url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235b6472' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat:no-repeat;background-position:right 12px center;background-size:18px;}
+  select:focus{outline:none;border-color:var(--blue);}
+  select:disabled{background-color:#f4f6f9;color:var(--gray);cursor:not-allowed;}
+  .instr-list{font-size:13.5px;line-height:1.8;color:#33404f;padding-left:20px;margin:0 0 10px;}
+  .rules{font-size:12.5px;color:var(--gray);line-height:1.6;margin:18px 0;padding:12px 14px;
+    background:#fff8ea;border:1px solid #f1e0ad;border-radius:8px;}
+  .btn-primary{width:100%;padding:14px;background:var(--blue);color:#fff;border:none;border-radius:9px;
+    font-size:16px;font-weight:700;margin-top:12px;transition:.15s;}
+  .btn-primary:hover{background:var(--navy);}
+  .btn-primary:disabled{background:#aab6c8;cursor:not-allowed;}
+  .err-msg{color:var(--red);font-size:12.5px;margin-top:6px;min-height:16px;}
+
+  /* ===== EXAM LAYOUT ===== */
+  #screen-exam{display:none;min-height:100vh;flex-direction:column;}
+  #topbar{background:var(--navy);color:#fff;padding:10px 18px;display:flex;align-items:center;
+    justify-content:space-between;gap:12px;flex-wrap:wrap;position:sticky;top:0;z-index:50;}
+  #topbar .brand{display:flex;align-items:center;gap:10px;font-size:13px;font-weight:700;}
+  #topbar .brand img{width:28px;height:auto;border:none;border-radius:0;}
+  #topbar .brand .who{font-weight:400;opacity:.85;font-size:11.5px;display:block;}
+  #timerBox{background:rgba(255,255,255,.12);padding:8px 16px;border-radius:8px;font-weight:700;
+    font-size:18px;letter-spacing:1px;min-width:110px;text-align:center;}
+  #timerBox.low{background:#c0392b;animation:pulse 1s infinite;}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.6}}
+  #violationBadge{background:var(--red);padding:5px 10px;border-radius:20px;font-size:12px;font-weight:700;display:none;}
+  #panelToggle{background:rgba(255,255,255,.15);color:#fff;border:none;padding:8px 12px;border-radius:8px;font-size:13px;}
+
+  #examBody{display:flex;flex:1;overflow:hidden;}
+  #navPanel{width:280px;flex-shrink:0;background:var(--card);border-right:1px solid var(--border);padding:16px;overflow-y:auto;}
+  #navPanel h3{font-size:11.5px;text-transform:uppercase;letter-spacing:.4px;color:var(--gray);margin:14px 0 8px;}
+  #navPanel h3:first-child{margin-top:0;}
+  .navgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;}
+  .navbtn{aspect-ratio:1;border:1.5px solid var(--border);background:var(--card);border-radius:6px;font-size:12px;
+    font-weight:700;color:var(--navy);display:flex;align-items:center;justify-content:center;}
+  .navbtn.answered{background:var(--green);border-color:var(--green);color:#fff;}
+  .navbtn.current{outline:3px solid var(--amber);outline-offset:1px;}
+  .legend{display:flex;gap:14px;font-size:11px;color:var(--gray);margin:14px 0 4px;flex-wrap:wrap;}
+  .legend span{display:inline-flex;align-items:center;gap:5px;}
+  .dot{width:10px;height:10px;border-radius:3px;display:inline-block;}
+  #navSubmitBtn{width:100%;margin-top:18px;padding:12px;background:var(--red);color:#fff;border:none;
+    border-radius:8px;font-weight:700;font-size:14px;}
+  #navSubmitBtn.locked{background:#8fa397;}
+  .idbox{background:var(--blue-light);border:1.5px solid var(--border);border-radius:10px;padding:12px 16px;margin-top:14px;font-size:14px;line-height:1.7;}
+  .idbox b{color:var(--navy);}
+
+  #questionArea{flex:1;overflow-y:auto;padding:26px 32px 100px;}
+  .qwrap{max-width:820px;margin:0 auto;}
+  .qsubject{display:inline-block;background:var(--blue-light);color:var(--blue);font-size:11.5px;font-weight:700;
+    padding:4px 12px;border-radius:20px;margin-bottom:10px;text-transform:uppercase;letter-spacing:.3px;}
+  .qnum{font-size:14px;color:var(--gray);margin-bottom:4px;}
+  .qtext{font-size:16px;line-height:1.7;white-space:pre-wrap;margin-bottom:16px;}
+  .qimg-wrap{margin:14px 0;display:flex;flex-wrap:wrap;gap:14px;}
+  .qimg-wrap .imgbox{position:relative;cursor:zoom-in;width:100%;max-width:820px;}
+  .qimg-wrap .imgscroll{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:6px;}
+  .qimg-wrap img{width:100%;max-width:820px;display:block;background:#fff;}
+  .qimg-wrap .zoomhint{display:block;text-align:right;color:var(--gray);font-size:11.5px;font-weight:700;margin-top:4px;pointer-events:none;}
+  .qimg-wrap .imgph{width:100%;max-width:760px;height:200px;border:2px dashed var(--border);border-radius:8px;
+    display:flex;align-items:center;justify-content:center;color:var(--gray);font-size:12.5px;text-align:center;
+    background:#fafbfc;padding:10px;}
+  #lightbox{position:fixed;inset:0;background:rgba(10,20,35,.94);z-index:1200;display:none;padding:56px 10px 10px;}
+  #lightbox.open{display:block;}
+  #lightbox .lb-scroll{width:100%;height:100%;overflow:auto;-webkit-overflow-scrolling:touch;display:flex;}
+  #lightbox img{margin:auto;width:100%;max-width:none;height:auto;background:#fff;border-radius:6px;box-shadow:0 10px 40px rgba(0,0,0,.5);flex-shrink:0;}
+  #lightbox.zoomed img{width:240%;}
+  #lightbox .lb-zoom{position:absolute;top:16px;right:66px;height:38px;padding:0 14px;border:none;border-radius:19px;background:#ffd166;color:#432;font-weight:700;font-size:13px;}
+  #lightbox .lb-close{position:absolute;top:16px;right:18px;background:#fff;color:var(--navy);border:none;
+    width:38px;height:38px;border-radius:50%;font-size:18px;font-weight:700;}
+  .qtype-hint{font-size:12.5px;color:var(--amber);font-weight:700;margin-bottom:10px;}
+
+  .option{display:flex;align-items:flex-start;gap:12px;padding:13px 16px;border:1.5px solid var(--border);
+    border-radius:10px;margin-bottom:10px;background:var(--card);transition:.12s;}
+  .option:hover{border-color:var(--blue);}
+  .option.selected{border-color:var(--blue);background:var(--blue-light);}
+  .option input{margin-top:3px;flex-shrink:0;width:17px;height:17px;}
+  .option .otext{font-size:15px;line-height:1.5;}
+  .option .olabel{font-weight:700;color:var(--navy);margin-right:4px;}
+
+  table.matrix{width:100%;border-collapse:collapse;margin-top:8px;font-size:14px;}
+  table.matrix th,table.matrix td{border:1px solid var(--border);padding:10px;text-align:center;}
+  table.matrix th{background:var(--blue-light);color:var(--navy);}
+  table.matrix td.stmt{text-align:left;font-size:14px;}
+  table.matrix input{width:17px;height:17px;}
+
+  #navRow{max-width:820px;margin:24px auto 0;display:flex;justify-content:space-between;gap:10px;}
+  .btn-nav{padding:11px 22px;border-radius:8px;border:1.5px solid var(--border);background:var(--card);
+    font-weight:700;color:var(--navy);font-size:14px;}
+  .btn-nav:disabled{opacity:.4;}
+  .btn-nav.primary{background:var(--blue);color:#fff;border:none;}
+
+  #warnOverlay{position:fixed;inset:0;background:rgba(15,39,69,.95);z-index:999;display:none;
+    align-items:center;justify-content:center;padding:20px;color:#fff;text-align:center;}
+  #warnOverlay .box{max-width:420px;}
+  #warnOverlay h2{color:#ffd166;font-size:22px;}
+  #warnOverlay p{font-size:14.5px;line-height:1.6;opacity:.9;}
+  #warnOverlay button{margin-top:16px;padding:12px 28px;background:#ffd166;border:none;border-radius:8px;
+    font-weight:700;font-size:14.5px;color:#432;}
+
+  /* ===== RESULT ===== */
+  #screen-result{display:none;min-height:100vh;padding:30px 16px;background:var(--bg);}
+  .result-card{max-width:720px;margin:0 auto;background:var(--card);border-radius:16px;padding:32px;box-shadow:0 10px 40px rgba(0,0,0,.08);}
+  .result-card h1{color:var(--navy);margin-top:0;font-size:22px;}
+  .score-hero{text-align:center;padding:26px;background:linear-gradient(135deg,var(--navy),var(--blue));
+    border-radius:14px;color:#fff;margin:18px 0 24px;}
+  .score-hero .num{font-size:46px;font-weight:800;}
+  .score-hero .grade{font-size:15px;opacity:.9;margin-top:4px;}
+  .breakdown{width:100%;border-collapse:collapse;font-size:14px;margin-bottom:20px;}
+  .breakdown th,.breakdown td{padding:9px 10px;border-bottom:1px solid var(--border);text-align:left;}
+  .breakdown th{color:var(--gray);font-size:12px;text-transform:uppercase;}
+  .result-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px;}
+  .result-actions button{flex:1;min-width:180px;padding:13px;border-radius:9px;font-weight:700;font-size:14px;border:none;}
+  #btnExcel{background:var(--blue);color:#fff;}
+  #btnRetrySubmit{background:var(--amber);color:#432;}
+  .submit-status{display:flex;align-items:center;gap:10px;padding:12px 16px;border-radius:9px;font-size:13.5px;
+    font-weight:600;margin-bottom:18px;}
+  .submit-status.sending{background:#fff8ea;color:#8a6d00;border:1px solid #f1e0ad;}
+  .submit-status.ok{background:#e9f9f0;color:#0f7a45;border:1px solid #b7ecd0;}
+  .submit-status.fail{background:#fdecea;color:#a4271f;border:1px solid #f3c3bd;}
+  .dotpulse{width:9px;height:9px;border-radius:50%;background:currentColor;flex-shrink:0;animation:pulse 1s infinite;}
+  .submit-status.ok .dotpulse,.submit-status.fail .dotpulse{animation:none;}
+  .note-small{font-size:12px;color:var(--gray);margin-top:14px;line-height:1.6;}
+
+  @media (max-width:820px){
+    .qimg-wrap img.scrollimg{min-width:var(--minw);max-width:none;width:auto;}
+    #navPanel{position:fixed;left:-300px;top:0;bottom:0;z-index:60;transition:.2s;box-shadow:4px 0 20px rgba(0,0,0,.15);}
+    #navPanel.open{left:0;}
+    #questionArea{padding:18px 16px 90px;}
+    .qimg-wrap img,.qimg-wrap .imgph{max-width:100%;width:100%;}
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ START / INSTRUCTIONS SCREEN ============ -->
+<div id="screen-start">
+  <div class="start-card">
+    <a href="../../kelas-9.html" style="display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;color:var(--gray);margin-bottom:14px;">&larr; Menu Kelas 9</a>
+    <div class="school-header">
+      <img src="../../assets/img/logo-smpn1dlingo.png" alt="Logo Sekolah">
+      <div class="stxt"><b>SMP NEGERI 1 DLINGO</b><span>Asesmen Sumatif Akhir Semester · PAI dan Budi Pekerti · TP 2026/2027</span></div>
+    </div>
+    <h1>📝 Asesmen Sumatif Akhir Semester — PAI dan Budi Pekerti</h1>
+    <p class="sub">Jenjang SMP · Kelas 9 · Semester Ganjil · Materi: Menuntut Ilmu, Iman kepada Hari Akhir, Cinta Lingkungan, Kurban &amp; Akikah, Islam di Nusantara</p>
+
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="petunjuk">📋 Petunjuk</button>
+      <button class="tab-btn" data-tab="mulai">🚀 Mulai Ujian</button>
+    </div>
+
+    <div class="tab-panel active" id="tab-petunjuk">
+      <div class="info-grid">
+        <div><b id="infoJumlah">50 Soal</b><span>Pilihan Ganda (pilih satu jawaban yang paling tepat)</span></div>
+        <div><b>90 Menit</b><span>Alokasi waktu · jawaban baru bisa dikirim setelah 40 menit</span></div>
+        <div><b>5 Materi</b><span>Keutamaan Menuntut Ilmu, Iman kepada Hari Akhir, Cinta Lingkungan, Penyembelihan/Kurban/Akikah, Penyebaran Islam di Nusantara</span></div>
+        <div><b>Acak Soal</b><span>Urutan soal &amp; opsi diacak</span></div>
+      </div>
+      <p style="font-size:13.5px;color:#33404f;margin:0 0 8px;font-weight:700;">Petunjuk Pengerjaan:</p>
+      <ol class="instr-list">
+        <li>Nama dan kelasmu terisi otomatis dari Menu Kelas 9. Masukkan token ujian pada tab "Mulai Ujian" lalu mulai.</li>
+        <li>Bacalah setiap butir soal dengan cermat sebelum menjawab.</li>
+        <li>Semua soal berbentuk Pilihan Ganda: pilih satu jawaban yang paling tepat (A, B, C, atau D). Gambar/ayat dapat diketuk untuk diperbesar dan digeser ke samping bila lebih lebar dari layar.</li>
+        <li>Ujian akan tampil dalam mode layar penuh (fullscreen) sejak dimulai.</li>
+        <li>Jangan berpindah tab/aplikasi, keluar dari layar penuh, menyalin teks, mengambil tangkapan layar, atau memakai split screen — semuanya tercatat sebagai pelanggaran.</li>
+        <li>Waktu berjalan otomatis selama 90 menit dan tidak dapat dijeda. Jawaban baru dapat dikirim setelah 40 menit pengerjaan.</li>
+        <li>Gunakan panel navigasi soal untuk melompat ke nomor soal tertentu dan memantau soal yang sudah/belum dijawab.</li>
+        <li>Tekan "Kirim Jawaban" setelah selesai. Jika pengiriman gagal, gunakan tombol "Kirim Ulang" yang akan muncul otomatis.</li>
+      </ol>
+    </div>
+
+    <div class="tab-panel" id="tab-mulai">
+      <label>Token Ujian</label>
+      <input type="password" id="inputToken" placeholder="Masukkan token dari guru">
+      <div class="idbox hidden" id="idBox">👤 <b id="idNama"></b><br>🏫 Kelas <b id="idKelas"></b></div>
+      <div id="pickWrap">
+        <div class="note-small" style="margin-top:12px;color:#8a6d00;">Data nama &amp; kelas tidak terbaca dari Menu Kelas 9. Silakan buka ujian melalui menu kelas, atau pilih manual di bawah ini.</div>
+        <label>Kelas</label>
+        <select id="inputKelas"><option value="">— Pilih Kelas —</option></select>
+        <label>Nama Lengkap</label>
+        <select id="inputNama" disabled><option value="">— Pilih kelas terlebih dahulu —</option></select>
+      </div>
+      <div class="rules">
+        ⚠️ <b>Perhatian sebelum memulai:</b><br>
+        • Ujian akan tampil dalam mode <b>layar penuh (fullscreen)</b>.<br>
+        • Jangan membuka tab/aplikasi lain atau memakai <b>split screen</b> — sistem akan mencatat pelanggaran.<br>
+        • Waktu berjalan otomatis dan tidak dapat dijeda. Jawaban <b>baru dapat dikirim setelah 40 menit</b>; ujian terkirim otomatis saat waktu habis.<br>
+        • Pastikan koneksi internet stabil agar hasil dapat terkirim ke guru secara real-time.<br>
+        • Layar akan mengabur otomatis dan pelanggaran tercatat jika kamu mencoba keluar layar penuh, menyalin teks, mengambil tangkapan layar (screenshot), atau memakai split screen.
+      </div>
+      <div class="err-msg" id="startErr"></div>
+      <button class="btn-primary" id="btnStart">🚀 Mulai Ujian (Layar Penuh)</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ EXAM SCREEN ============ -->
+<div id="screen-exam">
+  <div id="topbar">
+    <button id="panelToggle">☰ Soal</button>
+    <div class="brand"><img src="../../assets/img/logo-smpn1dlingo.png" alt="Logo"><span>ASAS PAI KELAS 9 · TP 2026/2027<small class="who" id="brandStudent"></small></span></div>
+    <div id="violationBadge">⚠ Pelanggaran: <span id="violCount">0</span></div>
+    <div id="timerBox">90:00</div>
+  </div>
+  <div id="examBody">
+    <div id="navPanel"></div>
+    <div id="questionArea">
+      <div class="qwrap" id="qwrap"></div>
+      <div id="navRow">
+        <button class="btn-nav" id="btnPrev">← Sebelumnya</button>
+        <button class="btn-nav primary" id="btnNext">Selanjutnya →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="lightbox">
+  <button class="lb-close" id="lightboxClose">✕</button>
+  <button class="lb-zoom" id="lightboxZoom">🔍 Perbesar</button>
+  <div class="lb-scroll" id="lbScroll"><img id="lightboxImg" src="" alt="Gambar diperbesar"></div>
+</div>
+
+<div id="warnOverlay">
+  <div class="box">
+    <h2 id="warnTitle">⚠ Peringatan</h2>
+    <p id="warnText"></p>
+    <button id="warnBtn">Kembali ke Ujian</button>
+  </div>
+</div>
+
+<!-- ============ RESULT SCREEN ============ -->
+<div id="screen-result">
+  <div class="result-card">
+    <div class="school-header">
+      <img src="../../assets/img/logo-smpn1dlingo.png" alt="Logo Sekolah">
+      <div class="stxt"><b>SMP NEGERI 1 DLINGO BANTUL</b><span>Asesmen Sumatif Akhir Semester · PAI dan Budi Pekerti · TP 2026/2027</span></div>
+    </div>
+    <h1>✅ Hasil Ujian</h1>
+    <div class="score-hero">
+      <div class="num" id="resScore">0 / 0</div>
+      <div class="grade" id="resGrade">Predikat —</div>
+    </div>
+    <div id="submitStatus" class="submit-status sending">
+      <span class="dotpulse"></span><span id="submitStatusText">Mengirim jawaban ke guru...</span>
+    </div>
+    <table class="breakdown" id="resTable"></table>
+    <div class="result-actions">
+      <button id="btnRetrySubmit" class="hidden">🔁 Kirim Ulang</button>
+      <button id="btnExcel">⬇️ Unduh Hasil (Excel)</button>
+    </div>
+    <p class="note-small">
+      Nama: <b id="rNama"></b> · Kelas: <b id="rKelas"></b> · Pelanggaran layar tercatat: <b id="rViol"></b> kali.<br>
+      Jawaban dikirim otomatis secara real-time ke Google Spreadsheet guru begitu halaman ini muncul. Jika status di atas menunjukkan gagal terkirim, gunakan tombol "Kirim Ulang", atau pastikan koneksi internet aktif lalu klik tombol tersebut. Tombol "Unduh Hasil (Excel)" tetap tersedia sebagai cadangan.
+    </p>
+  </div>
+</div>
+
+<script id="questions-data" type="application/json">[{"subject": "Keutamaan Menuntut Ilmu", "type": "pg", "options": ["1), 2), 3), 4)", "2), 3), 4), 1)", "3), 2), 4), 1)", "4), 3), 2), 1)"], "rows": null, "note": null, "pre": "Perhatikan penggalan-penggalan Q.S. Al-Mujadalah ayat 11 berikut!", "text": "Susunan yang tepat agar menjadi ayat yang utuh dari Q.S. Al-Mujadilah: 11 adalah ….", "img": "../../assets/img/PAI_9_1.png", "correct": "3), 2), 4), 1)"}, {"subject": "Keutamaan Menuntut Ilmu", "type": "pg", "options": ["1–a, 2–c, 3–b, 4–d", "1–a, 2–c, 3–d, 4–b", "1–c, 2–a, 3–d, 4–b", "1–c, 2–d, 3–a, 4–b"], "rows": null, "note": null, "pre": "Perhatikan tabel berikut!", "text": "Pasangan lafaz dan artinya yang benar adalah ….", "img": "../../assets/img/PAI_9_2.png", "correct": "1–c, 2–d, 3–a, 4–b"}, {"subject": "Keutamaan Menuntut Ilmu", "type": "pg", "options": ["orang yang mulia", "orang yang pandai", "orang yang berakal sehat", "orang yang berbudi pekerti"], "rows": null, "note": null, "pre": "Perhatikan Q.S. Az-Zumar [39]: 9 berikut!", "text": "Maksud pada lafaz yang digaris bawah adalah ….", "img": "../../assets/img/PAI_9_3.png", "correct": "orang yang berakal sehat"}, {"subject": "Keutamaan Menuntut Ilmu", "type": "pg", "options": ["Allah akan memudahkan baginya jalan menuju surga", "Barang siapa yang menempuh suatu jalan untuk mencari ilmu", "Dan sesungguhnya para malaikat meletakkan sayap-sayapnya untuk penuntut ilmu", "Jika seorang keturunan Adam meninggal dunia maka terputuslah amalnya, kecuali tiga perkara"], "rows": null, "note": null, "pre": "Perhatikan hadis berikut!", "text": "Arti lafaz hadis yang digaris bawah adalah ….", "img": "../../assets/img/PAI_9_4.png", "correct": "Allah akan memudahkan baginya jalan menuju surga"}, {"subject": "Keutamaan Menuntut Ilmu", "type": "pg", "options": ["1–a, 2–b, 3–c", "1–b, 2–c, 3–a", "1–c, 2–a, 3–b", "1–c, 2–b, 3–a"], "rows": null, "note": null, "text": "Perhatikan tabel berikut!\n<div style='overflow-x:auto;margin:10px 0;'><table style='border-collapse:collapse;width:100%;font-size:14px;white-space:normal;'><tr><th style=\"border:1px solid #cfe5d6;padding:6px 10px;text-align:left;background:#e4f5e9;\"><b>No<\/b><\/th><th style=\"border:1px solid #cfe5d6;padding:6px 10px;text-align:left;background:#e4f5e9;\"><b>Hukum Bacaan<\/b><\/th><th style=\"border:1px solid #cfe5d6;padding:6px 10px;text-align:left;background:#e4f5e9;\"><b>Kode<\/b><\/th><th style=\"border:1px solid #cfe5d6;padding:6px 10px;text-align:left;background:#e4f5e9;\"><b>Pengertian<\/b><\/th><\/tr><tr><td style=\"border:1px solid #cfe5d6;padding:6px 10px;vertical-align:top;\">1<\/td><td style=\"border:1px solid #cfe5d6;padding:6px 10px;vertical-align:top;\"><i>Izhar syafawi<\/i><\/td><td style=\"border:1px solid #cfe5d6;padding:6px 10px;vertical-align:top;\">a<\/td><td style=\"border:1px solid #cfe5d6;padding:6px 10px;vertical-align:top;\">Mim sukun bertemu huruf ب, dibaca samar dengan dengung<\/td><\/tr><tr><td style=\"border:1px solid #cfe5d6;padding:6px 10px;vertical-align:top;\">2<\/td><td style=\"border:1px solid #cfe5d6;padding:6px 10px;vertical-align:top;\"><i>Ikhfa syafawi<\/i><\/td><td style=\"border:1px solid #cfe5d6;padding:6px 10px;vertical-align:top;\">b<\/td><td style=\"border:1px solid #cfe5d6;padding:6px 10px;vertical-align:top;\">Mim sukun bertemu huruf م, dibaca melebur dengan dengung<\/td><\/tr><tr><td style=\"border:1px solid #cfe5d6;padding:6px 10px;vertical-align:top;\">3<\/td><td style=\"border:1px solid #cfe5d6;padding:6px 10px;vertical-align:top;\"><i>Idgham mimi<\/i><\/td><td style=\"border:1px solid #cfe5d6;padding:6px 10px;vertical-align:top;\">c<\/td><td style=\"border:1px solid #cfe5d6;padding:6px 10px;vertical-align:top;\">Mim sukun bertemu huruf selain ب dan م, dibaca jelas tanpa dengung<\/td><\/tr><\/table><\/div>Pasangan yang tepat antara hukum bacaan dan pengertian adalah ….", "img": null, "correct": "1–c, 2–a, 3–b"}, {"subject": "Keutamaan Menuntut Ilmu", "type": "pg", "options": ["1–a, 2–b, 3–c", "1–b, 2–a, 3–c", "1–c, 2–a, 3–b", "1–b, 2–c, 3–a"], "rows": null, "note": null, "pre": "Perhatikan tabel berikut!", "text": "Pasangan yang tepat antara nama hukum bacaan dan contoh lafaz adalah ….", "img": "../../assets/img/PAI_9_6.png", "correct": "1–b, 2–a, 3–c"}, {"subject": "Keutamaan Menuntut Ilmu", "type": "pg", "options": ["Berjalan kaki ke perpustakaan umum setiap hari.", "Mengikuti program pertukaran pelajar ke luar negeri.", "Pindah ke pondok pesantren yang jauh dari rumah untuk belajar.", "Membiasakan diri membaca, meneliti, dan mengkaji sebelum menyimpulkan suatu masalah."], "rows": null, "note": null, "pre": "Perhatikan hadis Nabi:", "text": "Makna \"menempuh jalan untuk mencari ilmu\" dalam hadis ini memiliki dimensi yang luas. Contoh penerapan makna <i>menempuh cara<\/i> yang paling tepat adalah …", "img": "../../assets/img/PAI_9_7.png", "correct": "Membiasakan diri membaca, meneliti, dan mengkaji sebelum menyimpulkan suatu masalah."}, {"subject": "Keutamaan Menuntut Ilmu", "type": "pg", "options": ["1-A, 2-B, 3-C, 4-D", "1-D, 2-A, 3-C, 4-B", "1-D, 2-A, 3-B, 4-C", "1-B, 2-C, 3-D, 4-A"], "rows": null, "note": null, "text": "Perhatikan tabel berikut ini!\n<div style='overflow-x:auto;margin:10px 0;'><table style='border-collapse:collapse;width:100%;font-size:14px;white-space:normal;'><tr><th style=\"border:1px solid #cfe5d6;padding:6px 10px;text-align:left;background:#e4f5e9;\"><b>Cendekiawan Muslim<\/b><\/th><th style=\"border:1px solid #cfe5d6;padding:6px 10px;text-align:left;background:#e4f5e9;\"><b>Keahlian Keilmuan<\/b><\/th><\/tr><tr><td style=\"border:1px solid #cfe5d6;padding:6px 10px;vertical-align:top;\">1. Ibnu Shina<\/td><td style=\"border:1px solid #cfe5d6;padding:6px 10px;vertical-align:top;\">a. Matematika<\/td><\/tr><tr><td style=\"border:1px solid #cfe5d6;padding:6px 10px;vertical-align:top;\">2. Al-Khawarizmi<\/td><td style=\"border:1px solid #cfe5d6;padding:6px 10px;vertical-align:top;\">b. Ilmu bedah modern<\/td><\/tr><tr><td style=\"border:1px solid #cfe5d6;padding:6px 10px;vertical-align:top;\">3. Ibnu Khaldun<\/td><td style=\"border:1px solid #cfe5d6;padding:6px 10px;vertical-align:top;\">c. Sejarawan dan sosiolog<\/td><\/tr><tr><td style=\"border:1px solid #cfe5d6;padding:6px 10px;vertical-align:top;\">4. Al-Zahrawi<\/td><td style=\"border:1px solid #cfe5d6;padding:6px 10px;vertical-align:top;\">d. Kedokteran<\/td><\/tr><\/table><\/div>Pasangan yang tepat ditunjukkan….", "img": null, "correct": "1-D, 2-A, 3-C, 4-B"}, {"subject": "Keutamaan Menuntut Ilmu", "type": "pg", "options": ["1), 2), dan 3)", "1), 2), dan 4)", "1), 3), dan 4)", "2), 3), dan 4)"], "rows": null, "note": null, "text": "Perhatikan pernyataan berikut!\n1) Memiliki pahala yang kekal\n2) Allah akan mengangkat derajatnya\n3) Akan mendapatkan kekayaan yang melimpah\n4) Akan dimudahkan jalan baginya menuju surga\n\nKeutamaan menuntut ilmu yang bersifat ukhrawi (akhirat) ditunjukkan pada nomor …", "img": null, "correct": "1), 2), dan 4)"}, {"subject": "Keutamaan Menuntut Ilmu", "type": "pg", "options": ["1), 2) dan 3)", "1), 3) dan 4)", "1), 2) dan 4)", "2), 3) dan 4)"], "rows": null, "note": null, "text": "Perhatikan Pernyataan berikut!\n1) Menyebabkan seseorang enggan beramal.\n2) Menjadi pedoman dalam beribadah kepada Allah Swt.\n3) Membantu menyelesaikan berbagai persoalan kehidupan.\n4) Membantu membedakan antara yang benar dan yang salah.\n\nDari pernyataan di atas, yang merupakan manfaat ilmu pengetahuan dalam kehidupan sehari-hari adalah….", "img": null, "correct": "2), 3) dan 4)"}, {"subject": "Keutamaan Menuntut Ilmu", "type": "pg", "options": ["1), 2), dan 3)", "1), 2), dan 4)", "1), 3), dan 5)", "2), 3), dan 4)"], "rows": null, "note": null, "text": "Perhatikanlah pernyataan di bawah ini!\n1) Mendapatkan kehormatan sebagai orang yang sempurna.\n2) Menjadi orang yang takut hanya kepada Allah Swt. semata.\n3) Dimudahkan jalannya menuju surga yang penuh kenikmatan.\n4) Didoakan oleh seluruh makhluk yang berada di alam semesta.\n5) Adanya jaminan dari Allah Swt. untuk mendapatkan kekayaan.\n\nDari pernyataan di atas, hikmah menuntut ilmu ditandai nomor ….", "img": null, "correct": "2), 3), dan 4)"}, {"subject": "Keutamaan Menuntut Ilmu", "type": "pg", "options": ["1), 2), dan 3)", "1), 2), dan 4)", "1), 3), dan 4)", "2), 3), dan 5)"], "rows": null, "note": null, "text": "Perhatikan pernyataan berikut!\n1) Rajin membaca dan belajar.\n2) Sombong karena memiliki ilmu.\n3) Menghormati guru dan teman belajar.\n4) Mengamalkan ilmu yang telah dipelajari.\n5) Malas bertanya ketika tidak memahami pelajaran.\n\nYang menunjukkan semangat menuntut ilmu ditunjukkan pada nomor….", "img": null, "correct": "1), 3), dan 4)"}, {"subject": "Keutamaan Menuntut Ilmu", "type": "pg", "options": ["1–a, 2–c, 3–b, 4–d, 5–e", "1–c, 2–a, 3–d, 4–b, 5–e", "1–e, 2–c, 3–d, 4–b, 5–a", "1–e, 2–d, 3–a, 4–b, 5–c"], "rows": null, "note": null, "text": "Perhatikan tabel berikut!\n<div style='overflow-x:auto;margin:10px 0;'><table style='border-collapse:collapse;width:100%;font-size:14px;white-space:normal;'><tr><th style=\"border:1px solid #cfe5d6;padding:6px 10px;text-align:left;background:#e4f5e9;\"><b>No<\/b><\/th><th style=\"border:1px solid #cfe5d6;padding:6px 10px;text-align:left;background:#e4f5e9;\"><b>Pernyataan<\/b><\/th><th style=\"border:1px solid #cfe5d6;padding:6px 10px;text-align:left;background:#e4f5e9;\"><b>Kode<\/b><\/th><th style=\"border:1px solid #cfe5d6;padding:6px 10px;text-align:left;background:#e4f5e9;\"><b>Jawaban<\/b><\/th><\/tr><tr><td style=\"border:1px solid #cfe5d6;padding:6px 10px;vertical-align:top;\">1<\/td><td style=\"border:1px solid #cfe5d6;padding:6px 10px;vertical-align:top;\">Orang yang mengetahui hak-hak Allah Swt. tidak sama dengan orang yang tidak mengetahuinya.<\/td><td style=\"border:1px solid #cfe5d6;padding:6px 10px;vertical-align:top;\">a<\/td><td style=\"border:1px solid #cfe5d6;padding:6px 10px;vertical-align:top;\">Kandungan Q.S Al-Mujadilah ayat 11<\/td><\/tr><tr><td style=\"border:1px solid #cfe5d6;padding:6px 10px;vertical-align:top;\">2<\/td><td style=\"border:1px solid #cfe5d6;padding:6px 10px;vertical-align:top;\">Orang yang menempuh jalan untuk mencari ilmu akan dimudahkan jalannya menuju surga.<\/td><td style=\"border:1px solid #cfe5d6;padding:6px 10px;vertical-align:top;\">b<\/td><td style=\"border:1px solid #cfe5d6;padding:6px 10px;vertical-align:top;\"><i>Ulul<\/i> <i>albab<\/i><\/td><\/tr><tr><td style=\"border:1px solid #cfe5d6;padding:6px 10px;vertical-align:top;\">3<\/td><td style=\"border:1px solid #cfe5d6;padding:6px 10px;vertical-align:top;\">Orang yang beribadah pada waktu malam dengan bersujud dan berdiri serta mengharap rahmat Allah Swt.<\/td><td style=\"border:1px solid #cfe5d6;padding:6px 10px;vertical-align:top;\">c<\/td><td style=\"border:1px solid #cfe5d6;padding:6px 10px;vertical-align:top;\">hadis Riwayat Muslim tentang keutamaan menuntut ilmu<\/td><\/tr><tr><td style=\"border:1px solid #cfe5d6;padding:6px 10px;vertical-align:top;\">4<\/td><td style=\"border:1px solid #cfe5d6;padding:6px 10px;vertical-align:top;\">Hanya orang-orang yang berakal sehat yang dapat mengambil pelajaran dari ayat-ayat Allah Swt.<\/td><td style=\"border:1px solid #cfe5d6;padding:6px 10px;vertical-align:top;\">d<\/td><td style=\"border:1px solid #cfe5d6;padding:6px 10px;vertical-align:top;\">orang yang beribadah dengan penuh ketakwaan<\/td><\/tr><tr><td style=\"border:1px solid #cfe5d6;padding:6px 10px;vertical-align:top;\">5<\/td><td style=\"border:1px solid #cfe5d6;padding:6px 10px;vertical-align:top;\">Keutamaan orang yang beriman dan berlimu pengetahuan akan diangkat derajatnya oleh Allah SWT<\/td><td style=\"border:1px solid #cfe5d6;padding:6px 10px;vertical-align:top;\">e<\/td><td style=\"border:1px solid #cfe5d6;padding:6px 10px;vertical-align:top;\">kandungan Q.S. Az-Zumar [39]: 9 tentang keutamaan orang berilmu<\/td><\/tr><\/table><\/div>Pasangan pernyataan dan jawaban yang benar adalah ….", "img": null, "correct": "1–e, 2–c, 3–d, 4–b, 5–a"}, {"subject": "Iman kepada Hari Akhir", "type": "pg", "options": ["Hari Tasyrik", "Hari Raya Id", "Hari Kiamat", "Hari Arafah"], "rows": null, "note": null, "text": "Perhatikan deskripsi berikut!\nPada hari itu, langit terbelah, matahari digulung, bintang-bintang berjatuhan, lautan meluap dan menjadi panas, bumi bergoncang dengan goncangan yang dahsyat, serta gunung-gunung seperti bulu yang berhamburan. Alam beserta isinya hancur lebur tak bersisa. Manusia seperti anai-anai yang berterbangan; terombang-ambing ke sana kemari. Seluruh makhluk, tak terkecuali manusia, akan binasa. Kemudian manusia akan dibangkitkan kembali untuk dihadapkan pada pengadilan Allah Swt. dan mempertanggungjawabkan apa yang telah dilakukan ketika hidup di dunia. Hari yang dimaksud adalah …", "img": null, "correct": "Hari Kiamat"}, {"subject": "Iman kepada Hari Akhir", "type": "pg", "options": ["hari kiamat pasti akan datang", "hari kiamat tidak pasti kedatangannya", "tanda hari kiamat sudah ditampakkan Allah Swt.", "hanya Allah Swt. yang tahu datangnya hari kiamat"], "rows": null, "note": null, "pre": "Perhatikan Q.S. Al-Hajj (22): 7 berikut!", "text": "Potongan ayat tersebut menjelaskan bahwa ….", "img": "../../assets/img/PAI_9_15.png", "correct": "hari kiamat pasti akan datang"}, {"subject": "Iman kepada Hari Akhir", "type": "pg", "options": ["1", "2", "3", "4"], "rows": null, "note": null, "text": "Perhatikan beberapa pernyataan berikut!\n1) Meyakini bahwa alam semesta akan kekal selamanya dan kehidupan akhirat tidak perlu diyakini\n2) Meyakini bahwa manusia akan hidup selamanya di dunia dan tidak akan pernah dibangkitkan.\n3) Meyakini bahwa hari akhir hanya berkaitan dengan kehancuran alam semesta, tanpa adanya kehidupan setelahnya.\n4) Meyakini bahwa seluruh alam semesta akan hancur atas kehendak Allah Swt. dan setelah itu ada kehidupan akhirat yang kekal.\n\nPernyataan yang paling tepat menggambarkan pengertian iman kepada Hari Akhir ditunjukkan nomor….", "img": null, "correct": "4"}, {"subject": "Iman kepada Hari Akhir", "type": "pg", "options": ["1), 2) dan 3)", "1), 4) dan 5)", "2), 3) dan 4)", "3), 4) dan 5)"], "rows": null, "note": null, "text": "Perhatikan pernyataan berikut!\n1) Bencana tsunami menyapu daerah di sekitarnya.\n2) Gunung meletus menghanguskan beberapa desa.\n3) Tanah longsor sehingga menyebabkan banyak korban jiwa.\n4) Bumi digoncang dengan dahsyat yang mengeluarkan semua isi bumi.\n5) Planet-planet keluar dari orbitnya dan saling bertabrakan, sehingga seluruh alam hancur.\n\nDi antara pernyataan tersebut yang menunjukkan adanya kiamat sugra adalah pernyataan nomor ….", "img": null, "correct": "1), 2) dan 3)"}, {"subject": "Iman kepada Hari Akhir", "type": "pg", "options": ["1), 2) dan 5)", "1), 3) dan 5)", "2), 3) dan 5)", "3), 4) dan 5)"], "rows": null, "note": null, "text": "Perhatikan pernyataan-pernyataan berikut!\n1) Keluarnya dukhan\n2) Ilmu agama tidak dianggap penting lagi\n3) Keluarnya hewan yang aneh dari dalam bumi\n4) Manusia bermegah-megahan dan melupakan Allah Swt.\n5) Keluarnya api dari dasar bumi yang membinasakan manusia\n\nTanda besar kiamat ditunjukkan pada nomor ….", "img": null, "correct": "1), 3) dan 5)"}, {"subject": "Iman kepada Hari Akhir", "type": "pg", "options": ["hari ketika amal manusia ditimbang, tetapi hanya amal besar yang menentukan hasil akhir", "hari dimana setiap amal manusia akan ditimbang, tetapi amal tersebut tidak berpengaruh apapun", "hari ketika setiap amal manusia ditimbang secara adil dan tidak ada satu pun amal yang diabaikan", "hari ketika semua manusia langsung menerima keputusan akhir tanpa melalui proses penimbangan amal"], "rows": null, "note": null, "pre": "Perhatikan Q.S. Al-Anbiya: 47 berikut!", "text": "Guru menjelaskan bahwa pada hari kiamat Allah akan menegakkan timbangan amal yang sangat adil. Setiap amal manusia meskipun kecil seperti biji sawi, tetap akan diperhitungkan. Tidak ada kezaliman dalam keputusan Allah.\n\nBerdasarkan ayat dan penjelasan tersebut, makna yang paling tepat tentang <i>yaumul mizan<\/i> adalah ….", "img": "../../assets/img/PAI_9_19.png", "correct": "hari ketika setiap amal manusia ditimbang secara adil dan tidak ada satu pun amal yang diabaikan"}, {"subject": "Iman kepada Hari Akhir", "type": "pg", "options": ["1–a, 2–b, 3–c, 4–d, 5–e", "1–b, 2–d, 3–a, 4–c, 5–e", "1–d, 2–b, 3–a, 4–c, 5–e", "1–d, 2–c, 3–a, 4–b, 5–e"], "rows": null, "note": null, "text": "Perhatikan tabel berikut!\n<div style='overflow-x:auto;margin:10px 0;'><table style='border-collapse:collapse;width:100%;font-size:14px;white-space:normal;'><tr><th style=\"border:1px solid #cfe5d6;padding:6px 10px;text-align:left;background:#e4f5e9;\"><b>No<\/b><\/th><th style=\"border:1px solid #cfe5d6;padding:6px 10px;text-align:left;background:#e4f5e9;\"><b>Pernyataan<\/b><\/th><th style=\"border:1px solid #cfe5d6;padding:6px 10px;text-align:left;background:#e4f5e9;\"><b>Kode<\/b><\/th><th style=\"border:1px solid #cfe5d6;padding:6px 10px;text-align:left;background:#e4f5e9;\"><b>Jawaban<\/b><\/th><\/tr><tr><td style=\"border:1px solid #cfe5d6;padding:6px 10px;vertical-align:top;\">1<\/td><td style=\"border:1px solid #cfe5d6;padding:6px 10px;vertical-align:top;\">Berakhirnya kehidupan makhluk hidup dan rusaknya sebagian alam.<\/td><td style=\"border:1px solid #cfe5d6;padding:6px 10px;vertical-align:top;\">a<\/td><td style=\"border:1px solid #cfe5d6;padding:6px 10px;vertical-align:top;\"><i>Dajjal<\/i><\/td><\/tr><tr><td style=\"border:1px solid #cfe5d6;padding:6px 10px;vertical-align:top;\">2<\/td><td style=\"border:1px solid #cfe5d6;padding:6px 10px;vertical-align:top;\">Hancurnya seluruh alam semesta beserta isinya.<\/td><td style=\"border:1px solid #cfe5d6;padding:6px 10px;vertical-align:top;\">b<\/td><td style=\"border:1px solid #cfe5d6;padding:6px 10px;vertical-align:top;\">Kiamat kubra<\/td><\/tr><tr><td style=\"border:1px solid #cfe5d6;padding:6px 10px;vertical-align:top;\">3<\/td><td style=\"border:1px solid #cfe5d6;padding:6px 10px;vertical-align:top;\">Tanda besar kiamat berupa munculnya tokoh yang menyesatkan manusia.<\/td><td style=\"border:1px solid #cfe5d6;padding:6px 10px;vertical-align:top;\">c<\/td><td style=\"border:1px solid #cfe5d6;padding:6px 10px;vertical-align:top;\">Matahari terbit dari barat<\/td><\/tr><tr><td style=\"border:1px solid #cfe5d6;padding:6px 10px;vertical-align:top;\">4<\/td><td style=\"border:1px solid #cfe5d6;padding:6px 10px;vertical-align:top;\">Tanda besar kiamat yang menunjukkan perubahan hukum alam.<\/td><td style=\"border:1px solid #cfe5d6;padding:6px 10px;vertical-align:top;\">d<\/td><td style=\"border:1px solid #cfe5d6;padding:6px 10px;vertical-align:top;\">Kiamat sugra<\/td><\/tr><tr><td style=\"border:1px solid #cfe5d6;padding:6px 10px;vertical-align:top;\">5<\/td><td style=\"border:1px solid #cfe5d6;padding:6px 10px;vertical-align:top;\">Malaikat yang meniup sangkakala pada hari kiamat.<\/td><td style=\"border:1px solid #cfe5d6;padding:6px 10px;vertical-align:top;\">e<\/td><td style=\"border:1px solid #cfe5d6;padding:6px 10px;vertical-align:top;\">Malaikat Israfil<\/td><\/tr><\/table><\/div>Pasangan yang tepat untuk tabel di atas adalah ….", "img": null, "correct": "1–d, 2–b, 3–a, 4–c, 5–e"}, {"subject": "Iman kepada Hari Akhir", "type": "pg", "options": ["1), 2), 3) dan 4)", "1), 3), 4) dan 5)", "2), 4), 5) dan 6)", "3), 4), 5), dan 6)"], "rows": null, "note": null, "text": "Perhatikan pernyataan berikut!\n1) Membangun hubungan sosial agar memperoleh kedudukan di masyarakat.\n2) Keimanan kepada hari akhir membuat seseorang takut berinteraksi dengan orang lain.\n3) Keimanan kepada hari akhir membentuk pribadi yang jujur, amanah, dan bertanggung jawab.\n4) Memanfaatkan waktu untuk beribadah, belajar, bekerja, dan melakukan kegiatan yang bermanfaat.\n5) Mengembalikan barang yang ditemukan kepada pemiliknya meskipun tidak ada orang yang mengetahui.\n6) Selalu berhati-hati dalam berkata dan bertindak, karena ia yakin bahwa semua itu akan dimintai pertanggungjawaban.\n\nDari pernyataan di atas, yang mencerminkan perilaku iman kepada hari akhir ditunjukkan nomor….", "img": null, "correct": "3), 4), 5), dan 6)"}, {"subject": "Iman kepada Hari Akhir", "type": "pg", "options": ["1), 2), dan 3)", "1), 3), dan 4)", "2), 3), dan 4)", "2), 4), dan 5)"], "rows": null, "note": null, "text": "Perhatikan pernyataan berikut!\n1) Senantiasa menjauhi kemaksiatan dan perbuatan yang buruk.\n2) Menjadikan kehidupan dunia menjadi tujuan akhir dari segala kehidupan manusia.\n3) Merasa bahwa kehidupan dunia merupakan sarana untuk mencapai kebahagiaan di akhirat.\n4) Menganggap bahwa keadilan yang hakiki adalah pengadilan dari Allah di Yaumul Mizan kelak.\n5) Tidak kikir dalam bersedekah karena yakin orang yang bersedekah akan dibalas oleh Allah paling sedikit 10 kali.\n\nPernyataan yang menunjukkan hikmah beriman kepada hari akhir adalah ….", "img": null, "correct": "1), 3), dan 4)"}, {"subject": "Iman kepada Hari Akhir", "type": "pg", "options": ["1–C, 2–A, 3–D, 4–B", "1–D, 2–C, 3–A, 4–B", "3–C, 4–A, 1–D, 2–B", "4–C, 1–A, 2–D, 3–B"], "rows": null, "note": null, "text": "Perhatikan tabel berikut!\n<div style='overflow-x:auto;margin:10px 0;'><table style='border-collapse:collapse;width:100%;font-size:14px;white-space:normal;'><tr><th style=\"border:1px solid #cfe5d6;padding:6px 10px;text-align:left;background:#e4f5e9;\"><b>No<\/b><\/th><th style=\"border:1px solid #cfe5d6;padding:6px 10px;text-align:left;background:#e4f5e9;\"><b>Nama Kehidupan di Akherat<\/b><\/th><th style=\"border:1px solid #cfe5d6;padding:6px 10px;text-align:left;background:#e4f5e9;\"><b>No<\/b><\/th><th style=\"border:1px solid #cfe5d6;padding:6px 10px;text-align:left;background:#e4f5e9;\"><b>Peristiwa<\/b><\/th><\/tr><tr><td style=\"border:1px solid #cfe5d6;padding:6px 10px;vertical-align:top;\">1<\/td><td style=\"border:1px solid #cfe5d6;padding:6px 10px;vertical-align:top;\"><i>Yaumul Ba'ats<\/i><\/td><td style=\"border:1px solid #cfe5d6;padding:6px 10px;vertical-align:top;\">A<\/td><td style=\"border:1px solid #cfe5d6;padding:6px 10px;vertical-align:top;\">Amal perbuatan manusia selama hidup di dunia pada saatnya kelak akan dihitung oleh Allah Swt.<\/td><\/tr><tr><td style=\"border:1px solid #cfe5d6;padding:6px 10px;vertical-align:top;\">2<\/td><td style=\"border:1px solid #cfe5d6;padding:6px 10px;vertical-align:top;\"><i>Yaumul Mahsyar<\/i><\/td><td style=\"border:1px solid #cfe5d6;padding:6px 10px;vertical-align:top;\">B<\/td><td style=\"border:1px solid #cfe5d6;padding:6px 10px;vertical-align:top;\">Umat manusia setelah hari kiamat kelak akan memperoleh balasan dari Allah Swt. atas apa yang telah diperbuat ketika di dunia.<\/td><\/tr><tr><td style=\"border:1px solid #cfe5d6;padding:6px 10px;vertical-align:top;\">3<\/td><td style=\"border:1px solid #cfe5d6;padding:6px 10px;vertical-align:top;\"><i>Yaumul Hisab<\/i><\/td><td style=\"border:1px solid #cfe5d6;padding:6px 10px;vertical-align:top;\">C<\/td><td style=\"border:1px solid #cfe5d6;padding:6px 10px;vertical-align:top;\">Manusia akan dikumpulkan pada suatu tempat untuk menunggu pengadilan dari Allah Swt.<\/td><\/tr><tr><td style=\"border:1px solid #cfe5d6;padding:6px 10px;vertical-align:top;\">4<\/td><td style=\"border:1px solid #cfe5d6;padding:6px 10px;vertical-align:top;\"><i>Yaumul Jaza'<\/i><\/td><td style=\"border:1px solid #cfe5d6;padding:6px 10px;vertical-align:top;\">D<\/td><td style=\"border:1px solid #cfe5d6;padding:6px 10px;vertical-align:top;\">Seluruh umat manusia yang telah meninggal akan dibangkitkan dari alam kubur untuk menghadap kepada Allah Swt. untuk mempertanggungjawabkan seluruh amal perbuatan ketika di dunia.<\/td><\/tr><\/table><\/div>Pasangan yang tepat pada tabel tersebut adalah ….", "img": null, "correct": "1–D, 2–C, 3–A, 4–B"}, {"subject": "Cinta Lingkungan", "type": "pg", "options": ["Dan janganlah kamu lupa akan hari di mana setiap ucapan dan perbuatanmu akan dimintai pertanggungan jawab di hadapan Tuhan-Mu", "Dan janganlah kamu tinggalkan kewajiban atas Tuhan-mu walau sebentar saja", "Dan janganlan kamu ingkari nikmat-nikmat Tuhan-mu dengan merusaknya", "Dan janganlah kamu membuat kerusakan di muka bumi sesudah Allah memperbaikinya"], "rows": null, "note": null, "pre": "Perhatikan potongan ayat dari Q.S. Al-A'raf ayat 56 berikut!", "text": "Arti dari potongan ayat di atas adalah ….", "img": "../../assets/img/PAI_9_24.png", "correct": "Dan janganlah kamu membuat kerusakan di muka bumi sesudah Allah memperbaikinya"}, {"subject": "Cinta Lingkungan", "type": "pg", "options": ["Menikmati seluruh hasil alam untuk memenuhi kebutuhan manusia tanpa batas.", "Menjaga, memelihara, dan melestarikan lingkungan sebagai amanah dari Allah Swt.", "Memanfaatkan seluruh sumber daya alam sebanyak-banyaknya tanpa memikirkan akibatnya.", "Membiarkan alam berkembang sendiri tanpa adanya kepedulian dan tanggung jawab manusia."], "rows": null, "note": null, "text": "Perhatikan ilustrasi cerita berikut!\nAllah Swt. menciptakan alam semesta beserta seluruh isinya, seperti gunung, sungai, laut, tumbuhan, dan hewan untuk memenuhi kebutuhan hidup manusia. Manusia diberikan tanggung jawab oleh Allah Swt. untuk memanfaatkan kekayaan alam dengan bijaksana dan tidak berlebihan. Namun, saat ini masih banyak orang yang membuang sampah sembarangan, menebang pohon secara liar, serta mencemari sungai sehingga menyebabkan kerusakan lingkungan. Sebagai seorang muslim, kita harus menyadari bahwa menjaga lingkungan merupakan salah satu bentuk rasa syukur dan tanggung jawab atas amanah yang diberikan Allah Swt.\n\nBerdasarkan cerita tersebut, pengertian cinta lingkungan yang paling tepat adalah ....", "img": null, "correct": "Menjaga, memelihara, dan melestarikan lingkungan sebagai amanah dari Allah Swt."}, {"subject": "Cinta Lingkungan", "type": "pg", "options": ["Acuh tak acuh terhadap lingkungan sekitar", "Menjaga kelestarian alam sebagai bentuk syukur", "Menganggap alam semesta terjadi secara kebetulan", "Rajin merusak alam karena Allah bisa menciptakan lagi"], "rows": null, "note": null, "text": "Perhatikan arti Q.S. Al-A'raf ayat 54 berikut!\n<i>\"Sesungguhnya Tuhanmu ialah Allah yang menciptakan langit dan bumi dalam enam masa, lalu Dia bersemayam di atas 'Arsy. Dia menutupkan malam kepada siang yang mengikutinya dengan cepat, dan (diciptakan-Nya pula) matahari, bulan, dan bintang-bintang (masing-masing) tunduk kepada perintah-Nya. Ingatlah, menciptakan dan memerintah hanyalah hak Allah. Maha<\/i> <i>Suci Allah, Tuhan Semesta Alam.\"<\/i>\n\nSetelah mempelajari Q.S. Al-A'raf: 54 tentang penciptaan alam semesta, sikap yang tepat adalah …", "img": null, "correct": "Menjaga kelestarian alam sebagai bentuk syukur"}, {"subject": "Cinta Lingkungan", "type": "pg", "options": ["1), 2), dan 3)", "1), 2), dan 5)", "1), 3), dan 5)", "2), 4), dan 5)"], "rows": null, "note": null, "text": "Pernyataan berikut yang menggambarkan konsep dalil naqli dan kedudukan manusia terhadap lingkungan dalam Islam adalah …\n1) Dalam Q.S. Al-A'raf ayat 56, Allah Swt. secara tegas melarang manusia untuk berbuat kerusakan di muka bumi.\n2) Dalil naqli cinta lingkungan adalah perintah menjaga alam yang bersumber langsung dari Al-Qur'an dan Hadis Nabi SAW.\n3) Manusia diciptakan sebagai khalifah yang memiliki hak mutlak untuk menghabiskan seluruh isi bumi demi kekayaan pribadi.\n4) Kerusakan alam di bumi murni terjadi karena faktor takdir alam dan tidak ada hubungannya dengan perilaku manusia.\n5) Allah Swt. melarang manusia berbuat kerusakan (fasad) di bumi, sebagaimana ditegaskan dalam Q.S. Al-Baqarah ayat 60 dan Q.S. Ar-Rum ayat 41.\n\nBerdasarkan pernyataan di atas, pernyataan yang benar adalah.…", "img": null, "correct": "1), 2), dan 5)"}, {"subject": "Cinta Lingkungan", "type": "pg", "options": ["1), 2), dan 3)", "1), 2), dan 4)", "1), 3), dan 4)", "2), 3), dan 4)"], "rows": null, "note": null, "text": "Perhatikan pernyataan berikut ini!\n1) Kebersihan dan kepedulian terhadap lingkungan merupakan cerminan dari kualitas keimanan seorang muslim.\n2) Islam hanya mewajibkan umatnya untuk fokus pada ibadah ritual seperti salat, sedangkan urusan alam adalah hal sepele.\n3) Merawat alam merupakan salah satu bentuk nyata rasa syukur manusia atas fasilitas hidup yang diberikan oleh Allah Swt.\n4) Menjaga alam sejalan dengan tujuan syariat Islam (Maqashid Asy-Syari'ah), yaitu melindungi keselamatan jiwa manusia.\n5) Menjaga kelestarian alam cukup dilakukan oleh pemerintah saja, sedangkan masyarakat biasa tidak memiliki tanggung jawab terhadap lingkungan.\n\nPernyataan yang tepat dalam rangka pentingnya menjaga kelestarian alam ditunjukkan nomor….", "img": null, "correct": "1), 3), dan 4)"}, {"subject": "Cinta Lingkungan", "type": "pg", "options": ["Pencemaran ekosistem laut akibat pembuangan limbah kimia pabrik dan sampah plastik sekali pakai.", "Penggundulan hutan secara liar (illegal logging) yang menyebabkan hilangnya daerah resapan air.", "Polusi udara dan pemanasan global yang dipicu oleh emisi gas buang kendaraan serta industri yang berlebihan.", "Terjadinya fenomena pergantian siang dan malam serta gerhana bulan secara periodik sebagai bagian dari keteraturan ciptaan Allah Swt"], "rows": null, "note": null, "text": "Dalam Q.S. Ar-Rum ayat 41 dijelaskan bahwa kerusakan di darat dan di laut terjadi akibat perbuatan tangan manusia. Berdasarkan ayat tersebut yang bukan merupakan bentuk kerusakan lingkungan akibat ulah manusia adalah ....", "img": null, "correct": "Terjadinya fenomena pergantian siang dan malam serta gerhana bulan secara periodik sebagai bagian dari keteraturan ciptaan Allah Swt"}, {"subject": "Cinta Lingkungan", "type": "pg", "options": ["1), 2), dan 3)", "1), 3), dan 4)", "2), 3), dan 4)", "2), 3), dan 5)"], "rows": null, "note": null, "text": "Perhatikan ilustrasi berikut!\nDalam rangka memperingati Hari Lingkungan Hidup, Pengurus OSIS mengadakan program <i>Sekolah Ramah Lingkungan<\/i>. Seluruh peserta didik diminta menerapkan perilaku yang mencerminkan kepedulian terhadap lingkungan dalam kehidupan sehari-hari. Beberapa siswa mengusulkan berbagai tindakan, mulai dari menghemat penggunaan energi, mengurangi sampah plastik, hingga menjaga kelestarian hewan di sekitar sekolah. Sebagai seorang pelajar muslim, setiap tindakan hendaknya didasarkan pada kesadaran bahwa menjaga lingkungan merupakan bentuk tanggung jawab manusia sebagai khalifah di bumi dan wujud rasa syukur kepada Allah Swt.\n\nBerdasarkan ilustrasi tersebut, tindakan yang paling tepat untuk mendukung keberhasilan program <i>Sekolah Ramah Lingkungan<\/i> ditunjukkan oleh nomor ....\n1) Membeli makanan dengan kemasan plastik berlebih dan membuang sampahnya ke dalam laci meja kelas\n2) Membawa botol minum sendiri (tumbler) untuk mengurangi penggunaan sampah plastik sekali pakai di sekolah.\n3) Mematikan lampu kelas dan menutup keran air setelah selesai digunakan sebagai bentuk penghematan energi dan air.\n4) Membiarkan sampah berserakan di halaman sekolah karena kebersihan lingkungan merupakan tanggung jawab petugas kebersihan saja.\n5) Menunjukkan rasa kasih sayang kepada hewan liar di sekitar sekolah dengan memberi makan dan tidak melakukan tindakan yang menyakiti hewan tersebut", "img": null, "correct": "2), 3), dan 5)"}, {"subject": "Cinta Lingkungan", "type": "pg", "options": ["1), 2), dan 3)", "2), 3), dan 5)", "2), 3), dan 4)", "3), 4), dan 5)"], "rows": null, "note": null, "text": "Perhatikan pernyataan berikut!\n1) Menjadi orang yang paling ditakuti dan disegani oleh seluruh makhluk hidup di dunia.\n2) Terhindar dari risiko bencana alam seperti banjir bandang dan tanah longsor yang dapat mengancam keselamatan\n3) Mengundang rahmat dan ampunan dari Allah Swt. karena telah mengasihi makhluk-makhluk ciptaan-Nya di bumi.\n4) Mendapatkan aliran pahala sedekah jariyah selama pohon atau kebaikan yang ia tanam membawa manfaat bagi makhluk lain.\n5) Menjaga lingkungan hanya bermanfaat untuk kepentingan duniawi semata dan tidak memiliki nilai ibadah di hadapan Allah Swt.\n\nDari pernyataan-pernyataan di atas, ketika seseorang menanamkan rasa cinta dan kepedulian pada lingkungan, hikmah dan keuntungan yang akan ia peroleh adalah .…", "img": null, "correct": "2), 3), dan 4)"}, {"subject": "Cinta Lingkungan", "type": "pg", "options": ["1) dan 4)", "2) dan 3)", "2) dan 4)", "3) dan 4)"], "rows": null, "note": null, "text": "Perhatikan pernyataan berikut!\n1) Menghemat penggunaan air.\n2) Menebang pohon tanpa izin.\n3) Membuang limbah ke sungai.\n4) Menggunakan listrik seperlunya.\n\nPerilaku yang mencerminkan cinta lingkungan adalah ….", "img": null, "correct": "1) dan 4)"}, {"subject": "Penyembelihan, Kurban & Akikah", "type": "pg", "options": ["1), 2) dan 3)", "1), 3) dan 5)", "2), 3) dan 4)", "2), 4) dan 5)"], "rows": null, "note": null, "text": "Perhatikan beberapa peristiwa berikut!\n1) Budi menyembelih kambing dengan sengaja, tetapi tidak membaca basmalah.\n2) Rudi menyembelih ayam dengan menggunakan pisau tajam dan membaca basmalah.\n3) Andi menyembelih hewan dengan menggunakan alat tumpul sehingga menyebabkan hewan tersiksa lebih lama.\n4) Ahmad memastikan hewan yang akan disembelih dalam keadaan sehat dan memperlakukannya dengan baik.\n5) Hasan menyembelih sapi dengan alat yang tajam dan memperhatikan bagian urat syaraf yang harus diputus dalam penyembelihan.\n\nBerdasarkan pernyataan tersebut, perilaku yang mencerminkan penerapan adab dan ketentuan penyembelihan hewan sesuai ajaran Islam ditunjukkan oleh nomor ....", "img": null, "correct": "2), 4) dan 5)"}, {"subject": "Penyembelihan, Kurban & Akikah", "type": "pg", "options": ["1), 2), 3), 4), 5), 6) dan 8)", "1), 2), 3), 4), 5), 6) dan 7)", "1), 3), 4), 5), 6), 7) dan 8)", "1), 2), 3), 5), 6), 7) dan 8)"], "rows": null, "note": null, "text": "Perhatikan beberapa tahapan penyembelihan hewan berikut!\n1) Menyiapkan lubang penampung darah.\n2) Hewan yang akan disembelih dihadapkan kiblat, lambung kiri di bawah.\n3) Kaki hewan dipegang kuat-kuat atau diikat, kepalanya ditekan ke bawah.\n4) Leher hewan diletakkan di atas lubang penampung darah yang sudah disiapkan.\n5) Berniat untuk menyembelih.\n6) Membaca basmalah, shalawat nabi, dan takbir tiga kali.\n7) Arahkan pisau pada bagian kepala hewan.\n8) Sembelihlah sampai terputus tenggorokan, saluran makanan, dan urat lehernya.\n\nBerdasarkan pernyataan tersebut, urutan tata cara penyembelihan hewan secara tradisional yang tepat sesuai dengan ketentuan ajaran Islam adalah ....", "img": null, "correct": "1), 2), 3), 4), 5), 6) dan 8)"}, {"subject": "Penyembelihan, Kurban & Akikah", "type": "pg", "options": ["1), 2) dan 3)", "2), 3) dan 4)", "3), 4) dan 5)", "4), 5) dan 1)"], "rows": null, "note": null, "text": "Perhatikan beberapa pernyataan berikut!\n1) Dihadapkan ke kiblat.\n2) Ada alat untuk menyembelih.\n3) Ada orang yang akan menyembelih.\n4) Tersedianya hewan yang akan disembelih.\n5) Mempercepat proses dalam penyembelihan.\n\nDari beberapa pernyataan di atas yang termasuk rukun dalam penyembelihan adalah ….", "img": null, "correct": "2), 3) dan 4)"}, {"subject": "Penyembelihan, Kurban & Akikah", "type": "pg", "options": ["1, 2, dan 4", "1, 3, dan 5", "2, 3, dan 4", "2, 4, dan 5"], "rows": null, "note": null, "text": "Perhatikan beberapa tindakan berikut!\n1) Menggunakan alat yang tajam.\n2) Memperlakukan hewan dengan kasar sebelum disembelih.\n3) Membaca basmalah ketika menyembelih.\n4) Menyembelih di hadapan hewan lain yang sedang menunggu.\n5) Memastikan proses penyembelihan dilakukan sesuai ketentuan syariat.\n\nPerilaku yang mencerminkan penyembelihan secara baik dan sesuai ajaran Islam ditunjukkan oleh ....", "img": null, "correct": "1, 3, dan 5"}, {"subject": "Penyembelihan, Kurban & Akikah", "type": "pg", "options": ["1) dan 3)", "2) dan 3)", "2) dan 4)", "3) dan 4)"], "rows": null, "note": null, "text": "Menjelang Hari Raya Idul adha, Pak Hasan bersama keluarganya berencana membeli hewan untuk melaksanakan ibadah kurban. Sebelum membeli hewan kurban, Pak Hasan mencari informasi mengenai ketentuan hewan yang sah untuk dijadikan kurban. Ia mengetahui bahwa Islam tidak hanya mensyaratkan hewan kurban harus sehat, tidak cacat, dan cukup umur, tetapi juga harus berasal dari jenis hewan ternak tertentu. Agar ibadah kurbannya sesuai dengan ketentuan syariat Islam, Pak Hasan mempelajari batas minimal umur beberapa jenis hewan yang diperbolehkan untuk dijadikan kurban.\nPerhatikan beberapa pernyataan berikut!\n1) Sapi harus telah berumur minimal 2 tahun atau memasuki tahun ketiga\n2) Unta harus telah berumur minimal 2 tahun agar sah dijadikan hewan qurban\n3) Kambing atau domba harus telah berumur minimal 1 tahun agar memenuhi syarat\n4) Kerbau harus telah berumur minimal 3 tahun agar memenuhi syarat sebagai hewan qurban\n\nBerdasarkan ketentuan syariat Islam tentang umur minimal hewan kurban, pernyataan yang benar ditunjukkan oleh nomor ....", "img": null, "correct": "1) dan 3)"}, {"subject": "Penyembelihan, Kurban & Akikah", "type": "pg", "options": ["1", "2", "3", "4"], "rows": null, "note": null, "pre": "Perhatikan kutipan QS. Al-Kautsar ayat 1-3 berikut!", "text": "Perintah berqurban ditunjukkan pada nomor….", "img": "../../assets/img/PAI_9_38.png", "correct": "3"}, {"subject": "Penyembelihan, Kurban & Akikah", "type": "pg", "options": ["1 dan 2", "2 dan 3", "3 dan 4", "3 dan 5"], "rows": null, "note": null, "pre": "Perhatikan ilustrasi-ilustrasi di bawah ini!", "text": "Hewan qurban untuk tujuh orang ditunjukkan nomor ....", "img": "../../assets/img/PAI_9_39.png", "correct": "3 dan 5"}, {"subject": "Penyembelihan, Kurban & Akikah", "type": "pg", "options": ["10, 11, 12 dan 13 Zulhijjah.", "11, 12, 13 dan 14 Zulhijjah", "10, 11, 12 dan 13 Zulqaidah", "11, 12, 13 dan 14 Zulqaidah"], "rows": null, "note": null, "text": "Ibadah kurban termasuk ibadah yang sudah ditentukan waktu pelaksanaan dan tata caranya, sebagaimana yang dicontohkan oleh Rasulullah Saw. Adapun waktu pelaksanaan ibadah kurban adalah….", "img": null, "correct": "10, 11, 12 dan 13 Zulhijjah."}, {"subject": "Penyembelihan, Kurban & Akikah", "type": "pg", "options": ["1), 2), dan 3)", "1), 3), dan 5)", "2), 4), dan 6)", "3), 4), dan 5)"], "rows": null, "note": null, "text": "Perhatikan pernyataan berikut!\n1) Dilaksanakan pada bulan Dzulhijjah.\n2) Pembagian daging dalam kondisi mentah.\n3) Dilaksanakan pada hari ke-7, 14 atau ke 21\n4) Pembagian daging dalam kondisi sudah masak.\n5) Untuk laki-laki 2 ekor dan wanita 1 ekor kambing.\n6) Untuk laki-laki 1 ekor dan wanita 2 ekor kambing.\n\nBerdasarkan pernyataan tersebut, ketentuan yang sesuai dengan pelaksanaan ibadah <i>akikah<\/i> menurut ajaran Islam ditunjukkan oleh nomor ....", "img": null, "correct": "3), 4), dan 5)"}, {"subject": "Penyembelihan, Kurban & Akikah", "type": "pg", "options": ["Disyukuri dengan pesta, menyusui hingga usia dua tahun, dibawa ke Posyandu", "Disembelihkan hewan akikah, dicukur rambut kepalanya dan diberi nama", "Dicukur rambut kepalanya, dibuatkan kenduri, diberi nama yang Islami", "Disembelihkan hewan akikah, diberi pakaian terbaik dan diberi nama"], "rows": null, "note": null, "pre": "Perhatikan hadis berikut!", "text": "Yang dilakukan orangtua sehubungan dengan kelahiran anak menurut kutipan di atas adalah….", "img": "../../assets/img/PAI_9_42.png", "correct": "Disembelihkan hewan akikah, dicukur rambut kepalanya dan diberi nama"}, {"subject": "Penyembelihan, Kurban & Akikah", "type": "pg", "options": ["1), 2), 3) dan 4)", "1), 2), 3) dan 5)", "1), 2), 4) dan 5)", "2), 3), 4) dan 5)"], "rows": null, "note": null, "text": "Perhatikan pernyataan berikut:\n1) Untuk mendekatkan diri kepada Allah Swt.\n2) Mendidik rasa peduli kepada sesama manusia.\n3) Mendidik diri untuk membunuh sifat kebinatangan.\n4) Sebagai ungkapan rasa syukur atas lahirnya anak dalam keluarga.\n5) Menghidupkan sunah para nabi terdahulu, terutama sunah Nabi Ibrahim.\n\nHikmah ibadah kurban ditunjukkan nomor ….", "img": null, "correct": "1), 2), 3) dan 5)"}, {"subject": "Penyebaran Islam di Nusantara", "type": "pg", "options": ["1), 2), dan 3)", "1), 2), dan 4)", "2), 3), dan 4)", "1), 3), dan 4)"], "rows": null, "note": null, "text": "Perhatikan pernyataan berikut!\n1) Islam disebarkan melalui peperangan.\n2) Islam berkembang melalui perdagangan.\n3) Pedagang muslim memiliki akhlak yang baik.\n4) Terjadi interaksi dengan masyarakat Nusantara.\n\nFaktor utama yang menyebabkan Islam mudah diterima masyarakat Indonesia adalah ….", "img": null, "correct": "2), 3), dan 4)"}, {"subject": "Penyebaran Islam di Nusantara", "type": "pg", "options": ["Kesenian", "Pernikahan", "Pendidikan", "Perdagangan"], "rows": null, "note": null, "pre": "Perhatikan Gambar berikut!", "text": "Gambar tersebut menunjukkan penyebaran Islam melalui jalur….", "img": "../../assets/img/PAI_9_45.png", "correct": "Kesenian"}, {"subject": "Penyebaran Islam di Nusantara", "type": "pg", "options": ["Menjadi pusat penyebaran Islam di Pulau Jawa melalui kerjasama antara kerajaan dengan bersama para Wali Songo, serta pendekatan dakwah yang menyesuaikan budaya masyarakat.", "Menjadi kerajaan Islam pertama di Asia yang berhasil menguasai seluruh wilayah Nusantara melalui peperangan.", "Menghapus seluruh tradisi dan kebudayaan masyarakat Jawa agar ajaran Islam dapat diterima secara menyeluruh.", "Menjadi kerajaan Hindu terbesar di Nusantara yang berperan dalam mempertahankan tradisi Hindu-Buddha."], "rows": null, "note": null, "text": "Perhatikan iliustrasi berikut!\nPada masa perkembangan Islam di Pulau Jawa, Kerajaan Demak tumbuh menjadi salah satu kerajaan Islam yang memiliki pengaruh besar. Selain berperan dalam bidang pemerintahan dan perdagangan, Kerajaan Demak juga menjadi pusat kegiatan dakwah Islam. Para Wali Songo turut berperan dalam menyebarkan ajaran Islam melalui berbagai pendekatan, seperti pendidikan, perdagangan, seni, dan budaya lokal. Strategi tersebut membuat ajaran Islam dapat diterima oleh masyarakat tanpa harus menghilangkan seluruh tradisi dan kebudayaan yang telah berkembang sebelumnya.\n\nBerdasarkan ilustrasi tersebut, analisis yang paling tepat mengenai peranan Kerajaan Demak dalam perkembangan Islam di Indonesia adalah ....", "img": null, "correct": "Menjadi pusat penyebaran Islam di Pulau Jawa melalui kerjasama antara kerajaan dengan bersama para Wali Songo, serta pendekatan dakwah yang menyesuaikan budaya masyarakat."}, {"subject": "Penyebaran Islam di Nusantara", "type": "pg", "options": ["Bertujuan menguasai wilayah.", "Menggunakan kekuatan militer.", "Dilakukan oleh pemerintah kolonial.", "Mengedepankan pendekatan damai kepada masyarakat."], "rows": null, "note": null, "text": "Perhatikan beberapa jalur penyebaran Islam berikut!.\n1) Perdagangan\n2) Pendidikan\n3) Seni budaya\n4) Tasawuf\n\nKesamaan dari keempat jalur tersebut adalah ….", "img": null, "correct": "Mengedepankan pendekatan damai kepada masyarakat."}, {"subject": "Penyebaran Islam di Nusantara", "type": "pg", "options": ["Menghilangkan seluruh kebudayaan lokal karena dianggap tidak sesuai dengan perkembangan ajaran Islam.", "Menghargai dan memanfaatkan budaya lokal sebagai sarana menyampaikan nilai-nilai Islam secara bijaksana dan santun.", "Memaksakan perubahan budaya masyarakat agar seluruh tradisi lama ditinggalkan dan diganti dengan kebudayaan yang baru.", "Mengutamakan kekuasaan politik sebagai cara utama untuk memepengaruhi masyarakat agar mengikuti ajaran Islam yang didakwahkan."], "rows": null, "note": null, "text": "Perhatikan Ilustrasi berikut!\nSunan Kalijaga dikenal sebagai salah satu Wali Songo yang menggunakan pendekatan seni dan budaya dalam menyebarkan ajaran Islam di Pulau Jawa. Salah satu media dakwah yang digunakannya adalah pertunjukan wayang kulit. Melalui cerita dan tokoh pewayangan, Sunan Kalijaga menyisipkan pesan-pesan keislaman, seperti kejujuran, tanggung jawab, keadilan, dan kepedulian terhadap sesama. Metode tersebut membuat masyarakat lebih mudah menerima ajaran Islam karena dakwah disampaikan melalui budaya yang telah dikenal dan digemari oleh masyarakat setempat.\n\nBerdasarkan ilustrasi tersebut, sikap dan nilai keteladanan yang dapat diterapkan oleh generasi muda dalam kehidupan bermasyarakat adalah ....", "img": null, "correct": "Menghargai dan memanfaatkan budaya lokal sebagai sarana menyampaikan nilai-nilai Islam secara bijaksana dan santun."}, {"subject": "Penyebaran Islam di Nusantara", "type": "pg", "options": ["Islam ajaran tauhid", "Islam agama akherat", "Islam Rahmatan Lil 'Alamin", "Islam selaras dengan akal"], "rows": null, "note": null, "text": "Perhatikan Ikustrasi berikut!\nPenyebaran Islam di Nusantara dapat dikatakan mengalami kesuksesan besar. Bukti nyata dari kesuksesan tersebut adalah jumlah populasi muslim yang begitu besar di Indonesia, bahkan terbesar di dunia. Kesuksesan penyebaran Islam di Nusantara tidak terlepas dari peran para ulama yang menyebarkan Islam di Nusantara dengan jalan damai. Para Wali Songo juga berdakwah dengan pendekatan sosial budaya, sehingga lebih mudah diterima oleh warga lokal. Penyebaran Islam dengan jalan damai dan dengan pendekatan sosial kebudayaan tersebut, didasari dari ajaran Islam itu sendiri, yaitu …", "img": null, "correct": "Islam Rahmatan Lil 'Alamin"}, {"subject": "Penyebaran Islam di Nusantara", "type": "pg", "options": ["Teori Cina", "Teori Mekah", "Teori Persia", "Teori Gujarat"], "rows": null, "note": null, "text": "Perhatikan Ilustrasi berikut!\nPara pedagang dimasa Dinasti Tang yang bermukim di Daerah Guangzhou, Kanton, Zhangzao datang ke Indonesia ( khususnya ditanah Jawa ) untuk berdagang dan sekaligus membawa ajaran Islam. Sehingga, ditemukan adanya masjid-masjid tua yang mempunyai nilai arsitektur Tiongkok di Pulau Jawa. Disamping itu menurut ahli sejarah bahwa raja Islam pertama di Jawa, yakni Raden Patah dari Bintoro Demak merupakan keturunan dari Putri Campa.\n\nBerdasarkan Ilustrasi tersebut Islam massuk ke Indonesia berdasarkan teori …", "img": null, "correct": "Teori Cina"}]</script>
+<script id="students-data" type="application/json">{"IX A":["ABID AQILA PRANAJA","AFRIAN SAPUTRA","AHMAT KHOIRUL MISBAHUDIN","ALVARO YUNANDA OKTINO","ANISA ANESTIA","ARUMI EKA AYU LESTARI","ASYFA NURFADILA","AZWA KURNIA SAPUTRA","BIMA DWI PUTRA","DEDI SETIAWAN JATI WENING PURNOMO","DEVICA PUTRI ANGGRAINI","DIO MAYVANO","FARA AYU SALSABILA","FEBRIADI SAPUTRA","GALIH ANANDA RACHMAN","KAFA","KEYLA CAHYA ATHALIA","KEZIA AINI ZULAIKA NINGTYAS","MANDA NITIYA AVIANI","MUSTAFIK VARIS MAULANA","MUTIARA AZMEI LISTYOWATI","NADIEN MEUTIARA SUKMA","NAIFATUL ZULFA","NUZZUA REIVA","ODIK TAUFIQURROHMAN","PERMATA MUSTIKA ALVIONITA","QAYYUMU ARUMI MAHARTANIA","RADEN RARA NAYA AULIA ASIH","SATRIA ADYASA NUSANTARA","SELY NUR ASHIFA","WISNU DWI SAPUTRA"],"IX B":["AKBAR KHOIRUL UMAM","ALFINSYA REZA SAPUTRA","ANANDA BAGAS LIYAN SAPUTRA","ARCEINA SEVILLA","ARIFKI EKA PUTRA","ARKA KEVIN DINATA","DEA ISTIQOMAH","DIO NUR FAUZAN","DWI NUR IKSAN","FEBIRA AURELLIA","ILYAS ZULKIFLI","INDIRA PUTRI LISTIKA","JACINDA RUELA MAHSA","KANAYA ALTHAFUNISSA AGUSTIN","KANIA MARSYA OKTAVIANI","LINTANG JA'FAR ABIANDRA","LUTHFI RAMDHAN HIBATULLAH","MEYSYA ALIF NUR FATHONAH","MICO FERNANDO","MUHAMMAD DIFA SAPUTRA","MUHAMMAD FIRNANDA","MUHAMMAD RAFA SAPUTRA","NAILA ALZENA SAFA","NETTISYA NAZWA DIANDHYRA","PUTRI HANI NUR HIDAYATI","RANGGA AQSHAL JOHANSYAH","SRI WULANDARI","SYAFIRA ZAHROTUM MUNIROH","TERA CESIA","ZULFA TANAYA"],"IX C":["AKHMAD THOLIB ABBAS","ALFITA SHOFI NADHIRA","ASKUN ROMADHON","ASYATUN NISWAH","ATAYA AZUAN MEYLANO","AZILA NUR IZZAFITRI","ELDA CHIKMATUR ROCHMAH","ELVIDA LARASATI","EVAN JAMAL MUSTHOFA OZIL","FA'IQ SULTAN AJI","FARAH NAFISA NURANIFAH","FAUZAN ALFAN TAQIYAN","GISSYA AZZAHRA ALTHAFUNNISA","KANAFARO CHRIZTIAN TONY","KANAYA CAHAYA NINGRUM","KEVIN ANGGIE PRATAMA","NABILA FIRANIKA ANINDI","NADHIFA AQILA ZAHWA","NICXO DIMAS SAPUTRA","PUTRI NURAHMI","RAIHAN DAFA AKMAL FAUZI","RETNO KARTIKA SARI","SILVIA AGUSTINA","TEO SAPUTRA","VITO ARDANTA NURROHMAN","WINNIE ALIYA AGASSI","YUSUF SADEWA LANGIT RAMADHAN","ZAHIERA RACHMADHANI","ZAHRA AULIA","ZHIFARA PURI NATASYA","ZIDAN AJI SYAHPUTRA","ZIVANA CARISSA PUTRI"],"IX D":["'ASA NAYLIS SA'DIYYAH","ADHELYA PRIHANDINI TRISTI","ADNAN HAFIZH ABIMANYU","AKILLA CHELSEA FABIONA","ANGELICA KINARIAN KAYANA","ARIFAH ZIYAN SHALIHAH","ARVINO AKBAR PRASETYA","ASYFA JUNO NAUFLAWATI","AXCEYLA DHEA ANGGRAINI","AYRA FAZIA","AZZURA QUEEN PRATAMA","BERLIANTI MANDA SAFIRA","DZAKWAAN FAKHRY AL FATIH","FERDINAND FELIK SAPUTRA","FILZAH SAUSAN NIDA GHASSANI","GAGAS ADE PRATAMA","HENNDAR RADITIYA LUKITO","JESSICA KUMALA DEWI","KEVIN GUSTAVO ARTHADANI BINTANG","LUTHFIYYA ZALFA DWI ALSANI","MUHAMMAD CELLO HARYANTO","MUHAMMAD RAFIQUL HAMIM","NAUFAL PRADITA","RAHELINA APRILLIA PUTRI","RAVA NUR HIDAYAT","RAVI NUR HIDAYAT","RIDWAN ARIS PRADANA","SITI AMINAH","SOFIA KARINA PUTRI","SYAHRUL RAHMAT FADHILAH","TAUFIQ ACHMAD NORCHOLIS","TIFFANO AUGESTA RAHMADAN"],"IX E":["ALIFFIAN NUR RACHMAN","ANINDYA FISKA LARASATI","ARDIANSYAH YUSUF SETIAWAN","DANIS NAZILATUL ULYA","DIRA ANINDITA","DZAKIA NAJAMUDDIN AKBAR","EKA ARDHAN ALFAREZA PUTRA","ELSYA KURNIA MEGA","FAHRI DZUL HILMI","FAREL VALENTINO","ILHAM OKTA PRATAMA","KESYA KURNIA MEGA","KHAISYA NUR KHASANAH","KYLA YAFFA OKTAVIANA","MELA NUR CAHYANI","MUADZ SIDIK HANAFI","MUHAMMAD KELVIN APRILIO","MUHAMMAD ULIN NUHA","MUKTI KHOIRUL HANAFI","NAUFAL RAFI MUSYAFFA","NAYLA AURELLIA PUTRI","NAZZIFA ALMAYSHA NIZRHIINA","NURUL AZKIA","RADHITYA NUR KHUSNA","RENTA SAPTA UTAMA","RESTU ANNAS FADILLAH","RIDZO FITRIANTO","RIFA RIZKI ROFIAH","RIZKI HIDAYATULLOH","SILVIA NAJWA","SRI NITAYANTI"],"IX F":["ALDIAN FAJAR","ALIFAH FALMA FEBYOLA","ALVIN NURRIYAN PUTRANTO","ARSHAVIN RIZALUL HAKIM","CHELSI PUTRI ARDIATRI","CLARA ANGELIA SAPUTRI","FAIRREL APRILLIO AL ZAIN","FAREL ARDIYANSYAH","FELIA PRADIFTA","IVANO DWIANGGA PUTRA","KHANZA AQILLA MAYLIAN","KIKI AMELIA","LIAN DWI ISWARI","MIFTAKHUL SAHRIL HUDA","MOHAMAD HABIB NURROHMAN","MUHAMMAD KAREL","MUHQAMAT AHQNAN SAIFULLOH","NAJWA SYARIFAH ERVIANA","NANO FILZA ALKARIM","NAUFAL FADIL IBRAHIM","NIKE SABRINA ROHMAT","OLIVYA CENDY NURRYLA","RAFA OKTA ADELIO","RAFFASYA NIZAM PRATAMA","RAHELYA AISHA NUR FATONAH","RAUFFI ACHMAD NORCHOLIS","RHEA MECCA ASRIYANTO","RIA ANANDA KARYADI","SETO HARI NUGROHO","VENALIA AISYA FILIANI","ZELDA ARYARAFFI VINDHIGA SAKTI","ZHAHRA ZAIN AULIA"]}</script>
+<script id="embedded-images-data" type="application/json">{}</script>
+<script>
+(function(){
+"use strict";
+
+/* ================= CONFIG ================= */
+const SUBJECT_ORDER = ["Keutamaan Menuntut Ilmu","Iman kepada Hari Akhir","Cinta Lingkungan","Penyembelihan, Kurban & Akikah","Penyebaran Islam di Nusantara"];
+const DURATION_SEC = 90*60;
+const MIN_SUBMIT_SEC = 40*60;   // batas minimal sebelum jawaban boleh dikirim (40 menit)
+const MAPEL = "PAI dan Budi Pekerti";
+const ASESMEN = "ASAS";
+const KELAS_TINGKAT = "IX";
+const MATERI = "Menuntut Ilmu, Iman kepada Hari Akhir, Cinta Lingkungan, Kurban & Akikah, Penyebaran Islam di Nusantara";
+const JUDUL = "ASAS PAI DAN BUDI PEKERTI KELAS 9";
+const VALID_TOKEN = "PAI9ZKY";
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwEoF6CHxZX131LIKCw71kbqkfMcDu1wF7Pz0sc3xlYmyhRX3TSWuKJgI0IoXZtn8DUCg/exec";
+
+const IMG_MINW = {"../../assets/img/PAI_9_1.png": 491, "../../assets/img/PAI_9_2.png": 555, "../../assets/img/PAI_9_3.png": 560, "../../assets/img/PAI_9_4.png": 560, "../../assets/img/PAI_9_6.png": 459, "../../assets/img/PAI_9_7.png": 498, "../../assets/img/PAI_9_15.png": 407, "../../assets/img/PAI_9_19.png": 556, "../../assets/img/PAI_9_38.png": 560, "../../assets/img/PAI_9_42.png": 404};
+const RAW_QUESTIONS = JSON.parse(document.getElementById('questions-data').textContent);
+document.getElementById('infoJumlah').textContent = RAW_QUESTIONS.length + " Soal";
+const STUDENTS = JSON.parse(document.getElementById('students-data').textContent);
+const EMBEDDED_IMAGES = JSON.parse(document.getElementById('embedded-images-data').textContent);
+
+/* ================= STATE ================= */
+let examQuestions = [];
+let answers = {};
+let current = 0;
+let violCount = 0;
+let timeLeft = DURATION_SEC;
+let timerHandle = null;
+let studentName = "", studentClass = "";
+let examStarted = false;
+let examFinished = false;
+
+/* ================= UTIL ================= */
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; }
+  return a;
+}
+function fmtTime(s){ const m=Math.floor(s/60), sec=s%60; return String(m).padStart(2,'0')+":"+String(sec).padStart(2,'0'); }
+function escapeHtml(str){ return String(str).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function renderText(t){ return String(t).replace(/\n/g,'<br>'); }
+function imgList(img){ if(!img) return []; return Array.isArray(img) ? img : [img]; }
+function imgSrc(name){ return EMBEDDED_IMAGES[name] || encodeURI(name); }
+function typesetMath(){ if(window.MathJax && window.MathJax.typesetPromise){ window.MathJax.typesetPromise(); } }
+
+/* ================= LIGHTBOX (tap-to-zoom for question images) ================= */
+document.getElementById('lightboxClose').addEventListener('click',()=>{
+  document.getElementById('lightbox').classList.remove('open');
+});
+document.getElementById('lightbox').addEventListener('click',(e)=>{
+  if(e.target.id==='lightbox' || e.target.id==='lbScroll') document.getElementById('lightbox').classList.remove('open');
+});
+document.getElementById('lightboxZoom').addEventListener('click',()=>{
+  const lb = document.getElementById('lightbox');
+  const z = lb.classList.toggle('zoomed');
+  document.getElementById('lightboxZoom').textContent = z ? '🔍 Perkecil' : '🔍 Perbesar';
+  if(z){ const s=document.getElementById('lbScroll'); s.scrollLeft = s.scrollWidth; }
+});
+
+/* ================= TABS (start screen) ================= */
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-'+btn.dataset.tab).classList.add('active');
+  });
+});
+
+/* ================= STUDENT DROPDOWNS ================= */
+(function populateClassDropdown(){
+  const selKelas = document.getElementById('inputKelas');
+  Object.keys(STUDENTS).forEach(kelas=>{
+    const opt = document.createElement('option');
+    opt.value = kelas; opt.textContent = kelas;
+    selKelas.appendChild(opt);
+  });
+
+  selKelas.addEventListener('change',()=>{
+    const selNama = document.getElementById('inputNama');
+    const kelas = selKelas.value;
+    selNama.innerHTML = '';
+    if(!kelas){
+      const opt = document.createElement('option'); opt.value=''; opt.textContent='— Pilih kelas terlebih dahulu —';
+      selNama.appendChild(opt); selNama.disabled = true; return;
+    }
+    const opt0 = document.createElement('option'); opt0.value=''; opt0.textContent='— Pilih Nama —';
+    selNama.appendChild(opt0);
+    (STUDENTS[kelas]||[]).forEach(nm=>{
+      const opt = document.createElement('option'); opt.value = nm; opt.textContent = nm;
+      selNama.appendChild(opt);
+    });
+    selNama.disabled = false;
+  });
+
+  /* Prefill dari menu Kelas (kelas-9.html): ?kelas=IX%20A&nama=NAMA%20SISWA */
+  const params = new URLSearchParams(window.location.search);
+  const pKelas = params.get('kelas');
+  const pNama = params.get('nama');
+  if(pKelas && STUDENTS[pKelas]){
+    selKelas.value = pKelas;
+    selKelas.dispatchEvent(new Event('change'));
+    const norm = s => String(s||'').replace(/\s+/g,' ').trim().toUpperCase();
+    const match = pNama ? STUDENTS[pKelas].find(n=>norm(n)===norm(pNama)) : null;
+    if(match){
+      document.getElementById('inputNama').value = match;
+      document.getElementById('idNama').textContent = match;
+      document.getElementById('idKelas').textContent = pKelas;
+      document.getElementById('idBox').classList.remove('hidden');
+      document.getElementById('pickWrap').classList.add('hidden');
+    }
+    document.querySelector('.tab-btn[data-tab="mulai"]').click();
+    document.getElementById('inputToken').focus();
+  }
+})();
+
+/* ================= BUILD EXAM (shuffle) ================= */
+function buildExam(){
+  const all = RAW_QUESTIONS.map((q,i)=>({q,i}));
+  const shuffledAll = shuffle(all);
+  examQuestions = shuffledAll.map(o=>{
+    const q = JSON.parse(JSON.stringify(o.q));
+    q._id = o.i;
+    if((q.type==='pg' || q.type==='multi') && Array.isArray(q.options)){
+      q.options = shuffle(q.options);
+    }
+    return q;
+  });
+}
+
+/* ================= NAV PANEL ================= */
+function renderNavPanel(){
+  const panel = document.getElementById('navPanel');
+  let html = '<h3>Nomor Soal (1–'+examQuestions.length+')</h3>';
+  html += '<div class="legend"><span><i class="dot" style="background:#1a9c5f"></i>Terjawab</span><span><i class="dot" style="background:#fff;border:1.5px solid #dde3ec"></i>Belum</span></div>';
+  let grid = '';
+  examQuestions.forEach((q,idx)=>{
+    const answered = isAnswered(q);
+    grid += '<button class="navbtn'+(answered?' answered':'')+(idx===current?' current':'')+'" data-idx="'+idx+'">'+(idx+1)+'</button>';
+  });
+  html += '<div class="navgrid">'+grid+'</div>';
+  html += '<button id="navSubmitBtn">✅ Kirim Jawaban</button>';
+  panel.innerHTML = html;
+  panel.querySelectorAll('.navbtn').forEach(b=>{
+    b.addEventListener('click',()=>{ current=parseInt(b.dataset.idx,10); renderQuestion(); closeMobilePanel(); });
+  });
+  document.getElementById('navSubmitBtn').addEventListener('click', confirmSubmit);
+  updateSubmitLock();
+}
+function closeMobilePanel(){ document.getElementById('navPanel').classList.remove('open'); }
+
+function isAnswered(q){
+  const v = answers[q._id];
+  if(q.type==='pg') return !!v;
+  if(q.type==='multi') return Array.isArray(v) && v.length>0;
+  if(q.type==='matrix'){ if(!v) return false; return q.rows.every(r=>v[r.label]); }
+  return false;
+}
+
+/* ================= RENDER QUESTION ================= */
+function renderQuestion(){
+  const q = examQuestions[current];
+  const wrap = document.getElementById('qwrap');
+  let html = '';
+  html += '<div class="qnum">Soal '+(current+1)+' dari '+examQuestions.length+'</div>';
+  html += '<div class="qtext">'+renderText(q.pre || q.text)+'</div>';
+  const imgs = imgList(q.img);
+  if(imgs.length){
+    html += '<div class="qimg-wrap">';
+    imgs.forEach(name=>{
+      const src = imgSrc(name);
+      const mw = IMG_MINW[name] || 0;
+      html += '<div class="imgbox" data-full="'+src+'">'+
+        '<div class="imgscroll"><img class="'+(mw?'scrollimg':'')+'" '+(mw?'style="--minw:'+mw+'px" ':'')+'src="'+src+'" alt="'+escapeHtml(name)+'" '+
+        'onerror="this.closest(\'.imgbox\').outerHTML=\'<div class=&quot;imgph&quot;>🖼️ '+escapeHtml(name)+'<br>(gambar belum terunggah ke folder assets)</div>\'"></div>'+
+        '<span class="zoomhint">'+(mw?'↔ geser · ':'')+'🔍 ketuk untuk perbesar</span></div>';
+    });
+    html += '</div>';
+  }
+  if(q.pre) html += '<div class="qtext">'+renderText(q.text)+'</div>';
+  if(q.type==='multi') html += '<div class="qtype-hint">☑ Pilihan Ganda Kompleks — pilih semua jawaban yang benar (bisa lebih dari satu)</div>';
+  if(q.type==='matrix') html += '<div class="qtype-hint">☑ Benar/Salah — tentukan Benar atau Salah untuk setiap pernyataan</div>';
+
+  if(q.type==='pg') html += renderPG(q);
+  else if(q.type==='multi') html += renderMulti(q);
+  else if(q.type==='matrix') html += renderMatrix(q);
+
+  wrap.innerHTML = html;
+  typesetMath();
+  attachOptionEvents(q);
+  wrap.querySelectorAll('.imgbox').forEach(box=>{
+    box.addEventListener('click',()=>{
+      document.getElementById('lightboxImg').src = box.dataset.full;
+      const lb = document.getElementById('lightbox'); lb.classList.remove('zoomed'); lb.classList.add('open');
+      document.getElementById('lightboxZoom').textContent = '🔍 Perbesar';
+      document.getElementById('lbScroll').scrollLeft = 0;
+    });
+  });
+
+  wrap.querySelectorAll('.imgscroll').forEach(s=>{ s.scrollLeft = s.scrollWidth; });
+  document.getElementById('btnPrev').disabled = (current===0);
+  document.getElementById('btnNext').textContent = (current===examQuestions.length-1) ? 'Selesai →' : 'Selanjutnya →';
+  document.querySelectorAll('.navbtn').forEach(b=>b.classList.toggle('current', parseInt(b.dataset.idx,10)===current));
+  document.getElementById('questionArea').scrollTop = 0;
+}
+
+const LETTERS = ['A','B','C','D','E','F'];
+
+function renderPG(q){
+  const v = answers[q._id]; let html='';
+  q.options.forEach((opt,i)=>{
+    const selected = v===opt;
+    html += '<label class="option'+(selected?' selected':'')+'"><input type="radio" name="pg" value="'+i+'" '+(selected?'checked':'')+'>'+
+      '<span class="otext"><span class="olabel">'+LETTERS[i]+'.</span>'+opt+'</span></label>';
+  });
+  return html;
+}
+function renderMulti(q){
+  const v = answers[q._id] || []; let html='';
+  q.options.forEach((opt,i)=>{
+    const selected = v.includes(opt);
+    html += '<label class="option'+(selected?' selected':'')+'"><input type="checkbox" name="multi" value="'+i+'" '+(selected?'checked':'')+'>'+
+      '<span class="otext"><span class="olabel">'+LETTERS[i]+'.</span>'+opt+'</span></label>';
+  });
+  return html;
+}
+function renderMatrix(q){
+  const v = answers[q._id] || {};
+  let html = '<table class="matrix"><thead><tr><th style="text-align:left">Pernyataan</th>';
+  q.rows[0].cols.forEach(c=>{ html += '<th>'+escapeHtml(c)+'</th>'; });
+  html += '</tr></thead><tbody>';
+  q.rows.forEach(r=>{
+    html += '<tr><td class="stmt">'+escapeHtml(r.label)+'. '+r.text+'</td>';
+    r.cols.forEach(c=>{
+      const checked = v[r.label]===c;
+      html += '<td><input type="radio" name="row_'+r.label+'" value="'+escapeHtml(c)+'" data-row="'+escapeHtml(r.label)+'" '+(checked?'checked':'')+'></td>';
+    });
+    html += '</tr>';
+  });
+  html += '</tbody></table>';
+  return html;
+}
+function attachOptionEvents(q){
+  if(q.type==='pg'){
+    document.querySelectorAll('input[name=pg]').forEach(inp=>{
+      inp.addEventListener('change',()=>{ answers[q._id]=q.options[parseInt(inp.value,10)]; renderQuestion(); renderNavPanel(); });
+    });
+  } else if(q.type==='multi'){
+    document.querySelectorAll('input[name=multi]').forEach(inp=>{
+      inp.addEventListener('change',()=>{
+        let cur = answers[q._id] ? answers[q._id].slice() : [];
+        const val = q.options[parseInt(inp.value,10)];
+        if(inp.checked){ if(!cur.includes(val)) cur.push(val); } else { cur = cur.filter(x=>x!==val); }
+        answers[q._id]=cur; renderQuestion(); renderNavPanel();
+      });
+    });
+  } else if(q.type==='matrix'){
+    document.querySelectorAll('table.matrix input').forEach(inp=>{
+      inp.addEventListener('change',()=>{
+        const rowLabel = inp.dataset.row;
+        const cur = answers[q._id] ? Object.assign({},answers[q._id]) : {};
+        cur[rowLabel] = inp.value; answers[q._id]=cur; renderQuestion(); renderNavPanel();
+      });
+    });
+  }
+}
+
+/* ================= NAVIGATION ================= */
+document.getElementById('btnPrev').addEventListener('click',()=>{ if(current>0){ current--; renderQuestion(); } });
+document.getElementById('btnNext').addEventListener('click',()=>{
+  if(current<examQuestions.length-1){ current++; renderQuestion(); } else { confirmSubmit(); }
+});
+document.getElementById('panelToggle').addEventListener('click',()=>{ document.getElementById('navPanel').classList.toggle('open'); });
+
+/* ================= TIMER (berbasis jam sistem, tetap akurat walau tab di-throttle) ================= */
+let startTs = 0, endTs = 0;
+function elapsedSec(){ return Math.floor((Date.now()-startTs)/1000); }
+function canSubmitNow(){ return elapsedSec() >= MIN_SUBMIT_SEC; }
+function updateSubmitLock(){
+  const b = document.getElementById('navSubmitBtn');
+  if(!b || !examStarted) return;
+  const rem = MIN_SUBMIT_SEC - elapsedSec();
+  if(rem > 0){ b.textContent = '🔒 Kirim dibuka dalam '+fmtTime(rem); b.classList.add('locked'); }
+  else { b.textContent = '✅ Kirim Jawaban'; b.classList.remove('locked'); }
+}
+function tick(){
+  timeLeft = Math.max(0, Math.ceil((endTs-Date.now())/1000));
+  const box = document.getElementById('timerBox');
+  box.textContent = fmtTime(timeLeft);
+  if(timeLeft<=300) box.classList.add('low');
+  updateSubmitLock();
+  if(timeLeft<=0){ clearInterval(timerHandle); finishExam(true); }
+}
+function startTimer(){
+  startTs = Date.now(); endTs = startTs + DURATION_SEC*1000;
+  tick(); timerHandle = setInterval(tick,1000);
+}
+
+/* ================= LAYAR PENUH & PENCATATAN PELANGGARAN ================= */
+const logPelanggaran = [];
+let dialogOpen = false, lastViolAt = 0, splitActive = false, blurTimer = null;
+const areaMax = {portrait:0, landscape:0};
+
+function enterFullscreen(){
+  const el = document.documentElement;
+  const req = el.requestFullscreen||el.webkitRequestFullscreen||el.msRequestFullscreen;
+  if(req){ try{ const p = req.call(el); if(p && p.catch) p.catch(()=>{}); }catch(e){} }
+}
+function isFullscreen(){ return !!(document.fullscreenElement||document.webkitFullscreenElement||document.msFullscreenElement); }
+function showWarn(title,text,onOk){
+  const ov = document.getElementById('warnOverlay');
+  document.getElementById('warnTitle').textContent = title;
+  document.getElementById('warnText').textContent = text;
+  ov.style.display='flex';
+  document.getElementById('warnBtn').onclick = ()=>{ ov.style.display='none'; if(onOk) onOk(); };
+}
+function safeAlert(msg){ dialogOpen = true; try{ alert(msg); } finally { dialogOpen = false; } }
+function safeConfirm(msg){ dialogOpen = true; try{ return confirm(msg); } finally { dialogOpen = false; } }
+
+// Jenis: "Pindah tab", "Keluar fullscreen", "Salin teks", "Screenshot", "Split screen", "Kehilangan fokus jendela"
+function catatPelanggaran(jenis){
+  if(!examStarted || examFinished) return;
+  const last = logPelanggaran[logPelanggaran.length-1];
+  if(last && last.jenis===jenis && Date.now()-new Date(last.waktu).getTime() < 1500) return; // satu kejadian, satu catatan
+  logPelanggaran.push({ jenis: jenis, waktu: new Date().toISOString() });
+  violCount = logPelanggaran.length;
+  lastViolAt = Date.now();
+  const badge = document.getElementById('violationBadge');
+  badge.style.display='inline-block';
+  document.getElementById('violCount').textContent = violCount;
+  showWarn('⚠ Pelanggaran Terdeteksi ('+violCount+')',
+    'Sistem mendeteksi: '+jenis+'. Tindakan ini tercatat dan akan dilaporkan kepada guru bersama hasil ujianmu. Tetaplah pada halaman ujian hingga selesai.',
+    ()=>{ if(!isFullscreen()) enterFullscreen(); });
+}
+function ringkasPelanggaran(){
+  const c = {}; logPelanggaran.forEach(p=>{ c[p.jenis]=(c[p.jenis]||0)+1; });
+  return Object.keys(c).map(k=>k+' ×'+c[k]).join('; ') || '-';
+}
+
+// 1) pindah tab / minimize
+document.addEventListener('visibilitychange',()=>{
+  if(document.hidden && examStarted && !examFinished) catatPelanggaran('Pindah tab');
+});
+// 2) keluar layar penuh
+function onFsChange(){ if(!isFullscreen() && examStarted && !examFinished) catatPelanggaran('Keluar fullscreen'); }
+document.addEventListener('fullscreenchange', onFsChange);
+document.addEventListener('webkitfullscreenchange', onFsChange);
+// 3) menyalin teks
+['copy','cut'].forEach(ev=>document.addEventListener(ev,e=>{
+  if(examStarted && !examFinished){ e.preventDefault(); catatPelanggaran('Salin teks'); }
+}));
+document.addEventListener('contextmenu',e=>{ if(examStarted && !examFinished) e.preventDefault(); });
+document.addEventListener('selectstart',e=>{ if(examStarted && !examFinished) e.preventDefault(); });
+document.addEventListener('dragstart',e=>{ if(examStarted && !examFinished) e.preventDefault(); });
+// 4) screenshot & pintasan terlarang
+function clearClip(){ try{ navigator.clipboard && navigator.clipboard.writeText('').catch(()=>{}); }catch(e){} }
+document.addEventListener('keydown',e=>{
+  if(!examStarted || examFinished) return;
+  const k = (e.key||'').toLowerCase();
+  if(e.key==='F12' || (e.ctrlKey&&e.shiftKey&&['i','j','c'].includes(k)) || (e.altKey&&e.key==='Tab')) e.preventDefault();
+  if((e.ctrlKey||e.metaKey) && ['p','s','u'].includes(k)) e.preventDefault();
+  if((e.ctrlKey||e.metaKey) && ['c','x','a'].includes(k)){ e.preventDefault(); if(k!=='a') catatPelanggaran('Salin teks'); }
+  if(e.key==='PrintScreen' || (e.metaKey&&e.shiftKey&&k==='s') || (e.metaKey&&e.shiftKey&&['Digit3','Digit4','Digit5'].includes(e.code))){
+    catatPelanggaran('Screenshot'); clearClip();
+  }
+});
+document.addEventListener('keyup',e=>{
+  if(!examStarted || examFinished) return;
+  if(e.key==='PrintScreen'){ catatPelanggaran('Screenshot'); clearClip(); }
+});
+// 5) split screen: ukuran jendela (piksel perangkat, tahan terhadap zoom) turun tajam dibanding ukuran terbesar
+function cekSplitScreen(){
+  if(!examStarted || examFinished) return;
+  const dpr = window.devicePixelRatio || 1;
+  const o = window.innerWidth > window.innerHeight ? 'landscape' : 'portrait';
+  const a = (window.innerWidth*dpr)*(window.innerHeight*dpr);
+  if(a > areaMax[o]) areaMax[o] = a;
+  if(areaMax[o] > 0 && a < areaMax[o]*0.8){
+    if(!splitActive){ splitActive = true; catatPelanggaran('Split screen'); }
+  } else if(a > areaMax[o]*0.9){ splitActive = false; }
+}
+let resizeT = null;
+window.addEventListener('resize',()=>{ clearTimeout(resizeT); resizeT = setTimeout(cekSplitScreen,400); });
+setInterval(cekSplitScreen,3000);
+// 6) jendela kehilangan fokus (mis. membuka aplikasi lain berdampingan)
+window.addEventListener('blur',()=>{
+  if(!examStarted || examFinished) return;
+  document.getElementById('screen-exam').classList.add('blurred');
+  clearTimeout(blurTimer);
+  blurTimer = setTimeout(()=>{
+    if(dialogOpen || examFinished || document.hidden) return;
+    if(!document.hasFocus() && Date.now()-lastViolAt > 4000) catatPelanggaran('Kehilangan fokus jendela');
+  },1500);
+});
+window.addEventListener('focus',()=>{
+  clearTimeout(blurTimer);
+  document.getElementById('screen-exam').classList.remove('blurred');
+});
+window.addEventListener('beforeunload',(e)=>{ if(examStarted && !examFinished){ e.preventDefault(); e.returnValue=''; } });
+
+/* ================= START EXAM ================= */
+document.getElementById('btnStart').addEventListener('click',()=>{
+  const token = document.getElementById('inputToken').value.trim();
+  const nama = document.getElementById('inputNama').value.trim();
+  const kelas = document.getElementById('inputKelas').value.trim();
+  const err = document.getElementById('startErr');
+  if(!token){ err.textContent='Token ujian wajib diisi.'; return; }
+  if(token !== VALID_TOKEN){ err.textContent='Token salah. Tanyakan token yang benar kepada gurumu.'; return; }
+  if(!kelas || !nama){ err.textContent='Nama dan kelas belum terbaca. Buka ujian dari Menu Kelas 9 atau pilih nama & kelas pada kolom yang tersedia.'; return; }
+  err.textContent='';
+  studentName = nama; studentClass = kelas;
+  buildExam();
+  answers = {}; current=0; logPelanggaran.length=0; violCount=0; examStarted=true; examFinished=false;
+  areaMax.portrait = 0; areaMax.landscape = 0; splitActive = false;
+
+  document.getElementById('screen-start').style.display='none';
+  document.getElementById('screen-exam').style.display='flex';
+  document.getElementById('brandStudent').textContent = nama+' · Kelas '+kelas;
+  startTimer(); renderNavPanel(); renderQuestion(); enterFullscreen();
+  setTimeout(cekSplitScreen, 1800);
+});
+
+/* ================= SUBMIT / SCORING ================= */
+function confirmSubmit(){
+  if(!canSubmitNow()){
+    safeAlert('Jawaban baru dapat dikirim setelah 40 menit pengerjaan. Sisa waktu tunggu: '+fmtTime(MIN_SUBMIT_SEC-elapsedSec())+'. Silakan periksa kembali jawabanmu.');
+    return;
+  }
+  const unansweredIdx = examQuestions.findIndex(q=>!isAnswered(q));
+  if(unansweredIdx !== -1){
+    const unansweredCount = examQuestions.filter(q=>!isAnswered(q)).length;
+    safeAlert('Masih ada '+unansweredCount+' soal yang belum dijawab. Silakan lengkapi semua soal terlebih dahulu sebelum mengirim jawaban. Kamu akan diarahkan ke soal pertama yang belum dijawab.');
+    current = unansweredIdx;
+    renderQuestion(); renderNavPanel(); closeMobilePanel();
+    return;
+  }
+  if(safeConfirm('Semua soal telah dijawab. Kirim jawaban sekarang? Jawaban tidak dapat diubah setelah dikirim.')) finishExam(false);
+}
+/* ---- Penilaian PARSIAL ----
+   Soal PG: 1 (benar) atau 0 (salah).
+   Soal PG Kompleks / Matrix: dinilai per-opsi/per-pernyataan, bukan semua-atau-tidak.
+   scoreFrac = (jumlah opsi/pernyataan yang cocok dengan kunci) / (jumlah opsi/pernyataan).
+   Contoh: dari 4 opsi, siswa benar menandai 3 -> scoreFrac = 0.75 (bukan 0). */
+function scoreFrac(q){
+  const v = answers[q._id];
+  if(q.type==='pg'){
+    return (v===q.correct) ? 1 : 0;
+  }
+  if(q.type==='multi'){
+    const n = q.options.length;
+    let matches = 0;
+    for(let i=0;i<n;i++){
+      const opt = q.options[i];
+      const correctFlag = q.correct.includes(opt);
+      const studentFlag = Array.isArray(v) && v.includes(opt);
+      if(correctFlag === studentFlag) matches++;
+    }
+    return n ? matches/n : 0;
+  }
+  if(q.type==='matrix'){
+    if(!v) return 0;
+    let matches = 0;
+    q.rows.forEach(r=>{ if(v[r.label]===r.correct) matches++; });
+    return q.rows.length ? matches/q.rows.length : 0;
+  }
+  return 0;
+}
+// isCorrect: dipakai untuk pelaporan "benar/salah" per-soal (mis. sheet Excel) — soal dianggap
+// "benar penuh" hanya jika scoreFrac mencapai 1 (semua opsi/pernyataan tepat).
+function isCorrect(q){ return scoreFrac(q) >= 0.999; }
+
+function finishExam(autoSubmit){
+  examFinished = true;
+  clearInterval(timerHandle);
+  if(isFullscreen()){ (document.exitFullscreen||document.webkitExitFullscreen||function(){}).call(document); }
+  document.getElementById('screen-exam').style.display='none';
+  document.getElementById('warnOverlay').style.display='none';
+
+  const totalMaks = examQuestions.length;
+  const weight = totalMaks ? 100/totalMaks : 0;
+  const perSubject = {};
+  SUBJECT_ORDER.forEach(s=>perSubject[s]={score:0,max:0,total:0,penuh:0});
+  let totalScore = 0, fullCount = 0;
+  const perQuestion = [];
+  examQuestions.forEach(q=>{
+    if(!perSubject[q.subject]){ perSubject[q.subject]={score:0,max:0,total:0,penuh:0}; if(!SUBJECT_ORDER.includes(q.subject)) SUBJECT_ORDER.push(q.subject); }
+    const frac = scoreFrac(q);
+    const qScore = frac*weight;
+    totalScore += qScore;
+    if(frac>=0.999) fullCount++;
+    perSubject[q.subject].total++;
+    perSubject[q.subject].score += qScore;
+    perSubject[q.subject].max += weight;
+    if(frac>=0.999) perSubject[q.subject].penuh++;
+    perQuestion.push({q, frac, qScore});
+  });
+  totalScore = Math.round(totalScore*100)/100;
+  let grade='D', gradeLabel='Perlu Bimbingan';
+  if(totalScore>=90){grade='A';gradeLabel='Sangat Baik';}
+  else if(totalScore>=75){grade='B';gradeLabel='Baik';}
+  else if(totalScore>=60){grade='C';gradeLabel='Cukup';}
+
+  document.getElementById('resScore').textContent = totalScore.toFixed(2)+' / 100';
+  document.getElementById('resGrade').textContent = 'Predikat '+grade+' — '+gradeLabel+' · '+fullCount+' dari '+totalMaks+' soal terjawab sempurna (penilaian bersifat parsial per opsi)' + (autoSubmit?' · waktu habis, jawaban terkirim otomatis':'');
+  document.getElementById('rNama').textContent = studentName;
+  document.getElementById('rKelas').textContent = studentClass;
+  document.getElementById('rViol').textContent = violCount;
+
+  let tbl = '<tr><th>Materi</th><th>Skor</th><th>Maks</th></tr>';
+  const detailParts = [];
+  SUBJECT_ORDER.forEach(s=>{
+    const sc = Math.round(perSubject[s].score*100)/100, mx = Math.round(perSubject[s].max*100)/100;
+    tbl += '<tr><td>'+escapeHtml(s)+'</td><td>'+sc+'</td><td>'+mx+'</td></tr>';
+    detailParts.push(s+' '+sc+'/'+mx);
+  });
+  document.getElementById('resTable').innerHTML = tbl;
+
+  window._examResult = {
+    nama: studentName, kelas: studentClass, skor: totalScore, skorMaks: 100, pct: totalScore,
+    grade: grade+' ('+gradeLabel+')', detail: detailParts.join(' | ') + ' | Pelanggaran: '+violCount+'x',
+    perSubject: perSubject, violasi: logPelanggaran.length, jenisPelanggaran: logPelanggaran.slice(), ringkasanPelanggaran: ringkasPelanggaran(), durasiDetik: Math.min(elapsedSec(),DURATION_SEC),
+    skorPerSoal: perQuestion.map(p=>Math.round(p.qScore*100)/100)
+  };
+
+  document.getElementById('screen-result').style.display='block';
+  autoSubmitToSheet();
+}
+
+/* ================= GOOGLE APPS SCRIPT AUTO-SUBMIT (real-time to Google Sheets) ================= */
+function setSubmitStatus(state, text){
+  const el = document.getElementById('submitStatus');
+  el.className = 'submit-status '+state;
+  document.getElementById('submitStatusText').textContent = text;
+  document.getElementById('btnRetrySubmit').classList.toggle('hidden', state==='sending');
+}
+function buildAnswerDetail(){
+  return examQuestions.map((q,idx)=>{
+    const v = answers[q._id];
+    let jawaban = '(kosong)';
+    if(q.type==='pg'){ jawaban = v || '(kosong)'; }
+    else if(q.type==='multi'){ jawaban = (v&&v.length) ? v.join(' ; ') : '(kosong)'; }
+    else if(q.type==='matrix'){ jawaban = v ? q.rows.map(r=>r.label+':'+(v[r.label]||'-')).join(' ; ') : '(kosong)'; }
+    return { no: idx+1, subject: q.subject, jawaban: jawaban, benar: Math.round(scoreFrac(q)*100)/100 };
+  });
+}
+function autoSubmitToSheet(){
+  if(!navigator.onLine){
+    setSubmitStatus('fail','❌ Gagal terkirim — perangkat sedang offline. Sambungkan internet lalu klik "Kirim Ulang".');
+    return;
+  }
+  if(!APPS_SCRIPT_URL || APPS_SCRIPT_URL.indexOf('PASTE_YOUR_DEPLOYMENT_ID_HERE')>-1){
+    setSubmitStatus('fail','⚠ URL Google Apps Script belum dipasang oleh guru. Gunakan "Unduh Hasil (Excel)" sebagai cadangan.');
+    return;
+  }
+  setSubmitStatus('sending','Mengirim jawaban ke guru...');
+  const r = window._examResult;
+  const payload = {
+    timestamp: new Date().toISOString(),
+    mapel: MAPEL, jenisAsesmen: ASESMEN, judul: JUDUL, materi: MATERI, tingkat: KELAS_TINGKAT,
+    nama: r.nama, kelas: r.kelas, skor: r.skor, skorMaks: r.skorMaks, persentase: r.pct,
+    grade: r.grade, pelanggaran: logPelanggaran.length, jenisPelanggaran: logPelanggaran, ringkasanPelanggaran: r.ringkasanPelanggaran, durasiDetik: r.durasiDetik, detailPerMapel: r.detail,
+    jawaban: buildAnswerDetail()
+  };
+  fetch(APPS_SCRIPT_URL, {
+    method: 'POST', mode: 'no-cors',
+    headers: {'Content-Type':'text/plain;charset=utf-8'},
+    body: JSON.stringify(payload)
+  }).then(()=>{
+    setSubmitStatus('ok','✅ Jawaban berhasil terkirim ke Google Spreadsheet guru.');
+  }).catch(()=>{
+    setSubmitStatus('fail','❌ Gagal terkirim (masalah jaringan). Klik "Kirim Ulang" untuk mencoba lagi.');
+  });
+}
+document.getElementById('btnRetrySubmit').addEventListener('click', autoSubmitToSheet);
+
+/* ================= EXCEL EXPORT (backup) ================= */
+document.getElementById('btnExcel').addEventListener('click',()=>{
+  const r = window._examResult;
+  const rows = [];
+  rows.push(['Nama','Kelas','No','Materi','Soal','Jawaban Siswa','Kunci Jawaban','Skor Soal (0-1, parsial)']);
+  function answerLabel(q){
+    if(q.type==='pg') return q.correct;
+    if(q.type==='multi') return q.correct.join(' ; ');
+    if(q.type==='matrix') return q.rows.map(row=>row.label+':'+row.correct).join(' ; ');
+    return '';
+  }
+  examQuestions.forEach((q,idx)=>{
+    let jawabanSiswa='';
+    const v = answers[q._id];
+    if(q.type==='pg'){ jawabanSiswa = v || '(kosong)'; }
+    else if(q.type==='multi'){ jawabanSiswa = (v&&v.length)? v.join(' ; ') : '(kosong)'; }
+    else if(q.type==='matrix'){ jawabanSiswa = v ? q.rows.map(row=>row.label+':'+(v[row.label]||'-')).join(' ; ') : '(kosong)'; }
+    const shortText = q.text.replace(/\s+/g,' ').slice(0,80)+'...';
+    rows.push([r.nama, r.kelas, idx+1, q.subject, shortText, jawabanSiswa, answerLabel(q), Math.round(scoreFrac(q)*100)/100]);
+  });
+  rows.push([]);
+  rows.push(['RINGKASAN']);
+  rows.push(['Nama','Kelas','Skor Akhir (0-100)','Grade','Pelanggaran','Jenis Pelanggaran']);
+  rows.push([r.nama, r.kelas, r.skor, r.grade, r.violasi, r.ringkasanPelanggaran]);
+
+  const ws = XLSX.utils.aoa_to_sheet(rows);
+  ws['!cols'] = [{wch:18},{wch:8},{wch:5},{wch:22},{wch:60},{wch:30},{wch:30},{wch:10}];
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Hasil ASAS PAI K9');
+  const fname = 'Hasil_ASAS_PAI_Kelas9_'+r.nama.replace(/[^a-zA-Z0-9]/g,'_')+'.xlsx';
+  XLSX.writeFile(wb, fname);
+});
+
+})();
+</script>
+</body>
+</html>
