@@ -2,46 +2,938 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Bahasa Inggris — Kelas 9 — ASAS SMP Negeri 1 Dlingo</title>
-<meta name="description" content="Soal Bahasa Inggris Kelas 9">
-<meta name="robots" content="noindex">
-<link rel="icon" href="../../assets/img/logo-smpn1dlingo.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../../assets/css/style.css">
-<script>document.documentElement.classList.add('js');</script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Asesmen Sumatif Akhir Semester — Bahasa Inggris — SMP N 1 Dlingo</title>
+<link rel="icon" type="image/png" href="../../assets/img/logo-smpn1dlingo.png">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<!-- Data nama & kelas siswa (disimpan di folder assets/js) -->
+<script src="../../assets/js/data-siswa.js"></script>
+<style>
+  :root{
+    --navy:#5b3a9e; --blue:#8a5cd6; --blue-light:#f3ebff; --green:#9b6bdc;
+    --pink:#f3a6d0; --pink-light:#fff0f8;
+    --red:#c0457f; --amber:#e6a23c; --gray:#6b5a86; --bg:#f4ecff; --border:#e0d3f3; --radius:10px;
+    --card:#ffffff;
+  }
+  *{box-sizing:border-box;}
+  html,body{height:100%;}
+  body{margin:0;font-family:'Segoe UI',Roboto,Arial,sans-serif;background:linear-gradient(135deg,#efe6ff 0%,#ffe9f4 100%);background-attachment:fixed;color:#2a2038;-webkit-tap-highlight-color:transparent;}
+  #screen-exam, #screen-exam *{
+    -webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;
+    -webkit-touch-callout:none;
+  }
+  #screen-exam img{-webkit-user-drag:none;user-drag:none;}
+  #screen-exam.blurred{filter:blur(18px);transition:filter .15s;}
+  @media print{
+    #screen-exam, #screen-start, #screen-result{display:none !important;}
+    body::before{content:"Konten ujian tidak dapat dicetak.";display:block;text-align:center;padding:40px;font-size:18px;}
+  }
+  img{max-width:100%;height:auto;border-radius:6px;border:1px solid var(--border);}
+  button{font-family:inherit;cursor:pointer;}
+  .hidden{display:none !important;}
+
+  /* ===== START ===== */
+  #screen-start{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;
+    background:linear-gradient(135deg,#d9c6fb 0%,#f0c9e6 55%,#ffdcec 100%);}
+  .start-card{background:var(--card);border-radius:18px;max-width:640px;width:100%;padding:34px 32px;box-shadow:0 20px 60px rgba(91,58,158,.25);}
+  .school-header{display:flex;align-items:center;gap:14px;margin-bottom:18px;}
+  .school-header img{width:56px;height:auto;border:none;border-radius:0;flex-shrink:0;}
+  .school-header .stxt{line-height:1.35;}
+  .school-header .stxt b{display:block;color:var(--navy);font-size:15px;}
+  .school-header .stxt span{color:var(--gray);font-size:12px;}
+  .start-card h1{margin:0 0 4px;font-size:21px;color:var(--navy);}
+  .start-card .sub{color:var(--gray);margin:0 0 20px;font-size:14px;}
+  .tabs{display:flex;gap:8px;margin-bottom:18px;border-bottom:1.5px solid var(--border);}
+  .tab-btn{padding:9px 16px;border:none;background:none;font-weight:700;font-size:13.5px;color:var(--gray);
+    border-bottom:3px solid transparent;margin-bottom:-2px;}
+  .tab-btn.active{color:var(--blue);border-bottom-color:var(--pink);}
+  .tab-panel{display:none;}
+  .tab-panel.active{display:block;}
+  .info-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px 18px;background:linear-gradient(135deg,var(--blue-light),var(--pink-light));
+    border-radius:10px;padding:14px 16px;margin-bottom:18px;font-size:13px;}
+  .info-grid div b{display:block;color:var(--navy);font-size:13px;}
+  .info-grid div span{color:var(--gray);}
+  label{display:block;font-size:13px;font-weight:600;color:var(--navy);margin:14px 0 6px;}
+  input[type=text],input[type=password]{width:100%;padding:12px 14px;border:1.5px solid var(--border);
+    border-radius:8px;font-size:15px;}
+  input:focus{outline:none;border-color:var(--blue);}
+  select{width:100%;padding:12px 14px;border:1.5px solid var(--border);border-radius:8px;font-size:15px;
+    background:var(--card);color:#2a2038;appearance:none;
+    background-image:url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236b5a86' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat:no-repeat;background-position:right 12px center;background-size:18px;}
+  select:focus{outline:none;border-color:var(--blue);}
+  select:disabled{background-color:#f6f1fb;color:var(--gray);cursor:not-allowed;}
+  .instr-list{font-size:13.5px;line-height:1.8;color:#3d3150;padding-left:20px;margin:0 0 10px;}
+  .rules{font-size:12.5px;color:var(--gray);line-height:1.6;margin:18px 0;padding:12px 14px;
+    background:#fff6ef;border:1px solid #f4d9c0;border-radius:8px;}
+  .btn-primary{width:100%;padding:14px;background:linear-gradient(135deg,var(--blue),#c274c9);color:#fff;border:none;border-radius:9px;
+    font-size:16px;font-weight:700;margin-top:12px;transition:.15s;}
+  .btn-primary:hover{filter:brightness(.93);}
+  .btn-primary:disabled{background:#c5bbd6;cursor:not-allowed;}
+  .err-msg{color:var(--red);font-size:12.5px;margin-top:6px;min-height:16px;}
+
+  /* ===== EXAM ===== */
+  #screen-exam{display:none;min-height:100vh;flex-direction:column;}
+  #topbar{background:linear-gradient(90deg,#6a3fc4,#b968c7 60%,#e592c5);color:#fff;padding:10px 18px;display:flex;align-items:center;
+    justify-content:space-between;gap:12px;flex-wrap:wrap;position:sticky;top:0;z-index:50;}
+  #topbar .brand{display:flex;align-items:center;gap:10px;font-size:13px;font-weight:700;}
+  #topbar .brand img{width:28px;height:auto;border:none;border-radius:0;}
+  #topbar .brand .who{font-weight:400;opacity:.9;font-size:11.5px;display:block;}
+  #timerBox{background:rgba(255,255,255,.2);padding:8px 16px;border-radius:8px;font-weight:700;
+    font-size:18px;letter-spacing:1px;min-width:110px;text-align:center;}
+  #timerBox.low{background:#c0392b;animation:pulse 1s infinite;}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.6}}
+  #violationBadge{display:none;background:var(--red);padding:5px 10px;border-radius:20px;font-size:12px;font-weight:700;}
+  #panelToggle{background:rgba(255,255,255,.22);color:#fff;border:none;padding:8px 12px;border-radius:8px;font-size:13px;}
+
+  #examBody{display:flex;flex:1;overflow:hidden;}
+  #navPanel{width:280px;flex-shrink:0;background:var(--card);border-right:1px solid var(--border);padding:16px;overflow-y:auto;}
+  #navPanel h3{font-size:11.5px;text-transform:uppercase;letter-spacing:.4px;color:var(--gray);margin:14px 0 8px;}
+  #navPanel h3:first-child{margin-top:0;}
+  .navgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;}
+  .navbtn{aspect-ratio:1;border:1.5px solid var(--border);background:var(--card);border-radius:6px;font-size:12px;
+    font-weight:700;color:var(--navy);display:flex;align-items:center;justify-content:center;}
+  .navbtn.answered{background:var(--green);border-color:var(--green);color:#fff;}
+  .navbtn.current{outline:3px solid var(--pink);outline-offset:1px;}
+  .legend{display:flex;gap:14px;font-size:11px;color:var(--gray);margin:14px 0 4px;flex-wrap:wrap;}
+  .legend span{display:inline-flex;align-items:center;gap:5px;}
+  .dot{width:10px;height:10px;border-radius:3px;display:inline-block;}
+  #navSubmitBtn{width:100%;margin-top:18px;padding:12px;background:var(--red);color:#fff;border:none;
+    border-radius:8px;font-weight:700;font-size:14px;}
+  #navSubmitBtn.locked{background:#a898bf;}
+  .idbox{background:var(--blue-light);border:1.5px solid var(--border);border-radius:10px;padding:12px 16px;margin-top:14px;font-size:14px;line-height:1.7;}
+  .idbox b{color:var(--navy);}
+
+  #questionArea{flex:1;overflow-y:auto;padding:26px 32px 100px;}
+  .qwrap{max-width:820px;margin:0 auto;}
+  .qsubject{display:inline-block;background:var(--pink-light);color:var(--red);font-size:11.5px;font-weight:700;
+    padding:4px 12px;border-radius:20px;margin-bottom:10px;text-transform:uppercase;letter-spacing:.3px;border:1px solid #f6cde3;}
+  .qnum{font-size:14px;color:var(--gray);margin-bottom:4px;}
+  .qpre{font-size:14px;font-weight:700;color:var(--navy);margin:6px 0 10px;}
+  .qtext{font-size:16.5px;line-height:1.7;margin-bottom:16px;font-weight:600;}
+  .qnote{font-size:13.5px;color:var(--gray);font-style:italic;margin:-8px 0 14px;}
+
+  /* Teks dalam kotak */
+  .textbox{border:2px solid #b996ea;border-radius:12px;background:linear-gradient(180deg,#fbf7ff,#fff6fb);padding:16px 18px;margin:8px 0 20px;
+    box-shadow:0 2px 10px rgba(138,92,214,.10);}
+  .textbox .tb-title{font-size:17px;font-weight:800;color:var(--navy);margin:0 0 10px;padding-bottom:8px;border-bottom:1.5px dashed #d9c6f5;}
+  .textbox p{font-size:15.5px;line-height:1.75;margin:0 0 10px;color:#2a2038;text-align:left;}
+  .textbox p:last-child{margin-bottom:0;}
+
+  .qimg-wrap{margin:10px 0 20px;display:flex;flex-wrap:wrap;gap:14px;}
+  .qimg-wrap .imgbox{position:relative;cursor:zoom-in;width:100%;max-width:820px;}
+  .qimg-wrap .imgbox.portrait{max-width:520px;}
+  .qimg-wrap img{width:100%;display:block;border:2px solid #b996ea;background:#fff;}
+  .qimg-wrap .zoomhint{display:block;margin-top:6px;text-align:center;color:var(--navy);background:var(--blue-light);
+    font-size:12.5px;font-weight:700;padding:6px 10px;border-radius:20px;pointer-events:none;}
+  .qimg-wrap .imgph{width:100%;max-width:760px;height:200px;border:2px dashed var(--border);border-radius:8px;
+    display:flex;align-items:center;justify-content:center;color:var(--gray);font-size:12.5px;text-align:center;
+    background:#fbf9fe;padding:10px;}
+
+  #lightbox{position:fixed;inset:0;background:rgba(30,15,60,.95);z-index:1200;display:none;flex-direction:column;}
+  #lightbox.open{display:flex;}
+  #lbScroll{flex:1;overflow:auto;-webkit-overflow-scrolling:touch;display:flex;padding:12px;}
+  #lbScroll img{margin:auto;width:100%;max-width:none;height:auto;border-radius:6px;background:#fff;}
+  #lbScroll.zoomed img{width:260%;}
+  #lbBar{display:flex;gap:10px;justify-content:center;padding:10px;background:rgba(0,0,0,.35);}
+  #lbBar button{border:none;border-radius:22px;padding:10px 20px;font-weight:700;font-size:14px;background:#fff;color:var(--navy);}
+  .qtype-hint{font-size:12.5px;color:#b0620d;font-weight:700;margin-bottom:10px;}
+
+  .option{display:flex;align-items:flex-start;gap:12px;padding:13px 16px;border:1.5px solid var(--border);
+    border-radius:10px;margin-bottom:10px;background:var(--card);transition:.12s;}
+  .option:hover{border-color:var(--blue);}
+  .option.selected{border-color:var(--blue);background:var(--blue-light);}
+  .option input{margin-top:3px;flex-shrink:0;width:18px;height:18px;accent-color:#8a5cd6;}
+  .option .otext{font-size:15.5px;line-height:1.5;}
+  .option .olabel{font-weight:700;color:var(--navy);margin-right:4px;}
+
+  table.matrix{width:100%;border-collapse:collapse;margin-top:8px;font-size:14.5px;background:#fff;}
+  table.matrix th,table.matrix td{border:1px solid var(--border);padding:10px;text-align:center;}
+  table.matrix th{background:var(--blue-light);color:var(--navy);}
+  table.matrix td.stmt{text-align:left;font-size:14.5px;line-height:1.5;}
+  table.matrix input{width:20px;height:20px;accent-color:#8a5cd6;}
+
+  #navRow{max-width:820px;margin:24px auto 0;display:flex;justify-content:space-between;gap:10px;}
+  .btn-nav{padding:11px 22px;border-radius:8px;border:1.5px solid var(--border);background:var(--card);
+    font-weight:700;color:var(--navy);font-size:14px;}
+  .btn-nav:disabled{opacity:.4;}
+  .btn-nav.primary{background:linear-gradient(135deg,var(--blue),#c274c9);color:#fff;border:none;}
+
+  #warnOverlay{position:fixed;inset:0;background:rgba(50,25,95,.95);z-index:1300;display:none;
+    align-items:center;justify-content:center;padding:20px;color:#fff;text-align:center;}
+  #warnOverlay .box{max-width:420px;}
+  #warnOverlay h2{color:#ffd9ec;font-size:22px;}
+  #warnOverlay p{font-size:14.5px;line-height:1.6;opacity:.92;}
+  #warnOverlay button{margin-top:16px;padding:12px 28px;background:#ffd9ec;border:none;border-radius:8px;
+    font-weight:700;font-size:14.5px;color:#4a1f66;}
+
+  /* ===== RESULT ===== */
+  #screen-result{display:none;min-height:100vh;padding:30px 16px;}
+  .result-card{max-width:720px;margin:0 auto;background:var(--card);border-radius:16px;padding:32px;box-shadow:0 10px 40px rgba(91,58,158,.15);}
+  .result-card h1{color:var(--navy);margin-top:0;font-size:22px;}
+  .score-hero{text-align:center;padding:26px;background:linear-gradient(135deg,#6a3fc4,#d27bc6);
+    border-radius:14px;color:#fff;margin:18px 0 24px;}
+  .score-hero .num{font-size:46px;font-weight:800;}
+  .score-hero .grade{font-size:15px;opacity:.95;margin-top:4px;}
+  .breakdown{width:100%;border-collapse:collapse;font-size:14px;margin-bottom:20px;}
+  .breakdown th,.breakdown td{padding:9px 10px;border-bottom:1px solid var(--border);text-align:left;}
+  .breakdown th{color:var(--gray);font-size:12px;text-transform:uppercase;}
+  .result-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px;}
+  .result-actions button{flex:1;min-width:180px;padding:13px;border-radius:9px;font-weight:700;font-size:14px;border:none;}
+  #btnExcel{background:var(--blue);color:#fff;}
+  #btnRetrySubmit{background:var(--amber);color:#432;}
+  .submit-status{display:flex;align-items:center;gap:10px;padding:12px 16px;border-radius:9px;font-size:13.5px;
+    font-weight:600;margin-bottom:18px;}
+  .submit-status.sending{background:#fff8ea;color:#8a6d00;border:1px solid #f1e0ad;}
+  .submit-status.ok{background:#e9f9f0;color:#0f7a45;border:1px solid #b7ecd0;}
+  .submit-status.fail{background:#fdecea;color:#a4271f;border:1px solid #f3c3bd;}
+  .dotpulse{width:9px;height:9px;border-radius:50%;background:currentColor;flex-shrink:0;animation:pulse 1s infinite;}
+  .submit-status.ok .dotpulse,.submit-status.fail .dotpulse{animation:none;}
+  .note-small{font-size:12px;color:var(--gray);margin-top:14px;line-height:1.6;}
+
+  @media (max-width:820px){
+    #navPanel{position:fixed;left:-300px;top:0;bottom:0;z-index:60;transition:.2s;box-shadow:4px 0 20px rgba(0,0,0,.15);}
+    #navPanel.open{left:0;}
+    #questionArea{padding:18px 14px 90px;}
+    .start-card{padding:26px 20px;}
+    .textbox{padding:14px 14px;}
+    .textbox p{font-size:16px;}
+    .qtext{font-size:17px;}
+    .qimg-wrap .imgbox,.qimg-wrap .imgbox.portrait{max-width:100%;}
+    table.matrix th,table.matrix td{padding:8px 6px;}
+    #topbar{flex-wrap:nowrap;gap:8px;padding:7px 10px;}
+    #topbar .brand{flex:1;min-width:0;font-size:11px;line-height:1.3;}
+    #topbar .brand img{display:none;}
+    #topbar .brand span{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+    #topbar .brand .who{font-size:10.5px;overflow:hidden;text-overflow:ellipsis;}
+    #timerBox{min-width:76px;padding:6px 8px;font-size:15px;letter-spacing:.5px;}
+    #panelToggle{padding:7px 9px;font-size:12px;}
+    #violationBadge{padding:4px 7px;font-size:11px;}
+  }
+</style>
 </head>
 <body>
-<div class="bg-deco" aria-hidden="true"><span class="orb o1"></span><span class="orb o2"></span><span class="orb o3"></span></div>
-<div class="page">
-<header class="kop">
-  <div class="kop-inner">
-    <a class="kembali reveal" href="../../kelas-9.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg> Kelas 9</a>
-    <div class="logo-wrap reveal"><img src="../../assets/img/logo-smpn1dlingo.png" alt="Logo SMP Negeri 1 Dlingo"></div>
-    <p class="sekolah reveal" style="--d:.08s">SMP NEGERI 1 DLINGO</p>
-    <h1 class="judul reveal" style="--d:.16s">Bahasa Inggris</h1>
-    <div class="ornamen reveal" style="--d:.24s"><i></i></div>
-    <div class="chips reveal" style="--d:.32s"><span class="chip">Kelas <strong>IX</strong></span><span class="chip">Tahun Pelajaran <strong>2026/2027</strong></span></div>
+
+<!-- ============ START ============ -->
+<div id="screen-start">
+  <div class="start-card">
+    <a href="../../kelas-9.html" style="display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;color:var(--gray);margin-bottom:14px;text-decoration:none;">&larr; Menu Kelas 9</a>
+    <div class="school-header">
+      <img src="../../assets/img/logo-smpn1dlingo.png" alt="Logo Sekolah">
+      <div class="stxt"><b>SMP NEGERI 1 DLINGO</b><span>Asesmen Sumatif Akhir Semester · Bahasa Inggris · TP 2026/2027</span></div>
+    </div>
+    <h1>📝 Asesmen Sumatif Akhir Semester — Bahasa Inggris</h1>
+    <p class="sub">Jenjang SMP · Kelas 9 · Semester Ganjil · Materi: Reading Comprehension (Teks Naratif, Pengumuman, Infografis, Chat, Teks Informatif &amp; Label Produk)</p>
+
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="petunjuk">📋 Petunjuk</button>
+      <button class="tab-btn" data-tab="mulai">🚀 Mulai Ujian</button>
+    </div>
+
+    <div class="tab-panel active" id="tab-petunjuk">
+      <div class="info-grid">
+        <div><b id="infoJumlah">40 Soal</b><span>Pilihan Ganda, PG Kompleks &amp; Benar/Salah (True/False)</span></div>
+        <div><b>90 Menit</b><span>Alokasi waktu · jawaban baru bisa dikirim setelah 40 menit</span></div>
+        <div><b>4 Kelompok Teks</b><span>Recount, Notice/Infographic/Chat, Informational Text, Product Label</span></div>
+        <div><b>Acak Soal</b><span>Urutan soal &amp; opsi diacak</span></div>
+      </div>
+      <p style="font-size:13.5px;color:#3d3150;margin:0 0 8px;font-weight:700;">Petunjuk Pengerjaan:</p>
+      <ol class="instr-list">
+        <li>Nama dan kelasmu terisi otomatis dari Menu Kelas 9. Masukkan token ujian pada tab "Mulai Ujian" lalu mulai.</li>
+        <li>Bacalah teks/gambar dan setiap butir soal dengan cermat sebelum menjawab. Teks atau gambar yang sama ditampilkan pada setiap soal yang menggunakannya.</li>
+        <li>Terdapat soal Pilihan Ganda (pilih satu jawaban), Pilihan Ganda Kompleks (pilih jawaban yang benar, bisa lebih dari satu), dan Benar/Salah (True/False) pada tiap pernyataan.</li>
+        <li>Penilaian PG Kompleks &amp; Benar/Salah bersifat parsial: setiap opsi/pernyataan yang kamu jawab dengan benar tetap mendapat nilai.</li>
+        <li>Ujian akan tampil dalam mode layar penuh (fullscreen) sejak dimulai.</li>
+        <li>Jangan berpindah tab/aplikasi, keluar dari layar penuh, menyalin teks, mengambil tangkapan layar, atau memakai split screen — semuanya tercatat sebagai pelanggaran.</li>
+        <li>Waktu berjalan otomatis selama 90 menit dan tidak dapat dijeda. Jawaban baru dapat dikirim setelah 40 menit pengerjaan.</li>
+        <li>Ketuk gambar untuk memperbesar. Gunakan panel navigasi soal untuk melompat ke nomor tertentu.</li>
+        <li>Tekan "Kirim Jawaban" setelah selesai. Jika pengiriman gagal, gunakan tombol "Kirim Ulang" yang muncul otomatis.</li>
+      </ol>
+    </div>
+
+    <div class="tab-panel" id="tab-mulai">
+      <label>Token Ujian</label>
+      <input type="password" id="inputToken" placeholder="Masukkan token dari guru" autocomplete="off" autocapitalize="characters">
+      <div class="idbox hidden" id="idBox">👤 <b id="idNama"></b><br>🏫 Kelas <b id="idKelas"></b></div>
+      <div id="pickWrap">
+        <div class="note-small" style="margin-top:12px;color:#8a5a00;">Data nama &amp; kelas tidak terbaca dari Menu Kelas 9. Silakan buka ujian melalui menu kelas, atau pilih manual di bawah ini.</div>
+        <label>Kelas</label>
+        <select id="inputKelas"><option value="">— Pilih Kelas —</option></select>
+        <label>Nama Lengkap</label>
+        <select id="inputNama" disabled><option value="">— Pilih kelas terlebih dahulu —</option></select>
+      </div>
+      <div class="rules">
+        ⚠️ <b>Perhatian sebelum memulai:</b><br>
+        • Ujian akan tampil dalam mode <b>layar penuh (fullscreen)</b>.<br>
+        • Jangan membuka tab/aplikasi lain atau memakai <b>split screen</b> — sistem akan mencatat pelanggaran.<br>
+        • Waktu berjalan otomatis dan tidak dapat dijeda. Jawaban <b>baru dapat dikirim setelah 40 menit</b>; ujian terkirim otomatis saat waktu habis.<br>
+        • Pastikan koneksi internet stabil agar hasil dapat terkirim ke guru secara real-time.<br>
+        • Layar akan mengabur otomatis dan pelanggaran tercatat jika kamu mencoba keluar layar penuh, menyalin teks, mengambil tangkapan layar (screenshot), atau memakai split screen.
+      </div>
+      <div class="err-msg" id="startErr"></div>
+      <button class="btn-primary" id="btnStart">🚀 Mulai Ujian (Layar Penuh)</button>
+    </div>
   </div>
-</header>
-<main>
-  <div class="glass panel-segera reveal">
-    <div class="ikon-besar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg></div>
-    <span class="lencana">Segera hadir</span>
-    <h2>Soal belum tersedia</h2>
-    <p>Berkas soal <strong>Bahasa Inggris</strong> Kelas IX sedang disiapkan dan akan diunggah menyusul.</p>
-    <p>Berkas ini akan digantikan pada alamat berikut, sehingga tautan menu tidak perlu diubah.</p>
-    <span class="berkas">soal/kelas-9/bahasa-inggris.html</span><br>
-    <a class="tombol" href="../../kelas-9.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg> Kembali ke Kelas IX</a>
-  </div>
-</main>
-<footer>
-  <p><strong>SMP Negeri 1 Dlingo</strong> — Bantul, Daerah Istimewa Yogyakarta<br>
-  Portal Asesmen Sumatif Akhir Semester &middot; Tahun Pelajaran 2026/2027</p>
-</footer>
 </div>
-<script src="../../assets/js/main.js"></script>
+
+<!-- ============ EXAM ============ -->
+<div id="screen-exam">
+  <div id="topbar">
+    <button id="panelToggle">☰ Soal</button>
+    <div class="brand"><img src="../../assets/img/logo-smpn1dlingo.png" alt="Logo"><span>ASAS BAHASA INGGRIS KELAS 9 · TP 2026/2027<small class="who" id="brandStudent"></small></span></div>
+    <div id="violationBadge">⚠ Pelanggaran: <span id="violCount">0</span></div>
+    <div id="timerBox">90:00</div>
+  </div>
+  <div id="examBody">
+    <div id="navPanel"></div>
+    <div id="questionArea">
+      <div class="qwrap" id="qwrap"></div>
+      <div id="navRow">
+        <button class="btn-nav" id="btnPrev">← Sebelumnya</button>
+        <button class="btn-nav primary" id="btnNext">Selanjutnya →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="lightbox">
+  <div id="lbScroll"><img id="lightboxImg" src="" alt="Gambar diperbesar"></div>
+  <div id="lbBar">
+    <button id="lbZoom">🔍 Perbesar</button>
+    <button id="lightboxClose">✕ Tutup</button>
+  </div>
+</div>
+
+<div id="warnOverlay">
+  <div class="box">
+    <h2 id="warnTitle">⚠ Peringatan</h2>
+    <p id="warnText"></p>
+    <button id="warnBtn">Kembali ke Ujian</button>
+  </div>
+</div>
+
+<!-- ============ RESULT ============ -->
+<div id="screen-result">
+  <div class="result-card">
+    <div class="school-header">
+      <img src="../../assets/img/logo-smpn1dlingo.png" alt="Logo Sekolah">
+      <div class="stxt"><b>SMP NEGERI 1 DLINGO BANTUL</b><span>Asesmen Sumatif Akhir Semester · Bahasa Inggris · TP 2026/2027</span></div>
+    </div>
+    <h1>✅ Hasil Ujian</h1>
+    <div class="score-hero">
+      <div class="num" id="resScore">0 / 0</div>
+      <div class="grade" id="resGrade">Predikat —</div>
+    </div>
+    <div id="submitStatus" class="submit-status sending">
+      <span class="dotpulse"></span><span id="submitStatusText">Mengirim jawaban ke guru...</span>
+    </div>
+    <table class="breakdown" id="resTable"></table>
+    <div class="result-actions">
+      <button id="btnRetrySubmit" class="hidden">🔁 Kirim Ulang</button>
+      <button id="btnExcel">⬇️ Unduh Hasil (Excel)</button>
+    </div>
+    <p class="note-small">
+      Nama: <b id="rNama"></b> · Kelas: <b id="rKelas"></b> · Pelanggaran layar tercatat: <b id="rViol"></b> kali.<br>
+      Jawaban dikirim otomatis secara real-time ke Google Spreadsheet guru begitu halaman ini muncul. Jika status di atas menunjukkan gagal terkirim, pastikan koneksi internet aktif lalu klik "Kirim Ulang". Tombol "Unduh Hasil (Excel)" tetap tersedia sebagai cadangan.
+    </p>
+  </div>
+</div>
+
+<script id="questions-data" type="application/json">[{"no": 1, "subject": "Recount & Personal Experience", "pre": "Read the text and answer the question.", "box": {"title": "Visit to the Orphanage", "paras": ["Last month, my school held a community service event at a nearby orphanage. I chose to take part because I wanted to do something good for others, especially those who don’t have families to care for them.", "My friends and I got to the orphanage in the morning. Our first task was to clean the surroundings and decorate the hall to prepare for a small celebration. After everything was ready, we spent time playing fun games with the children. We also gave them some gifts, which made them very happy.", "Later, we all enjoyed lunch together. We had prepared the lunch boxes from our school. Seeing the children’s bright smiles made me feel very thankful. I was glad I could help bring joy to their day.", "This experience really touched my heart. It made me realize how lucky I am to have parents who love and take care of me. I learned that I should always appreciate and respect them. Helping at the orphanage reminded me how important it is to care for others and to be grateful for what we have."]}, "img": null, "text": "Why did the writer join the community service at the orphanage?", "note": null, "type": "pg", "options": ["Her teacher asked every student to join the event.", "She wanted to do a good deed for the orphans.", "She planned to meet her old friends at the place.", "She hoped to get extra marks from her school."], "correct": "She wanted to do a good deed for the orphans."}, {"no": 2, "subject": "Recount & Personal Experience", "pre": "Read the text and answer the question.", "box": {"title": "Visit to the Orphanage", "paras": ["Last month, my school held a community service event at a nearby orphanage. I chose to take part because I wanted to do something good for others, especially those who don’t have families to care for them.", "My friends and I got to the orphanage in the morning. Our first task was to clean the surroundings and decorate the hall to prepare for a small celebration. After everything was ready, we spent time playing fun games with the children. We also gave them some gifts, which made them very happy.", "Later, we all enjoyed lunch together. We had prepared the lunch boxes from our school. Seeing the children’s bright smiles made me feel very thankful. I was glad I could help bring joy to their day.", "This experience really touched my heart. It made me realize how lucky I am to have parents who love and take care of me. I learned that I should always appreciate and respect them. Helping at the orphanage reminded me how important it is to care for others and to be grateful for what we have."]}, "img": null, "text": "What was the first thing the writer and her friends did at the orphanage?", "note": null, "type": "pg", "options": ["They played some games with the children.", "They handed gifts to the little ones.", "They cleaned the yard and decorated the hall.", "They enjoyed lunch together with the orphans."], "correct": "They cleaned the yard and decorated the hall."}, {"no": 3, "subject": "Recount & Personal Experience", "pre": "Read the text and answer the question.", "box": {"title": "Visit to the Orphanage", "paras": ["Last month, my school held a community service event at a nearby orphanage. I chose to take part because I wanted to do something good for others, especially those who don’t have families to care for them.", "My friends and I got to the orphanage in the morning. Our first task was to clean the surroundings and decorate the hall to prepare for a small celebration. After everything was ready, we spent time playing fun games with the children. We also gave them some gifts, which made them very happy.", "Later, we all enjoyed lunch together. We had prepared the lunch boxes from our school. Seeing the children’s bright smiles made me feel very thankful. I was glad I could help bring joy to their day.", "This experience really touched my heart. It made me realize how lucky I am to have parents who love and take care of me. I learned that I should always appreciate and respect them. Helping at the orphanage reminded me how important it is to care for others and to be grateful for what we have."]}, "img": null, "text": "Which statements are in line with the text?", "note": null, "type": "multi", "options": ["The students had prepared the lunch boxes at their school.", "The orphans organized the celebration for the visitors.", "The experience made the writer thankful for her parents.", "The writer stayed at the orphanage for a whole week."], "correct": ["The students had prepared the lunch boxes at their school.", "The experience made the writer thankful for her parents."]}, {"no": 4, "subject": "Recount & Personal Experience", "pre": "Read the text and answer the question.", "box": {"title": "A Scary Day at the Swimming Pool", "paras": ["Last weekend, I went to the Water Boom swimming pool with my friends. I was so excited because I love swimming and trying out water slides. After warming up, I decided to go on one of the tallest slides. However, my friends were afraid to go there. They chose to swim in the other pool area.", "At first, everything seemed fun. But when I reached the top, I slipped while getting ready to slide down. I lost my balance and fell awkwardly, hitting my arm on the side of the slide. I was shocked and in pain. The lifeguard quickly helped me, and luckily, I only got a bruise—not a serious injury.", "The fun day turned into a scary experience. I felt embarrassed and upset, but I also learned something important. From that day on, I realized I must be more careful when swimming, especially in public pools with lots of people and slippery areas. Safety should always come first."]}, "img": null, "text": "How did the writer feel about the accident afterwards?", "note": null, "type": "pg", "options": ["The writer felt embarrassed and upset.", "The writer felt proud and relaxed.", "The writer felt angry at the lifeguard.", "The writer felt bored and sleepy."], "correct": "The writer felt embarrassed and upset."}, {"no": 5, "subject": "Recount & Personal Experience", "pre": "Read the text and answer the question.", "box": {"title": "A Scary Day at the Swimming Pool", "paras": ["Last weekend, I went to the Water Boom swimming pool with my friends. I was so excited because I love swimming and trying out water slides. After warming up, I decided to go on one of the tallest slides. However, my friends were afraid to go there. They chose to swim in the other pool area.", "At first, everything seemed fun. But when I reached the top, I slipped while getting ready to slide down. I lost my balance and fell awkwardly, hitting my arm on the side of the slide. I was shocked and in pain. The lifeguard quickly helped me, and luckily, I only got a bruise—not a serious injury.", "The fun day turned into a scary experience. I felt embarrassed and upset, but I also learned something important. From that day on, I realized I must be more careful when swimming, especially in public pools with lots of people and slippery areas. Safety should always come first."]}, "img": null, "text": "What can we infer about the writer’s friends?", "note": null, "type": "pg", "options": ["They had never been to a swimming pool before.", "They were injured while playing on the other slide.", "They left the writer alone at the swimming pool.", "They thought the tall slide was too frightening."], "correct": "They thought the tall slide was too frightening."}, {"no": 6, "subject": "Recount & Personal Experience", "pre": "Read the text and answer the question.", "box": {"title": "A Scary Day at the Swimming Pool", "paras": ["Last weekend, I went to the Water Boom swimming pool with my friends. I was so excited because I love swimming and trying out water slides. After warming up, I decided to go on one of the tallest slides. However, my friends were afraid to go there. They chose to swim in the other pool area.", "At first, everything seemed fun. But when I reached the top, I slipped while getting ready to slide down. I lost my balance and fell awkwardly, hitting my arm on the side of the slide. I was shocked and in pain. The lifeguard quickly helped me, and luckily, I only got a bruise—not a serious injury.", "The fun day turned into a scary experience. I felt embarrassed and upset, but I also learned something important. From that day on, I realized I must be more careful when swimming, especially in public pools with lots of people and slippery areas. Safety should always come first."]}, "img": null, "text": "Decide whether the statements below are in line with the text.", "note": "State whether each statement is True or False.", "type": "matrix", "rows": [{"id": "1", "text": "The writer felt very excited before going to the swimming pool.", "correct": "True"}, {"id": "2", "text": "The writer’s friends decided to join the tall slide.", "correct": "False"}, {"id": "3", "text": "The lifeguard found a serious injury on the writer’s arm.", "correct": "False"}, {"id": "4", "text": "The accident made the writer more aware of safety.", "correct": "True"}]}, {"no": 7, "subject": "Recount & Personal Experience", "pre": "Read the text and answer the question.", "box": {"title": "Bobby’s Journey", "paras": ["My name is Bobby. I am a young man with a hearing disability. I cannot hear sounds, and I also have difficulty speaking. However, I never felt ashamed of myself. I always believed that I could do great things if I worked hard.", "When I was a student, I studied at a special school. Every day, I went to school with enthusiasm. I liked learning new things and making friends. My teachers always encouraged me to do my best. Because of their support, I became more confident.", "My favorite hobby was drawing. I spent a lot of time drawing characters and creating comic stories. I practiced every day after school. One day, my teacher told me about a comic painting competition. I joined the competition and won first place. After that, I joined many other competitions. I often became a winner and received several awards.", "After finishing school, I continued improving my drawing skills. Because of my experience and achievements, a book publisher offered me a job as a comic artist. I was very happy and proud. I worked hard and created many comic books.", "Looking back on my life, I feel grateful. Even though I cannot hear or speak well, I have achieved my dreams. My experience taught me that disabilities do not stop people from being successful. With hard work and confidence, anyone can reach their goals."]}, "img": null, "text": "What made Bobby more confident at his special school?", "note": null, "type": "pg", "options": ["The comic books that he published.", "The encouragement from his teachers.", "The prizes from drawing competitions.", "The job offer from a book publisher."], "correct": "The encouragement from his teachers."}, {"no": 8, "subject": "Recount & Personal Experience", "pre": "Read the text and answer the question.", "box": {"title": "Bobby’s Journey", "paras": ["My name is Bobby. I am a young man with a hearing disability. I cannot hear sounds, and I also have difficulty speaking. However, I never felt ashamed of myself. I always believed that I could do great things if I worked hard.", "When I was a student, I studied at a special school. Every day, I went to school with enthusiasm. I liked learning new things and making friends. My teachers always encouraged me to do my best. Because of their support, I became more confident.", "My favorite hobby was drawing. I spent a lot of time drawing characters and creating comic stories. I practiced every day after school. One day, my teacher told me about a comic painting competition. I joined the competition and won first place. After that, I joined many other competitions. I often became a winner and received several awards.", "After finishing school, I continued improving my drawing skills. Because of my experience and achievements, a book publisher offered me a job as a comic artist. I was very happy and proud. I worked hard and created many comic books.", "Looking back on my life, I feel grateful. Even though I cannot hear or speak well, I have achieved my dreams. My experience taught me that disabilities do not stop people from being successful. With hard work and confidence, anyone can reach their goals."]}, "img": null, "text": "Which statements describe Bobby’s experience?", "note": null, "type": "multi", "options": ["He felt ashamed of his hearing disability.", "His teacher told him about a comic painting competition.", "A publisher offered him a job as a comic artist.", "He avoided competitions after his first win."], "correct": ["His teacher told him about a comic painting competition.", "A publisher offered him a job as a comic artist."]}, {"no": 9, "subject": "Recount & Personal Experience", "pre": "Read the text and answer the question.", "box": {"title": "Bobby’s Journey", "paras": ["My name is Bobby. I am a young man with a hearing disability. I cannot hear sounds, and I also have difficulty speaking. However, I never felt ashamed of myself. I always believed that I could do great things if I worked hard.", "When I was a student, I studied at a special school. Every day, I went to school with enthusiasm. I liked learning new things and making friends. My teachers always encouraged me to do my best. Because of their support, I became more confident.", "My favorite hobby was drawing. I spent a lot of time drawing characters and creating comic stories. I practiced every day after school. One day, my teacher told me about a comic painting competition. I joined the competition and won first place. After that, I joined many other competitions. I often became a winner and received several awards.", "After finishing school, I continued improving my drawing skills. Because of my experience and achievements, a book publisher offered me a job as a comic artist. I was very happy and proud. I worked hard and created many comic books.", "Looking back on my life, I feel grateful. Even though I cannot hear or speak well, I have achieved my dreams. My experience taught me that disabilities do not stop people from being successful. With hard work and confidence, anyone can reach their goals."]}, "img": null, "text": "Decide whether the conclusions below are correct based on the text.", "note": "State whether each statement is True or False.", "type": "matrix", "rows": [{"id": "1", "text": "Bobby attended a regular public school.", "correct": "False"}, {"id": "2", "text": "Bobby believes that hard work can lead to success.", "correct": "True"}, {"id": "3", "text": "Bobby kept improving his drawing skills after school.", "correct": "True"}, {"id": "4", "text": "Bobby thinks a disability prevents people from reaching their dreams.", "correct": "False"}]}, {"no": 10, "subject": "Notice, Infographic & Chat", "pre": "Read the text and answer the question.", "box": null, "img": "B.Inggris_9_10.png", "text": "What is the purpose of the notice from the airport?", "note": null, "type": "pg", "options": ["To announce new flights to other islands.", "To promote tickets with cheaper prices.", "To invite the public to an airport event.", "To warn passengers about disturbed flights."], "correct": "To warn passengers about disturbed flights."}, {"no": 11, "subject": "Notice, Infographic & Chat", "pre": "Read the text and answer the question.", "box": null, "img": "B.Inggris_9_10.png", "text": "What are passengers advised to do before going to the airport?", "note": null, "type": "pg", "options": ["Call their airline to ask about the flight.", "Check the weather at the destination city.", "Buy new tickets for another day’s flight.", "Ask the officers at the airport entrance."], "correct": "Call their airline to ask about the flight."}, {"no": 12, "subject": "Notice, Infographic & Chat", "pre": "Read the text and answer the question.", "box": null, "img": "B.Inggris_9_12.png", "text": "What should people who are not used to escalators do?", "note": null, "type": "pg", "options": ["Ask a security guard to carry them up.", "Hold the handrail very tightly all the time.", "Use the lifts or the stairs nearby instead.", "Wait until the escalators are empty."], "correct": "Use the lifts or the stairs nearby instead."}, {"no": 13, "subject": "Notice, Infographic & Chat", "pre": "Read the text and answer the question.", "box": null, "img": "B.Inggris_9_12.png", "text": "Which statements are in line with the notice?", "note": null, "type": "multi", "options": ["The escalators are out of order today.", "Children need to be accompanied by an adult on the escalators.", "Trolleys may be taken up if they are pushed slowly.", "Lifts and stairs are alternatives to the escalators."], "correct": ["Children need to be accompanied by an adult on the escalators.", "Lifts and stairs are alternatives to the escalators."]}, {"no": 14, "subject": "Notice, Infographic & Chat", "pre": "Read the text and answer the question.", "box": null, "img": "B.Inggris_9_14.png", "text": "Why will the water supply be stopped?", "note": null, "type": "pg", "options": ["The village is cleaning the water tank.", "The residents have not paid their bills.", "The water source is dry because of drought.", "The waterline needs an emergency repair."], "correct": "The waterline needs an emergency repair."}, {"no": 15, "subject": "Notice, Infographic & Chat", "pre": "Read the text and answer the question.", "box": null, "img": "B.Inggris_9_14.png", "text": "Which statements are in line with the notice?", "note": null, "type": "multi", "options": ["Some streets in the village will lose water supply.", "Only the houses on Baker Avenue are affected.", "The repair has been planned for several months.", "The water will flow again after the repair is complete."], "correct": ["Some streets in the village will lose water supply.", "The water will flow again after the repair is complete."]}, {"no": 16, "subject": "Notice, Infographic & Chat", "pre": "Read the text and answer the question.", "box": null, "img": "B.Inggris_9_14.png", "text": "Decide whether the statements below are correct based on the notice.", "note": "State whether each statement is True or False.", "type": "matrix", "rows": [{"id": "1", "text": "The water supply will stop at around 1:00 pm.", "correct": "True"}, {"id": "2", "text": "The notice was issued by the Village of Salmo.", "correct": "True"}, {"id": "3", "text": "The notice states exactly when the repair will end.", "correct": "False"}, {"id": "4", "text": "Residents must send an email if they have questions.", "correct": "False"}]}, {"no": 17, "subject": "Notice, Infographic & Chat", "pre": "Read the text and answer the question.", "box": null, "img": "B.Inggris_9_17.png", "text": "What happens to the rural completion rate as the education level gets higher?", "note": null, "type": "pg", "options": ["It remains stable at every level.", "It keeps decreasing at each level.", "It rises slightly at each level.", "It becomes higher than the urban rate."], "correct": "It keeps decreasing at each level."}, {"no": 18, "subject": "Notice, Infographic & Chat", "pre": "Read the text and answer the question.", "box": null, "img": "B.Inggris_9_17.png", "text": "Which statements match the data in the infographic?", "note": null, "type": "multi", "options": ["Less than 90% of urban students completed lower secondary school.", "Rural students at elementary level recorded the lowest rate.", "More than half of the rural students completed upper secondary school.", "The gap at lower secondary level was about 6 percentage points."], "correct": ["More than half of the rural students completed upper secondary school.", "The gap at lower secondary level was about 6 percentage points."]}, {"no": 19, "subject": "Notice, Infographic & Chat", "pre": "Read the text and answer the question.", "box": null, "img": "B.Inggris_9_17.png", "text": "Decide whether the statements below are correct based on the infographic.", "note": "State whether each statement is True or False.", "type": "matrix", "rows": [{"id": "1", "text": "The data in the infographic was collected in 2023.", "correct": "False"}, {"id": "2", "text": "Urban areas had higher completion rates at all levels.", "correct": "True"}, {"id": "3", "text": "The rural rate at upper secondary was higher than at elementary.", "correct": "False"}, {"id": "4", "text": "The infographic presents data of three education levels.", "correct": "True"}]}, {"no": 20, "subject": "Notice, Infographic & Chat", "pre": "Read the text and answer the question.", "box": null, "img": "B.Inggris_9_20.png", "text": "What is the main message of the infographic?", "note": null, "type": "pg", "options": ["Childhood obesity in the US is a serious problem.", "Boys in the US eat more fast food than girls.", "Doctors in the US are unable to treat obesity.", "Overweight children never become healthy adults."], "correct": "Childhood obesity in the US is a serious problem."}, {"no": 21, "subject": "Notice, Infographic & Chat", "pre": "Read the text and answer the question.", "box": null, "img": "B.Inggris_9_20.png", "text": "What can we infer about children who are obese?", "note": null, "type": "pg", "options": ["They are mostly girls aged two to five.", "They usually have the lowest medical costs.", "They are likely to remain obese as adults.", "They cannot join any sports activities."], "correct": "They are likely to remain obese as adults."}, {"no": 22, "subject": "Notice, Infographic & Chat", "pre": "Read the text and answer the question.", "box": null, "img": "B.Inggris_9_20.png", "text": "Which statements are correct based on the infographic?", "note": null, "type": "multi", "options": ["The obesity rate among boys (19%) is higher than among girls (15%).", "The cost of obesity in the United States reaches about $147 billion.", "Fewer than 17 million children in the US are obese.", "Obese children have a 20% chance of becoming obese adults."], "correct": ["The obesity rate among boys (19%) is higher than among girls (15%).", "The cost of obesity in the United States reaches about $147 billion."]}, {"no": 23, "subject": "Notice, Infographic & Chat", "pre": "Read the text and answer the question.", "box": null, "img": "B.Inggris_9_23.png", "text": "What is the purpose of Rama’s last message?", "note": null, "type": "pg", "options": ["To refuse Dina’s suggestion politely.", "To ask Dina to subscribe right now.", "To ask Dina to join the next competition.", "To express his hope for the future."], "correct": "To express his hope for the future."}, {"no": 24, "subject": "Notice, Infographic & Chat", "pre": "Read the text and answer the question.", "box": null, "img": "B.Inggris_9_23.png", "text": "Which sentence shows Dina’s agreement with Rama’s plan to make more videos?", "note": null, "type": "pg", "options": ["“Haha, thanks for the encouragement!”", "“You should! I’d totally subscribe.”", "“Congrats on winning the competition!”", "“Your video was awesome, really.”"], "correct": "“You should! I’d totally subscribe.”"}, {"no": 25, "subject": "Notice, Infographic & Chat", "pre": "Read the text and answer the question.", "box": null, "img": "B.Inggris_9_23.png", "text": "Which statements are in line with the chat?", "note": null, "type": "multi", "options": ["Rama won a vlogging competition.", "Dina has already subscribed to the channel.", "Rama is certain that he will become a professional content creator.", "Dina thinks that Rama’s video is excellent."], "correct": ["Rama won a vlogging competition.", "Dina thinks that Rama’s video is excellent."]}, {"no": 26, "subject": "Informational Texts", "pre": "Read the text and answer the question.", "box": {"title": "Bakar Batu", "paras": ["The Bakar Batu ceremony is one of the most well-known traditional ceremonies in Papua. It is a form of gratitude by the Papuan people to God Almighty.", "This ceremony is held to celebrate joyful occasions such as births, traditional weddings, the inauguration of tribal chiefs, or even before going to war. During the ceremony, the community gathers to cook and eat together.", "A hole is prepared in the ground to serve as the cooking area. Large stones are heated with firewood until they become extremely hot. The food to be cooked—such as meat, potatoes, and sweet potatoes—is covered with leaves and placed on the hot stones inside the hole. Once the food is cooked, it is shared among all members of the community to be enjoyed together.", "<i>Bakar Batu<\/i> is usually performed by inland tribes such as those in Nabire, the Baliem Valley, Paniai, the Central Highlands, Pegunungan Bintang, Yahukimo, and Dekai."]}, "img": null, "text": "What is the main idea of the second paragraph?", "note": null, "type": "pg", "options": ["The tools used to prepare the food.", "The place where the ceremony is performed.", "The occasions when the ceremony is held.", "The tribes that perform the ceremony."], "correct": "The occasions when the ceremony is held."}, {"no": 27, "subject": "Informational Texts", "pre": "Read the text and answer the question.", "box": {"title": "Bakar Batu", "paras": ["The Bakar Batu ceremony is one of the most well-known traditional ceremonies in Papua. It is a form of gratitude by the Papuan people to God Almighty.", "This ceremony is held to celebrate joyful occasions such as births, traditional weddings, the inauguration of tribal chiefs, or even before going to war. During the ceremony, the community gathers to cook and eat together.", "A hole is prepared in the ground to serve as the cooking area. Large stones are heated with firewood until they become extremely hot. The food to be cooked—such as meat, potatoes, and sweet potatoes—is covered with leaves and placed on the hot stones inside the hole. Once the food is cooked, it is shared among all members of the community to be enjoyed together.", "<i>Bakar Batu<\/i> is usually performed by inland tribes such as those in Nabire, the Baliem Valley, Paniai, the Central Highlands, Pegunungan Bintang, Yahukimo, and Dekai."]}, "img": null, "text": "Which statements are in line with the text?", "note": null, "type": "multi", "options": ["The food is cooked in a modern oven.", "The stones are heated with firewood before cooking.", "The ceremony expresses thanks to God.", "The ceremony is held only for wedding celebrations."], "correct": ["The stones are heated with firewood before cooking.", "The ceremony expresses thanks to God."]}, {"no": 28, "subject": "Informational Texts", "pre": "Read the text and answer the question.", "box": {"title": "Bakar Batu", "paras": ["The Bakar Batu ceremony is one of the most well-known traditional ceremonies in Papua. It is a form of gratitude by the Papuan people to God Almighty.", "This ceremony is held to celebrate joyful occasions such as births, traditional weddings, the inauguration of tribal chiefs, or even before going to war. During the ceremony, the community gathers to cook and eat together.", "A hole is prepared in the ground to serve as the cooking area. Large stones are heated with firewood until they become extremely hot. The food to be cooked—such as meat, potatoes, and sweet potatoes—is covered with leaves and placed on the hot stones inside the hole. Once the food is cooked, it is shared among all members of the community to be enjoyed together.", "<i>Bakar Batu<\/i> is usually performed by inland tribes such as those in Nabire, the Baliem Valley, Paniai, the Central Highlands, Pegunungan Bintang, Yahukimo, and Dekai."]}, "img": null, "text": "Decide whether the statements below are correct based on the text.", "note": "State whether each statement is True or False.", "type": "matrix", "rows": [{"id": "1", "text": "The ceremony is held only when people go to war.", "correct": "False"}, {"id": "2", "text": "The ceremony is mostly done by coastal tribes.", "correct": "False"}, {"id": "3", "text": "The food is cooked on hot stones in a hole.", "correct": "True"}, {"id": "4", "text": "The cooked food is shared among the community.", "correct": "True"}]}, {"no": 29, "subject": "Informational Texts", "pre": "Read the text and answer the question.", "box": {"title": "Liquefaction", "paras": ["Liquefaction is a natural process that happens during strong shaking, like in an earthquake. It makes the ground lose its strength and act more like a liquid than a solid. This can cause serious damage to buildings, roads, and bridges.", "Liquefaction usually happens in saturated soil, which means the tiny spaces between soil particles are completely filled with water. Before an earthquake, the water pressure is low, and the soil particles stay tightly packed together.", "But when an earthquake shakes the ground, the water pressure between the particles rises. This makes the particles move around more easily, and the soil becomes loose and weak. As a result, the ground can’t support heavy structures anymore, which can lead to them sinking or collapsing."]}, "img": null, "text": "According to the text, what happens to the soil before an earthquake?", "note": null, "type": "pg", "options": ["It becomes a liquid and starts to sink.", "It is filled with high water pressure.", "It turns loose and cannot hold any weight.", "Its particles stay tightly packed together."], "correct": "Its particles stay tightly packed together."}, {"no": 30, "subject": "Informational Texts", "pre": "Read the text and answer the question.", "box": {"title": "Liquefaction", "paras": ["Liquefaction is a natural process that happens during strong shaking, like in an earthquake. It makes the ground lose its strength and act more like a liquid than a solid. This can cause serious damage to buildings, roads, and bridges.", "Liquefaction usually happens in saturated soil, which means the tiny spaces between soil particles are completely filled with water. Before an earthquake, the water pressure is low, and the soil particles stay tightly packed together.", "But when an earthquake shakes the ground, the water pressure between the particles rises. This makes the particles move around more easily, and the soil becomes loose and weak. As a result, the ground can’t support heavy structures anymore, which can lead to them sinking or collapsing."]}, "img": null, "text": "Which statements are correct based on the text?", "note": null, "type": "multi", "options": ["Liquefaction happens when the ground is completely dry.", "The soil gets stronger when an earthquake shakes it.", "Rising water pressure makes soil particles move more easily.", "Heavy structures can sink or collapse on weakened soil."], "correct": ["Rising water pressure makes soil particles move more easily.", "Heavy structures can sink or collapse on weakened soil."]}, {"no": 31, "subject": "Informational Texts", "pre": "Read the text and answer the question.", "box": {"title": "Red Flag and Green Flag", "paras": ["Red flag and green flag are common terms in teenager social life. These terms help teenagers understand whether a person’s behaviour is healthy or unhealthy. A red flag is a warning sign that shows a problem in a friendship or relationship. A green flag is a positive sign that shows good behaviour and healthy communication. Many teenagers use these terms when talking about friends, classmates, or people they meet online.", "A red flag can appear in different situations. For example, a teenager may always lie, bully others, or force friends to do something they do not want to do. Some teenagers may also ignore other people’s feelings or spread rumours. These actions can make others feel uncomfortable, sad, or unsafe. Knowing red flags are important because they help teenagers recognize unhealthy behaviour and avoid negative relationships.", "On the other hand, a green flag shows positive qualities. Teenagers with green flags are usually honest, respectful, and supportive. They listen to others, keep promises, and respect personal boundaries. They also encourage their friends to make good decisions. Green flags help create strong friendships and positive social environments. By understanding the difference between red flags and green flags, teenagers can build healthier relationships and become better friends to others."]}, "img": null, "text": "What is the main idea of the third paragraph?", "note": null, "type": "pg", "options": ["The positive qualities shown by green flags.", "The danger of meeting people on the internet.", "The ways to avoid red flag behaviour.", "The reasons teenagers use social media."], "correct": "The positive qualities shown by green flags."}, {"no": 32, "subject": "Informational Texts", "pre": "Read the text and answer the question.", "box": {"title": "Red Flag and Green Flag", "paras": ["Red flag and green flag are common terms in teenager social life. These terms help teenagers understand whether a person’s behaviour is healthy or unhealthy. A red flag is a warning sign that shows a problem in a friendship or relationship. A green flag is a positive sign that shows good behaviour and healthy communication. Many teenagers use these terms when talking about friends, classmates, or people they meet online.", "A red flag can appear in different situations. For example, a teenager may always lie, bully others, or force friends to do something they do not want to do. Some teenagers may also ignore other people’s feelings or spread rumours. These actions can make others feel uncomfortable, sad, or unsafe. Knowing red flags are important because they help teenagers recognize unhealthy behaviour and avoid negative relationships.", "On the other hand, a green flag shows positive qualities. Teenagers with green flags are usually honest, respectful, and supportive. They listen to others, keep promises, and respect personal boundaries. They also encourage their friends to make good decisions. Green flags help create strong friendships and positive social environments. By understanding the difference between red flags and green flags, teenagers can build healthier relationships and become better friends to others."]}, "img": null, "text": "Which statements are in line with the text?", "note": null, "type": "multi", "options": ["A red flag warns that a friendship may have a problem.", "Green flags mean that a person likes to spread rumours.", "Teenagers with green flags keep their promises.", "Only people met online can show red flags."], "correct": ["A red flag warns that a friendship may have a problem.", "Teenagers with green flags keep their promises."]}, {"no": 33, "subject": "Informational Texts", "pre": "Read the text and answer the question.", "box": {"title": "Red Flag and Green Flag", "paras": ["Red flag and green flag are common terms in teenager social life. These terms help teenagers understand whether a person’s behaviour is healthy or unhealthy. A red flag is a warning sign that shows a problem in a friendship or relationship. A green flag is a positive sign that shows good behaviour and healthy communication. Many teenagers use these terms when talking about friends, classmates, or people they meet online.", "A red flag can appear in different situations. For example, a teenager may always lie, bully others, or force friends to do something they do not want to do. Some teenagers may also ignore other people’s feelings or spread rumours. These actions can make others feel uncomfortable, sad, or unsafe. Knowing red flags are important because they help teenagers recognize unhealthy behaviour and avoid negative relationships.", "On the other hand, a green flag shows positive qualities. Teenagers with green flags are usually honest, respectful, and supportive. They listen to others, keep promises, and respect personal boundaries. They also encourage their friends to make good decisions. Green flags help create strong friendships and positive social environments. By understanding the difference between red flags and green flags, teenagers can build healthier relationships and become better friends to others."]}, "img": null, "text": "Decide whether the statements below are correct based on the text.", "note": "State whether each statement is True or False.", "type": "matrix", "rows": [{"id": "1", "text": "Red flags can make other people feel uncomfortable or unsafe.", "correct": "True"}, {"id": "2", "text": "Respecting personal boundaries is an example of a red flag.", "correct": "False"}, {"id": "3", "text": "Knowing red flags helps teenagers avoid negative relationships.", "correct": "True"}, {"id": "4", "text": "Green flags make friendships weaker.", "correct": "False"}]}, {"no": 34, "subject": "Product Labels", "pre": "Read the text and answer the question.", "box": null, "img": "B.Inggris_9_34.png", "text": "Why does the label include the words “CONTAINS MILK INGREDIENTS”?", "note": null, "type": "pg", "options": ["To warn people who are allergic to milk.", "To say that milk is the main ingredient.", "To tell that the snack must be kept cold.", "To promote that the snack is good for bones."], "correct": "To warn people who are allergic to milk."}, {"no": 35, "subject": "Product Labels", "pre": "Read the text and answer the question.", "box": null, "img": "B.Inggris_9_34.png", "text": "Decide whether the statements below are correct based on the label.", "note": "State whether each statement is True or False.", "type": "matrix", "rows": [{"id": "1", "text": "One package of the snack contains only one serving.", "correct": "False"}, {"id": "2", "text": "A serving of the snack gives 140 calories.", "correct": "True"}, {"id": "3", "text": "The snack provides a small amount of calcium and iron.", "correct": "True"}, {"id": "4", "text": "The snack is a good source of Vitamin A and Vitamin C.", "correct": "False"}]}, {"no": 36, "subject": "Product Labels", "pre": "Read the texts and answer the question.", "box": null, "img": "B.Inggris_9_36.png", "text": "How is Product A different from Product B in the recommended age?", "note": null, "type": "pg", "options": ["Product A is for ages 8–16, while Product B is for ages 4–18.", "Product A is for ages 4–18, while Product B is for ages 8–16.", "Both products are intended for children aged 4–16.", "Product A is for toddlers, while Product B is for adults."], "correct": "Product A is for ages 4–18, while Product B is for ages 8–16."}, {"no": 37, "subject": "Product Labels", "pre": "Read the texts and answer the question.", "box": null, "img": "B.Inggris_9_36.png", "text": "Which statements compare the two products correctly?", "note": null, "type": "multi", "options": ["A gummy of Product A has more Vitamin C than Product B.", "Product B has less sodium per gummy than Product A.", "Product B is higher in calories per gummy than Product A.", "Both products give the same amount of sugar in one gummy."], "correct": ["Product B has less sodium per gummy than Product A.", "Both products give the same amount of sugar in one gummy."]}, {"no": 38, "subject": "Product Labels", "pre": "Read the texts and answer the question.", "box": null, "img": "B.Inggris_9_36.png", "text": "Decide whether the statements below are correct based on the texts.", "note": "State whether each statement is True or False.", "type": "matrix", "rows": [{"id": "1", "text": "Product A is recommended for children under four years old.", "correct": "False"}, {"id": "2", "text": "Product B should be chewed after a meal.", "correct": "True"}, {"id": "3", "text": "Product A contains artificial sweeteners.", "correct": "False"}, {"id": "4", "text": "Product B should be kept in a place below 30°C.", "correct": "True"}]}, {"no": 39, "subject": "Product Labels", "pre": "Read the texts and answer the question.", "box": null, "img": "B.Inggris_9_39.png", "text": "Which statement compares the two juices correctly?", "note": null, "type": "pg", "options": ["Product A provides more calories than Product B.", "Product B has less sodium than Product A.", "Product A has lower total sugars than Product B.", "Product B has less Vitamin C than Product A."], "correct": "Product A has lower total sugars than Product B."}, {"no": 40, "subject": "Product Labels", "pre": "Read the texts and answer the question.", "box": null, "img": "B.Inggris_9_39.png", "text": "Which statements are correct about the two juices?", "note": null, "type": "multi", "options": ["Product B is made only from mango juice and mango pulp.", "Product A has more protein than Product B.", "Both products are rich in Vitamin D.", "Product A contains added sugars, while Product B does not."], "correct": ["Product B is made only from mango juice and mango pulp.", "Product A contains added sugars, while Product B does not."]}]</script>
+<script>
+(function(){
+"use strict";
+
+/* ================= CONFIG ================= */
+const SUBJECT_ORDER = ["Recount & Personal Experience","Notice, Infographic & Chat","Informational Texts","Product Labels"];
+const DURATION_SEC = 90*60;
+const MIN_SUBMIT_SEC = 40*60;   // batas minimal sebelum jawaban boleh dikirim (40 menit)
+const MAPEL = "Bahasa Inggris";
+const ASESMEN = "ASAS";
+const KELAS_TINGKAT = "IX";
+const MATERI = "Reading Comprehension: Recount, Notice, Infographic, Chat, Informational Text & Product Label";
+const JUDUL = "ASAS BAHASA INGGRIS KELAS 9";
+const VALID_TOKEN = "IGR9MRU";
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw0s4noQT2VO8ibO-7Mb7QBhpcS2u8PXyALP1yhMUSPw-o-bAuww-ZBbypkKdiSlB7L/exec";
+
+const RAW_QUESTIONS = JSON.parse(document.getElementById('questions-data').textContent);
+document.getElementById('infoJumlah').textContent = RAW_QUESTIONS.length + " Soal";
+/* DATA_SISWA berasal dari ../../assets/js/data-siswa.js ; hanya rombel kelas IX yang dipakai */
+const STUDENTS = {};
+if(typeof DATA_SISWA !== 'undefined'){
+  Object.keys(DATA_SISWA).filter(k=>/^IX\b/.test(k)).forEach(k=>{ STUDENTS[k] = DATA_SISWA[k]; });
+}
+
+/* ================= STATE ================= */
+let examQuestions = [];
+let answers = {};
+let current = 0;
+let violCount = 0;
+let timeLeft = DURATION_SEC;
+let timerHandle = null;
+let studentName = "", studentClass = "";
+let examStarted = false;
+let examFinished = false;
+
+/* ================= UTIL ================= */
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; }
+  return a;
+}
+function fmtTime(s){ const m=Math.floor(s/60), sec=s%60; return String(m).padStart(2,'0')+":"+String(sec).padStart(2,'0'); }
+function escapeHtml(str){ return String(str).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+/* teks soal mengandung <i> untuk huruf miring pada teks dalam kotak; selebihnya di-escape */
+function allowItalic(s){ return escapeHtml(s).replace(/&lt;i&gt;/g,'<i>').replace(/&lt;\/i&gt;/g,'</i>'); }
+function imgSrc(name){ return encodeURI(name.indexOf('/')>-1 ? name : '../../assets/img/'+name); }
+
+/* ================= LIGHTBOX ================= */
+const lb = document.getElementById('lightbox'), lbScroll = document.getElementById('lbScroll');
+function closeLb(){ lb.classList.remove('open'); lbScroll.classList.remove('zoomed'); document.getElementById('lbZoom').textContent='🔍 Perbesar'; }
+document.getElementById('lightboxClose').addEventListener('click',closeLb);
+document.getElementById('lbZoom').addEventListener('click',()=>{
+  const z = lbScroll.classList.toggle('zoomed');
+  document.getElementById('lbZoom').textContent = z ? '↩ Ukuran Pas Layar' : '🔍 Perbesar';
+});
+
+/* ================= TABS ================= */
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-'+btn.dataset.tab).classList.add('active');
+  });
+});
+
+/* ================= NAMA & KELAS (dari data-siswa.js / Menu Kelas 9) ================= */
+(function populateClassDropdown(){
+  const selKelas = document.getElementById('inputKelas');
+  Object.keys(STUDENTS).forEach(kelas=>{
+    const opt = document.createElement('option');
+    opt.value = kelas; opt.textContent = kelas;
+    selKelas.appendChild(opt);
+  });
+  selKelas.addEventListener('change',()=>{
+    const selNama = document.getElementById('inputNama');
+    const kelas = selKelas.value;
+    selNama.innerHTML = '';
+    if(!kelas){
+      const opt = document.createElement('option'); opt.value=''; opt.textContent='— Pilih kelas terlebih dahulu —';
+      selNama.appendChild(opt); selNama.disabled = true; return;
+    }
+    const opt0 = document.createElement('option'); opt0.value=''; opt0.textContent='— Pilih Nama —';
+    selNama.appendChild(opt0);
+    (STUDENTS[kelas]||[]).forEach(nm=>{
+      const opt = document.createElement('option'); opt.value = nm; opt.textContent = nm;
+      selNama.appendChild(opt);
+    });
+    selNama.disabled = false;
+  });
+
+  /* Prefill dari Menu Kelas 9 (kelas-9.html): ?kelas=IX%20A&nama=NAMA%20SISWA */
+  const params = new URLSearchParams(window.location.search);
+  const pKelas = params.get('kelas');
+  const pNama = params.get('nama');
+  if(pKelas && STUDENTS[pKelas]){
+    selKelas.value = pKelas;
+    selKelas.dispatchEvent(new Event('change'));
+    const norm = s => String(s||'').replace(/\s+/g,' ').trim().toUpperCase();
+    const match = pNama ? STUDENTS[pKelas].find(n=>norm(n)===norm(pNama)) : null;
+    if(match){
+      document.getElementById('inputNama').value = match;
+      document.getElementById('idNama').textContent = match;
+      document.getElementById('idKelas').textContent = pKelas;
+      document.getElementById('idBox').classList.remove('hidden');
+      document.getElementById('pickWrap').classList.add('hidden');
+    }
+    document.querySelector('.tab-btn[data-tab="mulai"]').click();
+    document.getElementById('inputToken').focus();
+  }
+})();
+
+/* ================= BUILD EXAM (acak soal, opsi, dan pernyataan) ================= */
+function buildExam(){
+  const all = RAW_QUESTIONS.map((q,i)=>({q,i}));
+  examQuestions = shuffle(all).map(o=>{
+    const q = JSON.parse(JSON.stringify(o.q));
+    q._id = o.i;
+    if((q.type==='pg' || q.type==='multi') && Array.isArray(q.options)) q.options = shuffle(q.options);
+    if(q.type==='matrix' && Array.isArray(q.rows)) q.rows = shuffle(q.rows);
+    return q;
+  });
+}
+
+/* ================= NAV PANEL ================= */
+function renderNavPanel(){
+  const panel = document.getElementById('navPanel');
+  let html = '<h3>Nomor Soal (1–'+examQuestions.length+')</h3>';
+  html += '<div class="legend"><span><i class="dot" style="background:#9b6bdc"></i>Terjawab</span><span><i class="dot" style="background:#fff;border:1.5px solid #e0d3f3"></i>Belum</span></div>';
+  let grid = '';
+  examQuestions.forEach((q,idx)=>{
+    grid += '<button class="navbtn'+(isAnswered(q)?' answered':'')+(idx===current?' current':'')+'" data-idx="'+idx+'">'+(idx+1)+'</button>';
+  });
+  html += '<div class="navgrid">'+grid+'</div>';
+  html += '<button id="navSubmitBtn">✅ Kirim Jawaban</button>';
+  panel.innerHTML = html;
+  panel.querySelectorAll('.navbtn').forEach(b=>{
+    b.addEventListener('click',()=>{ current=parseInt(b.dataset.idx,10); renderQuestion(); renderNavPanel(); closeMobilePanel(); });
+  });
+  document.getElementById('navSubmitBtn').addEventListener('click', confirmSubmit);
+  updateSubmitLock();
+}
+function closeMobilePanel(){ document.getElementById('navPanel').classList.remove('open'); }
+
+function isAnswered(q){
+  const v = answers[q._id];
+  if(q.type==='pg') return !!v;
+  if(q.type==='multi') return Array.isArray(v) && v.length>0;
+  if(q.type==='matrix'){ if(!v) return false; return q.rows.every(r=>v[r.id]); }
+  return false;
+}
+
+/* ================= RENDER QUESTION ================= */
+const LETTERS = ['A','B','C','D','E','F'];
+function renderQuestion(keepScroll){
+  const q = examQuestions[current];
+  const area = document.getElementById('questionArea');
+  const prevScroll = area.scrollTop;
+  const wrap = document.getElementById('qwrap');
+  let html = '';
+  html += '<div class="qnum">Soal '+(current+1)+' dari '+examQuestions.length+'</div>';
+  if(q.pre) html += '<div class="qpre">'+escapeHtml(q.pre)+'</div>';
+
+  /* teks dalam kotak */
+  if(q.box){
+    html += '<div class="textbox"><div class="tb-title">'+escapeHtml(q.box.title)+'</div>';
+    q.box.paras.forEach(p=>{ html += '<p>'+allowItalic(p)+'</p>'; });
+    html += '</div>';
+  }
+  /* gambar */
+  if(q.img){
+    const src = imgSrc(q.img);
+    html += '<div class="qimg-wrap"><div class="imgbox'+(q.portrait?' portrait':'')+'" data-full="'+src+'">'+
+      '<img src="'+src+'" alt="'+escapeHtml(q.img)+'" draggable="false" '+
+      'onerror="this.parentElement.outerHTML=\'<div class=&quot;imgph&quot;>🖼️ '+escapeHtml(q.img)+'<br>(gambar belum terunggah ke folder assets/img)</div>\'">'+
+      '<span class="zoomhint">🔍 Ketuk untuk perbesar</span></div></div>';
+  }
+  html += '<div class="qtext">'+allowItalic(q.text)+'</div>';
+  if(q.note) html += '<div class="qnote">'+escapeHtml(q.note)+'</div>';
+  if(q.type==='multi') html += '<div class="qtype-hint">☑ Pilihan Ganda Kompleks — pilih semua jawaban yang benar (bisa lebih dari satu)</div>';
+  if(q.type==='matrix') html += '<div class="qtype-hint">☑ True / False — tentukan True atau False untuk setiap pernyataan</div>';
+
+  if(q.type==='pg') html += renderPG(q);
+  else if(q.type==='multi') html += renderMulti(q);
+  else if(q.type==='matrix') html += renderMatrix(q);
+
+  wrap.innerHTML = html;
+  attachOptionEvents(q);
+  wrap.querySelectorAll('.imgbox').forEach(box=>{
+    box.addEventListener('click',()=>{
+      document.getElementById('lightboxImg').src = box.dataset.full;
+      lb.classList.add('open');
+    });
+  });
+  const img = wrap.querySelector('.imgbox img');
+  if(img){ const mark=()=>{ if(img.naturalHeight>img.naturalWidth) img.parentElement.classList.add('portrait'); }; if(img.complete) mark(); else img.addEventListener('load',mark); }
+
+  document.getElementById('btnPrev').disabled = (current===0);
+  document.getElementById('btnNext').textContent = (current===examQuestions.length-1) ? 'Selesai →' : 'Selanjutnya →';
+  document.querySelectorAll('.navbtn').forEach(b=>b.classList.toggle('current', parseInt(b.dataset.idx,10)===current));
+  area.scrollTop = keepScroll ? prevScroll : 0;
+}
+
+function renderPG(q){
+  const v = answers[q._id]; let html='';
+  q.options.forEach((opt,i)=>{
+    const selected = v===opt;
+    html += '<label class="option'+(selected?' selected':'')+'"><input type="radio" name="pg" value="'+i+'" '+(selected?'checked':'')+'>'+
+      '<span class="otext"><span class="olabel">'+LETTERS[i]+'.</span>'+escapeHtml(opt)+'</span></label>';
+  });
+  return html;
+}
+function renderMulti(q){
+  const v = answers[q._id] || []; let html='';
+  q.options.forEach((opt,i)=>{
+    const selected = v.includes(opt);
+    html += '<label class="option'+(selected?' selected':'')+'"><input type="checkbox" name="multi" value="'+i+'" '+(selected?'checked':'')+'>'+
+      '<span class="otext"><span class="olabel">'+LETTERS[i]+'.</span>'+escapeHtml(opt)+'</span></label>';
+  });
+  return html;
+}
+function renderMatrix(q){
+  const v = answers[q._id] || {};
+  const cols = ['True','False'];
+  let html = '<table class="matrix"><thead><tr><th>No.</th><th style="text-align:left">Statements</th>';
+  cols.forEach(c=>{ html += '<th>'+c+'</th>'; });
+  html += '</tr></thead><tbody>';
+  q.rows.forEach((r,idx)=>{
+    html += '<tr><td>'+(idx+1)+'</td><td class="stmt">'+escapeHtml(r.text)+'</td>';
+    cols.forEach(c=>{
+      const checked = v[r.id]===c;
+      html += '<td><input type="radio" name="row_'+r.id+'" value="'+c+'" data-row="'+r.id+'" '+(checked?'checked':'')+'></td>';
+    });
+    html += '</tr>';
+  });
+  html += '</tbody></table>';
+  return html;
+}
+function attachOptionEvents(q){
+  if(q.type==='pg'){
+    document.querySelectorAll('input[name=pg]').forEach(inp=>{
+      inp.addEventListener('change',()=>{ answers[q._id]=q.options[parseInt(inp.value,10)]; renderQuestion(true); renderNavPanel(); });
+    });
+  } else if(q.type==='multi'){
+    document.querySelectorAll('input[name=multi]').forEach(inp=>{
+      inp.addEventListener('change',()=>{
+        let cur = answers[q._id] ? answers[q._id].slice() : [];
+        const val = q.options[parseInt(inp.value,10)];
+        if(inp.checked){ if(!cur.includes(val)) cur.push(val); } else { cur = cur.filter(x=>x!==val); }
+        answers[q._id]=cur; renderQuestion(true); renderNavPanel();
+      });
+    });
+  } else if(q.type==='matrix'){
+    document.querySelectorAll('table.matrix input').forEach(inp=>{
+      inp.addEventListener('change',()=>{
+        const cur = answers[q._id] ? Object.assign({},answers[q._id]) : {};
+        cur[inp.dataset.row] = inp.value; answers[q._id]=cur; renderQuestion(true); renderNavPanel();
+      });
+    });
+  }
+}
+
+/* ================= NAVIGASI ================= */
+document.getElementById('btnPrev').addEventListener('click',()=>{ if(current>0){ current--; renderQuestion(); renderNavPanel(); } });
+document.getElementById('btnNext').addEventListener('click',()=>{
+  if(current<examQuestions.length-1){ current++; renderQuestion(); renderNavPanel(); } else { confirmSubmit(); }
+});
+document.getElementById('panelToggle').addEventListener('click',()=>{ document.getElementById('navPanel').classList.toggle('open'); });
+
+/* ================= TIMER (berbasis jam sistem) ================= */
+let startTs = 0, endTs = 0;
+function elapsedSec(){ return Math.floor((Date.now()-startTs)/1000); }
+function canSubmitNow(){ return elapsedSec() >= MIN_SUBMIT_SEC; }
+function updateSubmitLock(){
+  const b = document.getElementById('navSubmitBtn');
+  if(!b || !examStarted) return;
+  const rem = MIN_SUBMIT_SEC - elapsedSec();
+  if(rem > 0){ b.textContent = '🔒 Kirim dibuka dalam '+fmtTime(rem); b.classList.add('locked'); }
+  else { b.textContent = '✅ Kirim Jawaban'; b.classList.remove('locked'); }
+}
+function tick(){
+  timeLeft = Math.max(0, Math.ceil((endTs-Date.now())/1000));
+  const box = document.getElementById('timerBox');
+  box.textContent = fmtTime(timeLeft);
+  if(timeLeft<=300) box.classList.add('low');
+  updateSubmitLock();
+  if(timeLeft<=0){ clearInterval(timerHandle); finishExam(true); }
+}
+function startTimer(){
+  startTs = Date.now(); endTs = startTs + DURATION_SEC*1000;
+  tick(); timerHandle = setInterval(tick,1000);
+}
+
+/* ================= LAYAR PENUH & PENCATATAN PELANGGARAN ================= */
+const logPelanggaran = [];
+let dialogOpen = false, lastViolAt = 0, splitActive = false, blurTimer = null;
+const areaMax = {portrait:0, landscape:0};
+
+function enterFullscreen(){
+  const el = document.documentElement;
+  const req = el.requestFullscreen||el.webkitRequestFullscreen||el.msRequestFullscreen;
+  if(req){ try{ const p = req.call(el); if(p && p.catch) p.catch(()=>{}); }catch(e){} }
+}
+function isFullscreen(){ return !!(document.fullscreenElement||document.webkitFullscreenElement||document.msFullscreenElement); }
+function showWarn(title,text,onOk){
+  const ov = document.getElementById('warnOverlay');
+  document.getElementById('warnTitle').textContent = title;
+  document.getElementById('warnText').textContent = text;
+  ov.style.display='flex';
+  document.getElementById('warnBtn').onclick = ()=>{ ov.style.display='none'; if(onOk) onOk(); };
+}
+function safeAlert(msg){ dialogOpen = true; try{ alert(msg); } finally { dialogOpen = false; } }
+function safeConfirm(msg){ dialogOpen = true; try{ return confirm(msg); } finally { dialogOpen = false; } }
+
+// Jenis: "Pindah tab", "Keluar fullscreen", "Salin teks", "Screenshot", "Split screen", "Kehilangan fokus jendela"
+function catatPelanggaran(jenis){
+  if(!examStarted || examFinished) return;
+  const last = logPelanggaran[logPelanggaran.length-1];
+  if(last && last.jenis===jenis && Date.now()-new Date(last.waktu).getTime() < 1500) return; // satu kejadian, satu catatan
+  logPelanggaran.push({ jenis: jenis, waktu: new Date().toISOString() });
+  violCount = logPelanggaran.length;
+  lastViolAt = Date.now();
+  const badge = document.getElementById('violationBadge');
+  badge.style.display='inline-block';
+  document.getElementById('violCount').textContent = violCount;
+  showWarn('⚠ Pelanggaran Terdeteksi ('+violCount+')',
+    'Sistem mendeteksi: '+jenis+'. Tindakan ini tercatat dan akan dilaporkan kepada guru bersama hasil ujianmu. Tetaplah pada halaman ujian hingga selesai.',
+    ()=>{ if(!isFullscreen()) enterFullscreen(); });
+}
+function ringkasPelanggaran(){
+  const c = {}; logPelanggaran.forEach(p=>{ c[p.jenis]=(c[p.jenis]||0)+1; });
+  return Object.keys(c).map(k=>k+' ×'+c[k]).join('; ') || '-';
+}
+
+// 1) pindah tab / minimize
+document.addEventListener('visibilitychange',()=>{
+  if(document.hidden && examStarted && !examFinished) catatPelanggaran('Pindah tab');
+});
+// 2) keluar layar penuh
+function onFsChange(){ if(!isFullscreen() && examStarted && !examFinished) catatPelanggaran('Keluar fullscreen'); }
+document.addEventListener('fullscreenchange', onFsChange);
+document.addEventListener('webkitfullscreenchange', onFsChange);
+// 3) menyalin teks
+['copy','cut'].forEach(ev=>document.addEventListener(ev,e=>{
+  if(examStarted && !examFinished){ e.preventDefault(); catatPelanggaran('Salin teks'); }
+}));
+document.addEventListener('contextmenu',e=>{ if(examStarted && !examFinished) e.preventDefault(); });
+document.addEventListener('selectstart',e=>{ if(examStarted && !examFinished) e.preventDefault(); });
+document.addEventListener('dragstart',e=>{ if(examStarted && !examFinished) e.preventDefault(); });
+// 4) screenshot & pintasan terlarang
+function clearClip(){ try{ navigator.clipboard && navigator.clipboard.writeText('').catch(()=>{}); }catch(e){} }
+document.addEventListener('keydown',e=>{
+  if(!examStarted || examFinished) return;
+  const k = (e.key||'').toLowerCase();
+  if(e.key==='F12' || (e.ctrlKey&&e.shiftKey&&['i','j','c'].includes(k)) || (e.altKey&&e.key==='Tab')) e.preventDefault();
+  if((e.ctrlKey||e.metaKey) && ['p','s','u'].includes(k)) e.preventDefault();
+  if((e.ctrlKey||e.metaKey) && ['c','x','a'].includes(k)){ e.preventDefault(); if(k!=='a') catatPelanggaran('Salin teks'); }
+  if(e.key==='PrintScreen' || (e.metaKey&&e.shiftKey&&k==='s') || (e.metaKey&&e.shiftKey&&['Digit3','Digit4','Digit5'].includes(e.code))){
+    catatPelanggaran('Screenshot'); clearClip();
+  }
+});
+document.addEventListener('keyup',e=>{
+  if(!examStarted || examFinished) return;
+  if(e.key==='PrintScreen'){ catatPelanggaran('Screenshot'); clearClip(); }
+});
+// 5) split screen
+function cekSplitScreen(){
+  if(!examStarted || examFinished) return;
+  const dpr = window.devicePixelRatio || 1;
+  const o = window.innerWidth > window.innerHeight ? 'landscape' : 'portrait';
+  const a = (window.innerWidth*dpr)*(window.innerHeight*dpr);
+  if(a > areaMax[o]) areaMax[o] = a;
+  if(areaMax[o] > 0 && a < areaMax[o]*0.8){
+    if(!splitActive){ splitActive = true; catatPelanggaran('Split screen'); }
+  } else if(a > areaMax[o]*0.9){ splitActive = false; }
+}
+let resizeT = null;
+window.addEventListener('resize',()=>{ clearTimeout(resizeT); resizeT = setTimeout(cekSplitScreen,400); });
+setInterval(cekSplitScreen,3000);
+// 6) jendela kehilangan fokus
+window.addEventListener('blur',()=>{
+  if(!examStarted || examFinished) return;
+  document.getElementById('screen-exam').classList.add('blurred');
+  clearTimeout(blurTimer);
+  blurTimer = setTimeout(()=>{
+    if(dialogOpen || examFinished || document.hidden) return;
+    if(!document.hasFocus() && Date.now()-lastViolAt > 4000) catatPelanggaran('Kehilangan fokus jendela');
+  },1500);
+});
+window.addEventListener('focus',()=>{
+  clearTimeout(blurTimer);
+  document.getElementById('screen-exam').classList.remove('blurred');
+});
+window.addEventListener('beforeunload',(e)=>{ if(examStarted && !examFinished){ e.preventDefault(); e.returnValue=''; } });
+
+/* ================= MULAI UJIAN ================= */
+document.getElementById('btnStart').addEventListener('click',()=>{
+  const token = document.getElementById('inputToken').value.trim();
+  const nama = document.getElementById('inputNama').value.trim();
+  const kelas = document.getElementById('inputKelas').value.trim();
+  const err = document.getElementById('startErr');
+  if(!token){ err.textContent='Token ujian wajib diisi.'; return; }
+  if(token.toUpperCase() !== VALID_TOKEN){ err.textContent='Token salah. Tanyakan token yang benar kepada gurumu.'; return; }
+  if(!kelas || !nama){ err.textContent='Nama dan kelas belum terbaca. Buka ujian dari Menu Kelas 9 atau pilih nama & kelas pada kolom yang tersedia.'; return; }
+  err.textContent='';
+  studentName = nama; studentClass = kelas;
+  buildExam();
+  answers = {}; current=0; logPelanggaran.length=0; violCount=0; examStarted=true; examFinished=false;
+  areaMax.portrait = 0; areaMax.landscape = 0; splitActive = false;
+
+  document.getElementById('screen-start').style.display='none';
+  document.getElementById('screen-exam').style.display='flex';
+  document.getElementById('brandStudent').textContent = nama+' · Kelas '+kelas;
+  startTimer(); renderNavPanel(); renderQuestion(); enterFullscreen();
+  setTimeout(cekSplitScreen, 1800);
+});
+
+/* ================= KIRIM / PENILAIAN ================= */
+function confirmSubmit(){
+  if(!canSubmitNow()){
+    safeAlert('Jawaban baru dapat dikirim setelah 40 menit pengerjaan. Sisa waktu tunggu: '+fmtTime(MIN_SUBMIT_SEC-elapsedSec())+'. Silakan periksa kembali jawabanmu.');
+    return;
+  }
+  const unansweredIdx = examQuestions.findIndex(q=>!isAnswered(q));
+  if(unansweredIdx !== -1){
+    const unansweredCount = examQuestions.filter(q=>!isAnswered(q)).length;
+    safeAlert('Masih ada '+unansweredCount+' soal yang belum dijawab. Silakan lengkapi semua soal terlebih dahulu sebelum mengirim jawaban. Kamu akan diarahkan ke soal pertama yang belum dijawab.');
+    current = unansweredIdx;
+    renderQuestion(); renderNavPanel(); closeMobilePanel();
+    return;
+  }
+  if(safeConfirm('Semua soal telah dijawab. Kirim jawaban sekarang? Jawaban tidak dapat diubah setelah dikirim.')) finishExam(false);
+}
+/* ---- Penilaian PARSIAL ----
+   PG: 1 (benar) atau 0 (salah).
+   PG Kompleks & True/False: per opsi / per pernyataan (4 per soal).
+   Skor soal = (jumlah opsi/pernyataan yang dijawab benar) / 4.
+   Nilai akhir langsung skala 0–100; bobot tiap soal = 100 / jumlah soal. */
+function scoreFrac(q){
+  const v = answers[q._id];
+  if(q.type==='pg') return (v===q.correct) ? 1 : 0;
+  if(q.type==='multi'){
+    const n = q.options.length; let matches = 0;
+    for(let i=0;i<n;i++){
+      const opt = q.options[i];
+      const correctFlag = q.correct.includes(opt);
+      const studentFlag = Array.isArray(v) && v.includes(opt);
+      if(correctFlag === studentFlag) matches++;
+    }
+    return n ? matches/n : 0;
+  }
+  if(q.type==='matrix'){
+    if(!v) return 0;
+    let matches = 0;
+    q.rows.forEach(r=>{ if(v[r.id]===r.correct) matches++; });
+    return q.rows.length ? matches/q.rows.length : 0;
+  }
+  return 0;
+}
+
+function finishExam(autoSubmit){
+  examFinished = true;
+  clearInterval(timerHandle);
+  closeLb();
+  if(isFullscreen()){ (document.exitFullscreen||document.webkitExitFullscreen||function(){}).call(document); }
+  document.getElementById('screen-exam').style.display='none';
+  document.getElementById('warnOverlay').style.display='none';
+
+  const totalMaks = examQuestions.length;
+  const weight = totalMaks ? 100/totalMaks : 0;
+  const perSubject = {};
+  SUBJECT_ORDER.forEach(s=>perSubject[s]={score:0,max:0,total:0,penuh:0});
+  let totalScore = 0, fullCount = 0;
+  const perQuestion = [];
+  examQuestions.forEach(q=>{
+    if(!perSubject[q.subject]){ perSubject[q.subject]={score:0,max:0,total:0,penuh:0}; if(!SUBJECT_ORDER.includes(q.subject)) SUBJECT_ORDER.push(q.subject); }
+    const frac = scoreFrac(q);
+    const qScore = frac*weight;
+    totalScore += qScore;
+    if(frac>=0.999) fullCount++;
+    perSubject[q.subject].total++;
+    perSubject[q.subject].score += qScore;
+    perSubject[q.subject].max += weight;
+    if(frac>=0.999) perSubject[q.subject].penuh++;
+    perQuestion.push({q, frac, qScore});
+  });
+  totalScore = Math.round(totalScore*100)/100;
+  let grade='D', gradeLabel='Perlu Bimbingan';
+  if(totalScore>=90){grade='A';gradeLabel='Sangat Baik';}
+  else if(totalScore>=75){grade='B';gradeLabel='Baik';}
+  else if(totalScore>=60){grade='C';gradeLabel='Cukup';}
+
+  document.getElementById('resScore').textContent = totalScore.toFixed(2)+' / 100';
+  document.getElementById('resGrade').textContent = 'Predikat '+grade+' — '+gradeLabel+' · '+fullCount+' dari '+totalMaks+' soal terjawab sempurna (penilaian parsial per opsi)' + (autoSubmit?' · waktu habis, jawaban terkirim otomatis':'');
+  document.getElementById('rNama').textContent = studentName;
+  document.getElementById('rKelas').textContent = studentClass;
+  document.getElementById('rViol').textContent = violCount;
+
+  let tbl = '<tr><th>Kelompok Teks</th><th>Skor</th><th>Maks</th></tr>';
+  const detailParts = [];
+  SUBJECT_ORDER.forEach(s=>{
+    const sc = Math.round(perSubject[s].score*100)/100, mx = Math.round(perSubject[s].max*100)/100;
+    tbl += '<tr><td>'+escapeHtml(s)+'</td><td>'+sc+'</td><td>'+mx+'</td></tr>';
+    detailParts.push(s+' '+sc+'/'+mx);
+  });
+  document.getElementById('resTable').innerHTML = tbl;
+
+  window._examResult = {
+    nama: studentName, kelas: studentClass, skor: totalScore, skorMaks: 100, pct: totalScore,
+    grade: grade+' ('+gradeLabel+')', detail: detailParts.join(' | ') + ' | Pelanggaran: '+violCount+'x',
+    perSubject: perSubject, violasi: logPelanggaran.length, jenisPelanggaran: logPelanggaran.slice(), ringkasanPelanggaran: ringkasPelanggaran(), durasiDetik: Math.min(elapsedSec(),DURATION_SEC),
+    skorPerSoal: perQuestion.map(p=>Math.round(p.qScore*100)/100)
+  };
+
+  document.getElementById('screen-result').style.display='block';
+  autoSubmitToSheet();
+}
+
+/* ================= GOOGLE APPS SCRIPT (kirim ke Google Sheets) ================= */
+function setSubmitStatus(state, text){
+  const el = document.getElementById('submitStatus');
+  el.className = 'submit-status '+state;
+  document.getElementById('submitStatusText').textContent = text;
+  document.getElementById('btnRetrySubmit').classList.toggle('hidden', state==='sending');
+}
+function jawabanSiswa(q){
+  const v = answers[q._id];
+  if(q.type==='pg') return v || '(kosong)';
+  if(q.type==='multi') return (v&&v.length) ? v.join(' ; ') : '(kosong)';
+  if(q.type==='matrix') return v ? q.rows.map((r,i)=>(i+1)+':'+(v[r.id]||'-')+' ['+r.text.slice(0,40)+']').join(' ; ') : '(kosong)';
+  return '(kosong)';
+}
+function buildAnswerDetail(){
+  return examQuestions.map((q,idx)=>({
+    no: idx+1, noAsli: q._id+1, subject: q.subject, jawaban: jawabanSiswa(q), benar: Math.round(scoreFrac(q)*100)/100
+  }));
+}
+function autoSubmitToSheet(){
+  if(!navigator.onLine){
+    setSubmitStatus('fail','❌ Gagal terkirim — perangkat sedang offline. Sambungkan internet lalu klik "Kirim Ulang".');
+    return;
+  }
+  if(!APPS_SCRIPT_URL){
+    setSubmitStatus('fail','⚠ URL Google Apps Script belum dipasang oleh guru. Gunakan "Unduh Hasil (Excel)" sebagai cadangan.');
+    return;
+  }
+  setSubmitStatus('sending','Mengirim jawaban ke guru...');
+  const r = window._examResult;
+  const payload = {
+    timestamp: new Date().toISOString(),
+    mapel: MAPEL, jenisAsesmen: ASESMEN, judul: JUDUL, materi: MATERI, tingkat: KELAS_TINGKAT,
+    nama: r.nama, kelas: r.kelas, skor: r.skor, skorMaks: r.skorMaks, persentase: r.pct,
+    grade: r.grade, pelanggaran: logPelanggaran.length, jenisPelanggaran: logPelanggaran, ringkasanPelanggaran: r.ringkasanPelanggaran, durasiDetik: r.durasiDetik, detailPerMapel: r.detail,
+    jawaban: buildAnswerDetail()
+  };
+  fetch(APPS_SCRIPT_URL, {
+    method: 'POST', mode: 'no-cors',
+    headers: {'Content-Type':'text/plain;charset=utf-8'},
+    body: JSON.stringify(payload)
+  }).then(()=>{
+    setSubmitStatus('ok','✅ Jawaban berhasil terkirim ke Google Spreadsheet guru.');
+  }).catch(()=>{
+    setSubmitStatus('fail','❌ Gagal terkirim (masalah jaringan). Klik "Kirim Ulang" untuk mencoba lagi.');
+  });
+}
+document.getElementById('btnRetrySubmit').addEventListener('click', autoSubmitToSheet);
+
+/* ================= EXPORT EXCEL (cadangan) ================= */
+document.getElementById('btnExcel').addEventListener('click',()=>{
+  const r = window._examResult;
+  const rows = [];
+  rows.push(['Nama','Kelas','No','No Asli','Kelompok Teks','Soal','Jawaban Siswa','Kunci Jawaban','Skor Soal (0-1, parsial)']);
+  function kunci(q){
+    if(q.type==='pg') return q.correct;
+    if(q.type==='multi') return q.correct.join(' ; ');
+    if(q.type==='matrix') return q.rows.map((row,i)=>(i+1)+':'+row.correct).join(' ; ');
+    return '';
+  }
+  examQuestions.forEach((q,idx)=>{
+    const shortText = q.text.replace(/\s+/g,' ').slice(0,80)+'...';
+    rows.push([r.nama, r.kelas, idx+1, q._id+1, q.subject, shortText, jawabanSiswa(q), kunci(q), Math.round(scoreFrac(q)*100)/100]);
+  });
+  rows.push([]);
+  rows.push(['RINGKASAN']);
+  rows.push(['Nama','Kelas','Skor Akhir (0-100)','Grade','Pelanggaran','Jenis Pelanggaran']);
+  rows.push([r.nama, r.kelas, r.skor, r.grade, r.violasi, r.ringkasanPelanggaran]);
+  const ws = XLSX.utils.aoa_to_sheet(rows);
+  ws['!cols'] = [{wch:18},{wch:8},{wch:5},{wch:8},{wch:26},{wch:60},{wch:40},{wch:40},{wch:10}];
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Hasil ASAS B.Inggris K9');
+  XLSX.writeFile(wb, 'Hasil_ASAS_BInggris_Kelas9_'+r.nama.replace(/[^a-zA-Z0-9]/g,'_')+'.xlsx');
+});
+
+})();
+</script>
 </body>
 </html>
