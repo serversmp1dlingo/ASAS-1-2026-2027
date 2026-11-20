@@ -2,46 +2,888 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Informatika dan KKA — Kelas 8 — ASAS SMP Negeri 1 Dlingo</title>
-<meta name="description" content="Soal Informatika dan KKA Kelas 8">
-<meta name="robots" content="noindex">
-<link rel="icon" href="../../assets/img/logo-smpn1dlingo.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../../assets/css/style.css">
-<script>document.documentElement.classList.add('js');</script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Asesmen Sumatif Akhir Semester — Informatika — SMP N 1 Dlingo</title>
+<link rel="icon" type="image/png" href="../../assets/img/logo-smpn1dlingo.png">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<!-- Data nama siswa per rombel (folder assets/js) -->
+<script src="../../assets/js/data-siswa.js"></script>
+<style>
+  :root{
+    --navy:#4b3a7a; --blue:#7c5cc4; --blue-light:#f1ecfb; --ok:#6a4fb8;
+    --red:#b04a4a; --amber:#d9a23a; --gray:#5d5675; --bg:#ece6f8; --border:#d8cdef; --radius:10px;
+    --card:#ffffff; --ink:#241c3a;
+  }
+  *{box-sizing:border-box;}
+  html,body{height:100%;}
+  body{margin:0;font-family:'Segoe UI',Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink);-webkit-tap-highlight-color:transparent;}
+  #screen-exam, #screen-exam *{
+    -webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;
+    -webkit-touch-callout:none;
+  }
+  #screen-exam img{-webkit-user-drag:none;user-drag:none;}
+  #screen-exam.blurred{filter:blur(18px);transition:filter .15s;}
+  @media print{
+    #screen-exam, #screen-start, #screen-result{display:none !important;}
+    body::before{content:"Konten ujian tidak dapat dicetak.";display:block;text-align:center;padding:40px;font-size:18px;}
+  }
+  img{max-width:100%;height:auto;border-radius:6px;border:1px solid var(--border);}
+  button{font-family:inherit;cursor:pointer;}
+  a{color:inherit;text-decoration:none;}
+  .hidden{display:none !important;}
+
+  /* ===== START ===== */
+  #screen-start{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;
+    background:linear-gradient(135deg,#f1ebfc,#d9ccf2);}
+  .start-card{background:var(--card);border-radius:16px;max-width:660px;width:100%;padding:34px 32px;box-shadow:0 20px 60px rgba(75,58,122,.22);}
+  .school-header{display:flex;align-items:center;gap:14px;margin-bottom:18px;}
+  .school-header img{width:56px;height:auto;border:none;border-radius:0;flex-shrink:0;}
+  .school-header .stxt{line-height:1.35;}
+  .school-header .stxt b{display:block;color:var(--navy);font-size:15px;}
+  .school-header .stxt span{color:var(--gray);font-size:12px;}
+  .start-card h1{margin:0 0 4px;font-size:21px;color:var(--navy);}
+  .start-card .sub{color:var(--gray);margin:0 0 20px;font-size:14px;}
+  .tabs{display:flex;gap:8px;margin-bottom:18px;border-bottom:1.5px solid var(--border);}
+  .tab-btn{padding:9px 16px;border:none;background:none;font-weight:700;font-size:13.5px;color:var(--gray);
+    border-bottom:3px solid transparent;margin-bottom:-2px;}
+  .tab-btn.active{color:var(--blue);border-bottom-color:var(--blue);}
+  .tab-panel{display:none;}
+  .tab-panel.active{display:block;}
+  .info-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px 18px;background:var(--blue-light);
+    border-radius:10px;padding:14px 16px;margin-bottom:18px;font-size:13px;}
+  .info-grid div b{display:block;color:var(--navy);font-size:13px;}
+  .info-grid div span{color:var(--gray);}
+  label.lbl{display:block;font-size:13px;font-weight:600;color:var(--navy);margin:14px 0 6px;}
+  input[type=text],input[type=password]{width:100%;padding:12px 14px;border:1.5px solid var(--border);
+    border-radius:8px;font-size:15px;}
+  input:focus,select:focus{outline:none;border-color:var(--blue);}
+  select{width:100%;padding:12px 14px;border:1.5px solid var(--border);border-radius:8px;font-size:15px;
+    background:var(--card);color:var(--ink);appearance:none;
+    background-image:url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235d5675' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat:no-repeat;background-position:right 12px center;background-size:18px;}
+  select:disabled{background-color:#f4f1fa;color:var(--gray);cursor:not-allowed;}
+  .instr-list{font-size:13.5px;line-height:1.8;color:#3a3150;padding-left:20px;margin:0 0 10px;}
+  .rules{font-size:12.5px;color:var(--gray);line-height:1.6;margin:18px 0;padding:12px 14px;
+    background:#fff8ea;border:1px solid #f1e0ad;border-radius:8px;}
+  .btn-primary{width:100%;padding:14px;background:var(--blue);color:#fff;border:none;border-radius:9px;
+    font-size:16px;font-weight:700;margin-top:12px;transition:.15s;}
+  .btn-primary:hover{background:var(--navy);}
+  .err-msg{color:var(--red);font-size:12.5px;margin-top:6px;min-height:16px;}
+  .idbox{background:var(--blue-light);border:1.5px solid var(--border);border-radius:10px;padding:12px 16px;margin-top:14px;font-size:14px;line-height:1.7;}
+  .idbox b{color:var(--navy);}
+  .note-small{font-size:12px;color:var(--gray);margin-top:14px;line-height:1.6;}
+
+  /* ===== EXAM ===== */
+  #screen-exam{display:none;min-height:100vh;flex-direction:column;}
+  #topbar{background:var(--navy);color:#fff;padding:10px 18px;display:flex;align-items:center;
+    justify-content:space-between;gap:12px;flex-wrap:wrap;position:sticky;top:0;z-index:50;}
+  #topbar .brand{display:flex;align-items:center;gap:10px;font-size:13px;font-weight:700;}
+  #topbar .brand img{width:28px;height:auto;border:none;border-radius:0;}
+  #topbar .brand .who{font-weight:400;opacity:.85;font-size:11.5px;display:block;}
+  #timerBox{background:rgba(255,255,255,.14);padding:8px 16px;border-radius:8px;font-weight:700;
+    font-size:18px;letter-spacing:1px;min-width:110px;text-align:center;}
+  #timerBox.low{background:#c0392b;animation:pulse 1s infinite;}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.6}}
+  #violationBadge{background:var(--red);padding:5px 10px;border-radius:20px;font-size:12px;font-weight:700;display:none;}
+  #panelToggle{background:rgba(255,255,255,.18);color:#fff;border:none;padding:8px 12px;border-radius:8px;font-size:13px;}
+
+  #examBody{display:flex;flex:1;overflow:hidden;}
+  #navPanel{width:280px;flex-shrink:0;background:var(--card);border-right:1px solid var(--border);padding:16px;overflow-y:auto;}
+  #navPanel h3{font-size:11.5px;text-transform:uppercase;letter-spacing:.4px;color:var(--gray);margin:14px 0 8px;}
+  #navPanel h3:first-child{margin-top:0;}
+  .navgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;}
+  .navbtn{aspect-ratio:1;border:1.5px solid var(--border);background:var(--card);border-radius:6px;font-size:12px;
+    font-weight:700;color:var(--navy);display:flex;align-items:center;justify-content:center;}
+  .navbtn.answered{background:var(--ok);border-color:var(--ok);color:#fff;}
+  .navbtn.current{outline:3px solid var(--amber);outline-offset:1px;}
+  .legend{display:flex;gap:14px;font-size:11px;color:var(--gray);margin:14px 0 4px;flex-wrap:wrap;}
+  .legend span{display:inline-flex;align-items:center;gap:5px;}
+  .dot{width:10px;height:10px;border-radius:3px;display:inline-block;}
+  #navSubmitBtn{width:100%;margin-top:18px;padding:12px;background:var(--red);color:#fff;border:none;
+    border-radius:8px;font-weight:700;font-size:14px;}
+  #navSubmitBtn.locked{background:#9a90b5;}
+
+  #questionArea{flex:1;overflow-y:auto;padding:26px 32px 100px;}
+  .qwrap{max-width:820px;margin:0 auto;}
+  .qsubject{display:inline-block;background:var(--blue-light);color:var(--blue);font-size:11.5px;font-weight:700;
+    padding:4px 12px;border-radius:20px;margin-bottom:10px;text-transform:uppercase;letter-spacing:.3px;}
+  .qnum{font-size:14px;color:var(--gray);margin-bottom:8px;}
+  .stim{background:#f6f1ff;border:1.5px solid var(--border);border-left:6px solid var(--blue);border-radius:10px;
+    padding:14px 16px;margin:0 0 16px;}
+  .stim .stim-h{font-weight:700;font-style:italic;color:var(--navy);font-size:14px;margin-bottom:6px;}
+  .stim .stim-t{font-style:italic;font-size:16px;line-height:1.75;}
+  .qtext{font-size:17px;line-height:1.7;margin-bottom:14px;font-weight:600;}
+  .qimg-wrap{margin:14px 0;display:flex;flex-wrap:wrap;gap:14px;}
+  .qimg-wrap .imgbox{position:relative;cursor:zoom-in;width:100%;max-width:760px;}
+  .qimg-wrap img{width:100%;max-width:760px;display:block;}
+  .qimg-wrap .zoomhint{position:absolute;bottom:8px;right:8px;background:rgba(75,58,122,.8);color:#fff;
+    font-size:11px;font-weight:700;padding:4px 9px;border-radius:20px;pointer-events:none;}
+  .qimg-wrap .imgph{width:100%;max-width:760px;height:200px;border:2px dashed var(--border);border-radius:8px;
+    display:flex;align-items:center;justify-content:center;color:var(--gray);font-size:12.5px;text-align:center;background:#faf8fe;padding:10px;}
+  #lightbox{position:fixed;inset:0;background:rgba(25,15,45,.94);z-index:1200;display:none;align-items:center;justify-content:center;padding:14px;}
+  #lightbox.open{display:flex;}
+  #lightbox img{max-width:100%;max-height:92vh;width:auto;border-radius:6px;box-shadow:0 10px 40px rgba(0,0,0,.5);}
+  #lightbox .lb-close{position:absolute;top:16px;right:18px;background:#fff;color:var(--navy);border:none;width:38px;height:38px;border-radius:50%;font-size:18px;font-weight:700;}
+  .qtype-hint{font-size:13px;color:#a8741a;font-weight:700;margin-bottom:10px;}
+
+  .option{display:flex;align-items:flex-start;gap:12px;padding:14px 16px;border:1.5px solid var(--border);
+    border-radius:10px;margin-bottom:10px;background:var(--card);transition:.12s;}
+  .option:hover{border-color:var(--blue);}
+  .option.selected{border-color:var(--blue);background:var(--blue-light);}
+  .option input{margin-top:3px;flex-shrink:0;width:19px;height:19px;accent-color:var(--blue);}
+  .option .otext{font-size:16px;line-height:1.55;}
+  .option .olabel{font-weight:700;color:var(--navy);margin-right:6px;}
+
+  table.matrix{width:100%;border-collapse:collapse;margin-top:8px;font-size:15px;background:var(--card);}
+  table.matrix th,table.matrix td{border:1px solid var(--border);padding:10px;text-align:center;}
+  table.matrix th{background:var(--blue-light);color:var(--navy);}
+  table.matrix td.stmt{text-align:left;line-height:1.55;}
+  table.matrix td.pick{width:78px;padding:0;}
+  table.matrix td.pick label{display:flex;align-items:center;justify-content:center;width:100%;min-height:56px;cursor:pointer;}
+  table.matrix td.pick.sel{background:var(--blue-light);}
+  table.matrix input{width:21px;height:21px;accent-color:var(--blue);}
+
+  #navRow{max-width:820px;margin:24px auto 0;display:flex;justify-content:space-between;gap:10px;}
+  .btn-nav{padding:12px 22px;border-radius:8px;border:1.5px solid var(--border);background:var(--card);font-weight:700;color:var(--navy);font-size:14px;}
+  .btn-nav:disabled{opacity:.4;}
+  .btn-nav.primary{background:var(--blue);color:#fff;border:none;}
+
+  #warnOverlay{position:fixed;inset:0;background:rgba(45,30,80,.96);z-index:999;display:none;align-items:center;justify-content:center;padding:20px;color:#fff;text-align:center;}
+  #warnOverlay .box{max-width:420px;}
+  #warnOverlay h2{color:#ffd166;font-size:22px;}
+  #warnOverlay p{font-size:14.5px;line-height:1.6;opacity:.92;}
+  #warnOverlay button{margin-top:16px;padding:12px 28px;background:#ffd166;border:none;border-radius:8px;font-weight:700;font-size:14.5px;color:#432;}
+
+  /* ===== RESULT ===== */
+  #screen-result{display:none;min-height:100vh;padding:30px 16px;background:var(--bg);}
+  .result-card{max-width:720px;margin:0 auto;background:var(--card);border-radius:16px;padding:32px;box-shadow:0 10px 40px rgba(75,58,122,.12);}
+  .result-card h1{color:var(--navy);margin-top:0;font-size:22px;}
+  .score-hero{text-align:center;padding:26px;background:linear-gradient(135deg,var(--navy),var(--blue));border-radius:14px;color:#fff;margin:18px 0 24px;}
+  .score-hero .num{font-size:46px;font-weight:800;}
+  .score-hero .grade{font-size:15px;opacity:.92;margin-top:4px;}
+  .breakdown{width:100%;border-collapse:collapse;font-size:14px;margin-bottom:20px;}
+  .breakdown th,.breakdown td{padding:9px 10px;border-bottom:1px solid var(--border);text-align:left;}
+  .breakdown th{color:var(--gray);font-size:12px;text-transform:uppercase;}
+  .result-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px;}
+  .result-actions button{flex:1;min-width:180px;padding:13px;border-radius:9px;font-weight:700;font-size:14px;border:none;}
+  #btnExcel{background:var(--blue);color:#fff;}
+  #btnRetrySubmit{background:var(--amber);color:#432;}
+  .submit-status{display:flex;align-items:center;gap:10px;padding:12px 16px;border-radius:9px;font-size:13.5px;font-weight:600;margin-bottom:18px;}
+  .submit-status.sending{background:#fff8ea;color:#8a6d00;border:1px solid #f1e0ad;}
+  .submit-status.ok{background:#e9f9f0;color:#0f7a45;border:1px solid #b7ecd0;}
+  .submit-status.fail{background:#fdecea;color:#a4271f;border:1px solid #f3c3bd;}
+  .dotpulse{width:9px;height:9px;border-radius:50%;background:currentColor;flex-shrink:0;animation:pulse 1s infinite;}
+  .submit-status.ok .dotpulse,.submit-status.fail .dotpulse{animation:none;}
+
+  @media (max-width:820px){
+    #navPanel{position:fixed;left:-300px;top:0;bottom:0;z-index:60;transition:.2s;box-shadow:4px 0 20px rgba(75,58,122,.2);}
+    #navPanel.open{left:0;}
+    #questionArea{padding:18px 14px 90px;}
+    .qimg-wrap img,.qimg-wrap .imgph{max-width:100%;width:100%;}
+    .start-card{padding:26px 20px;}
+    .info-grid{grid-template-columns:1fr;}
+    .stim .stim-t{font-size:15.5px;}
+    table.matrix{font-size:14.5px;}
+    table.matrix td.pick{width:66px;}
+  }
+</style>
 </head>
 <body>
-<div class="bg-deco" aria-hidden="true"><span class="orb o1"></span><span class="orb o2"></span><span class="orb o3"></span></div>
-<div class="page">
-<header class="kop">
-  <div class="kop-inner">
-    <a class="kembali reveal" href="../../kelas-8.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg> Kelas 8</a>
-    <div class="logo-wrap reveal"><img src="../../assets/img/logo-smpn1dlingo.png" alt="Logo SMP Negeri 1 Dlingo"></div>
-    <p class="sekolah reveal" style="--d:.08s">SMP NEGERI 1 DLINGO</p>
-    <h1 class="judul reveal" style="--d:.16s">Informatika dan KKA</h1>
-    <div class="ornamen reveal" style="--d:.24s"><i></i></div>
-    <div class="chips reveal" style="--d:.32s"><span class="chip">Kelas <strong>VIII</strong></span><span class="chip">Tahun Pelajaran <strong>2026/2027</strong></span></div>
+
+<!-- ============ START ============ -->
+<div id="screen-start">
+  <div class="start-card">
+    <a href="../../kelas-8.html" style="display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;color:var(--gray);margin-bottom:14px;">&larr; Menu Kelas 8</a>
+    <div class="school-header">
+      <img src="../../assets/img/logo-smpn1dlingo.png" alt="Logo Sekolah">
+      <div class="stxt"><b>SMP NEGERI 1 DLINGO</b><span>Asesmen Sumatif Akhir Semester · Informatika · TP 2026/2027</span></div>
+    </div>
+    <h1>📝 Asesmen Sumatif Akhir Semester — Informatika</h1>
+    <p class="sub">Jenjang SMP · Kelas 8 · Semester Ganjil · Materi: Mesin Pencari, Keamanan Akun Digital, Cyberbullying, Jaringan Komputer, Hoaks &amp; Verifikasi Informasi</p>
+
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="petunjuk">📋 Petunjuk</button>
+      <button class="tab-btn" data-tab="mulai">🚀 Mulai Ujian</button>
+    </div>
+
+    <div class="tab-panel active" id="tab-petunjuk">
+      <div class="info-grid">
+        <div><b id="infoJumlah">50 Soal</b><span>30 Pilihan Ganda, 10 PG Kompleks, 10 Benar/Salah</span></div>
+        <div><b>90 Menit</b><span>Alokasi waktu · jawaban baru bisa dikirim setelah 40 menit</span></div>
+        <div><b>5 Materi</b><span>Mesin Pencari, Keamanan Akun Digital, Cyberbullying, Jaringan Komputer, Hoaks &amp; Verifikasi Informasi</span></div>
+        <div><b>Acak Soal</b><span>Urutan soal &amp; opsi diacak untuk tiap siswa</span></div>
+      </div>
+      <p style="font-size:13.5px;color:#3a3150;margin:0 0 8px;font-weight:700;">Petunjuk Pengerjaan:</p>
+      <ol class="instr-list">
+        <li>Berdoalah terlebih dahulu. Nama dan kelasmu terisi otomatis dari Menu Kelas 8. Masukkan token ujian pada tab "Mulai Ujian" lalu mulai.</li>
+        <li>Bacalah teks stimulus (kotak ungu) dan setiap butir soal dengan cermat sebelum menjawab.</li>
+        <li>Soal nomor awal berupa Pilihan Ganda (pilih satu jawaban). Soal Pilihan Ganda Kompleks: centang <b>semua</b> jawaban yang benar. Soal Benar/Salah: tentukan Benar atau Salah untuk <b>setiap</b> pernyataan.</li>
+        <li>Penilaian bersifat parsial untuk soal PG Kompleks dan Benar/Salah: setiap opsi/pernyataan yang tepat tetap menambah skor.</li>
+        <li>Ujian akan tampil dalam mode layar penuh (fullscreen) sejak dimulai.</li>
+        <li>Jangan berpindah tab/aplikasi, keluar dari layar penuh, menyalin teks, mengambil tangkapan layar, atau memakai split screen — semuanya tercatat sebagai pelanggaran.</li>
+        <li>Waktu berjalan otomatis selama 90 menit dan tidak dapat dijeda. Jawaban baru dapat dikirim setelah 40 menit pengerjaan.</li>
+        <li>Gunakan panel nomor soal untuk melompat ke soal tertentu. Tekan "Kirim Jawaban" setelah selesai. Jika pengiriman gagal, gunakan tombol "Kirim Ulang".</li>
+      </ol>
+    </div>
+
+    <div class="tab-panel" id="tab-mulai">
+      <label class="lbl">Token Ujian</label>
+      <input type="password" id="inputToken" placeholder="Masukkan token dari guru" autocomplete="off">
+      <div class="idbox hidden" id="idBox">👤 <b id="idNama"></b><br>🏫 Kelas <b id="idKelas"></b></div>
+      <div id="pickWrap">
+        <div class="note-small" style="margin-top:12px;color:#8a6d00;">Data nama &amp; kelas tidak terbaca dari Menu Kelas 8. Silakan buka ujian melalui menu kelas, atau pilih manual di bawah ini.</div>
+        <label class="lbl">Kelas</label>
+        <select id="inputKelas"><option value="">— Pilih Kelas —</option></select>
+        <label class="lbl">Nama Lengkap</label>
+        <select id="inputNama" disabled><option value="">— Pilih kelas terlebih dahulu —</option></select>
+      </div>
+      <div class="rules">
+        ⚠️ <b>Perhatian sebelum memulai:</b><br>
+        • Ujian akan tampil dalam mode <b>layar penuh (fullscreen)</b>.<br>
+        • Jangan membuka tab/aplikasi lain atau memakai <b>split screen</b> — sistem akan mencatat pelanggaran.<br>
+        • Waktu berjalan otomatis dan tidak dapat dijeda. Jawaban <b>baru dapat dikirim setelah 40 menit</b>; ujian terkirim otomatis saat waktu habis.<br>
+        • Pastikan koneksi internet stabil agar hasil dapat terkirim ke guru.<br>
+        • Layar akan mengabur dan pelanggaran tercatat jika kamu keluar layar penuh, menyalin teks, mengambil tangkapan layar (screenshot), atau memakai split screen.
+      </div>
+      <div class="err-msg" id="startErr"></div>
+      <button class="btn-primary" id="btnStart">🚀 Mulai Ujian (Layar Penuh)</button>
+    </div>
   </div>
-</header>
-<main>
-  <div class="glass panel-segera reveal">
-    <div class="ikon-besar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg></div>
-    <span class="lencana">Segera hadir</span>
-    <h2>Soal belum tersedia</h2>
-    <p>Berkas soal <strong>Informatika dan KKA</strong> Kelas VIII sedang disiapkan dan akan diunggah menyusul.</p>
-    <p>Berkas ini akan digantikan pada alamat berikut, sehingga tautan menu tidak perlu diubah.</p>
-    <span class="berkas">soal/kelas-8/informatika-kka.html</span><br>
-    <a class="tombol" href="../../kelas-8.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg> Kembali ke Kelas VIII</a>
-  </div>
-</main>
-<footer>
-  <p><strong>SMP Negeri 1 Dlingo</strong> — Bantul, Daerah Istimewa Yogyakarta<br>
-  Portal Asesmen Sumatif Akhir Semester &middot; Tahun Pelajaran 2026/2027</p>
-</footer>
 </div>
-<script src="../../assets/js/main.js"></script>
+
+<!-- ============ EXAM ============ -->
+<div id="screen-exam">
+  <div id="topbar">
+    <button id="panelToggle">☰ Soal</button>
+    <div class="brand"><img src="../../assets/img/logo-smpn1dlingo.png" alt="Logo"><span>ASAS INFORMATIKA KELAS 8 · TP 2026/2027<small class="who" id="brandStudent"></small></span></div>
+    <div id="violationBadge">⚠ Pelanggaran: <span id="violCount">0</span></div>
+    <div id="timerBox">90:00</div>
+  </div>
+  <div id="examBody">
+    <div id="navPanel"></div>
+    <div id="questionArea">
+      <div class="qwrap" id="qwrap"></div>
+      <div id="navRow">
+        <button class="btn-nav" id="btnPrev">← Sebelumnya</button>
+        <button class="btn-nav primary" id="btnNext">Selanjutnya →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="lightbox">
+  <button class="lb-close" id="lightboxClose">✕</button>
+  <img id="lightboxImg" src="" alt="Gambar diperbesar">
+</div>
+
+<div id="warnOverlay">
+  <div class="box">
+    <h2 id="warnTitle">⚠ Peringatan</h2>
+    <p id="warnText"></p>
+    <button id="warnBtn">Kembali ke Ujian</button>
+  </div>
+</div>
+
+<!-- ============ RESULT ============ -->
+<div id="screen-result">
+  <div class="result-card">
+    <div class="school-header">
+      <img src="../../assets/img/logo-smpn1dlingo.png" alt="Logo Sekolah">
+      <div class="stxt"><b>SMP NEGERI 1 DLINGO BANTUL</b><span>Asesmen Sumatif Akhir Semester · Informatika · TP 2026/2027</span></div>
+    </div>
+    <h1>✅ Hasil Ujian</h1>
+    <div class="score-hero">
+      <div class="num" id="resScore">0 / 100</div>
+      <div class="grade" id="resGrade">Predikat —</div>
+    </div>
+    <div id="submitStatus" class="submit-status sending">
+      <span class="dotpulse"></span><span id="submitStatusText">Mengirim jawaban ke guru...</span>
+    </div>
+    <table class="breakdown" id="resTable"></table>
+    <div class="result-actions">
+      <button id="btnRetrySubmit" class="hidden">🔁 Kirim Ulang</button>
+      <button id="btnExcel">⬇️ Unduh Hasil (Excel)</button>
+    </div>
+    <p class="note-small">
+      Nama: <b id="rNama"></b> · Kelas: <b id="rKelas"></b> · Pelanggaran tercatat: <b id="rViol"></b> kali.<br>
+      Jawaban dikirim otomatis ke Google Spreadsheet guru begitu halaman ini muncul. Jika status di atas menunjukkan gagal terkirim, pastikan internet aktif lalu klik "Kirim Ulang". Tombol "Unduh Hasil (Excel)" tersedia sebagai cadangan.
+    </p>
+  </div>
+</div>
+
+<script id="questions-data" type="application/json">[{"no":1,"type":"pg","stim":"Rizki mendapat tugas project IPAS tentang dampak sampah plastik di laut. Percobaan pertamanya dengan mengetik kata kunci “sampah” menghasilkan halaman yang terlalu umum dan banyak membahas sampah rumah tangga. Pada percobaan kedua, ia mengetik “dampak sampah plastik laut” lengkap dengan tanda kutip dua, dan hasil yang muncul menjadi jauh lebih spesifik dan relevan.","text":"Berdasarkan ilustrasi, mengapa hasil pencarian Rizki pada percobaan kedua menjadi lebih relevan?","options":[{"k":"A","t":"Karena mesin pencari otomatis memperbaiki ejaan yang salah"},{"k":"B","t":"Karena tanda kutip dua memerintahkan mesin pencari menampilkan halaman dengan frasa persis seperti yang diketik"},{"k":"C","t":"Karena kata kunci yang lebih panjang otomatis diprioritaskan oleh algoritma"},{"k":"D","t":"Karena mesin pencari menghapus seluruh hasil yang memuat kata “sampah” secara terpisah"}],"correct":["B"],"subject":"Mesin Pencari & Pencarian Informasi"},{"no":2,"type":"pg","stim":"Saat Rizki mulai mengetik huruf-huruf awal kata kunci di kolom pencarian, muncul beberapa saran kata yang sering dicari orang lain sebelum ia selesai mengetik.","text":"Saran kata yang muncul saat Rizki mengetik sebagian kata kunci sebagaimana diilustrasikan merupakan hasil kerja fitur ...","options":[{"k":"A","t":"Web crawler"},{"k":"B","t":"Autocomplete"},{"k":"C","t":"Operator pencarian"},{"k":"D","t":"Pengindeksan manual oleh admin situs"}],"correct":["B"],"subject":"Mesin Pencari & Pencarian Informasi"},{"no":3,"type":"pg","stim":"Untuk project IPAS-nya, Rizki ingin menemukan halaman yang membahas sampah plastik maupun solusi daur ulangnya sekaligus dalam satu hasil pencarian.","text":"Jika Rizki ingin menemukan halaman yang membahas sampah plastik maupun solusi daur ulangnya sekaligus dalam satu hasil pencarian, operator pencarian yang paling tepat digunakan adalah ...","options":[{"k":"A","t":"OR"},{"k":"B","t":"AND"},{"k":"C","t":"Tanda kutip dua"},{"k":"D","t":"Tanda tanya"}],"correct":["B"],"subject":"Mesin Pencari & Pencarian Informasi"},{"no":4,"type":"pg","stim":"Untuk mencari bahan project IPAS tentang dampak sampah plastik di laut, Rizki berencana mengetik satu kata saja, yaitu “sampah”, di mesin pencari.","text":"Apabila Rizki memasukkan kata kunci yang sangat umum seperti hanya “sampah”, risiko yang paling mungkin terjadi adalah ...","options":[{"k":"A","t":"Mesin pencari akan error dan tidak menampilkan hasil apa pun"},{"k":"B","t":"Hasil pencarian menjadi sangat banyak namun kurang relevan dengan topik spesifik yang diinginkan"},{"k":"C","t":"Mesin pencari otomatis akan mengubah kata kunci tanpa sepengetahuan pengguna"},{"k":"D","t":"Pencarian akan diblokir karena dianggap kata terlarang"}],"correct":["B"],"subject":"Mesin Pencari & Pencarian Informasi"},{"no":5,"type":"pg","stim":"Setelah Rizki menekan tombol “cari”, mesin pencari menampilkan jutaan halaman web hanya dalam hitungan detik. Rizki heran karena mesin pencari tentu tidak membuka seluruh internet satu per satu pada saat itu juga.","text":"Mesin pencari dapat menampilkan jutaan halaman web hanya dalam hitungan detik setelah Rizki menekan tombol “cari” karena sebelumnya mesin pencari telah melakukan ...","options":[{"k":"A","t":"Pengunduhan seluruh isi internet ke komputer pengguna"},{"k":"B","t":"Pengindeksan data dari halaman-halaman web yang telah dijelajahi oleh web crawler"},{"k":"C","t":"Pengiriman email konfirmasi ke pemilik situs web"},{"k":"D","t":"Penghapusan otomatis halaman yang jarang dikunjungi"}],"correct":["B"],"subject":"Mesin Pencari & Pencarian Informasi"},{"no":6,"type":"pg","stim":"Tasya baru saja membuat akun belajar daring. Saat diminta membuat kata sandi, ia mengetik tanggal lahirnya karena mudah diingat, namun sistem menolak dan memberi peringatan “kata sandi lemah”.","text":"Sistem menolak kata sandi berupa tanggal lahir Tasya karena ...","options":[{"k":"A","t":"Tanggal lahir terlalu pendek untuk dimasukkan"},{"k":"B","t":"Tanggal lahir termasuk informasi yang mudah ditebak atau diketahui orang lain"},{"k":"C","t":"Sistem tidak mendukung format angka sebagai kata sandi"},{"k":"D","t":"Tanggal lahir mengandung karakter yang tidak diizinkan"}],"correct":["B"],"subject":"Keamanan Akun Digital"},{"no":7,"type":"pg","stim":"Setelah kata sandi berupa tanggal lahirnya ditolak, Tasya membuat kata sandi baru: T@sya_2026! Kali ini sistem menerimanya dan menilainya sebagai kata sandi yang kuat.","text":"Dibandingkan dengan tanggal lahirnya, kata sandi baru Tasya (T@sya_2026!) menjadi lebih kuat terutama karena ...","options":[{"k":"A","t":"Jumlah karakternya sama persis dengan tanggal lahir"},{"k":"B","t":"Hanya menggunakan huruf kapital saja"},{"k":"C","t":"Menggabungkan huruf besar, huruf kecil, angka, dan simbol sehingga lebih sulit ditebak"},{"k":"D","t":"Mengandung nama lengkap Tasya sehingga mudah diingat"}],"correct":["C"],"subject":"Keamanan Akun Digital"},{"no":8,"type":"pg","stim":"Beberapa hari kemudian, Tasya menerima pesan email yang mengatasnamakan “Admin Sekolah”. Pesan itu meminta Tasya mengklik sebuah tautan dan memasukkan ulang kata sandi akunnya karena akun akan “diblokir dalam 1 jam”.","text":"Pesan yang diterima Tasya yang mengatasnamakan “Admin Sekolah” dan meminta ia memasukkan ulang kata sandi melalui tautan tertentu merupakan contoh tindakan ...","options":[{"k":"A","t":"Autocomplete"},{"k":"B","t":"Phishing"},{"k":"C","t":"Verifikasi dua langkah"},{"k":"D","t":"Query pencarian"}],"correct":["B"],"subject":"Keamanan Akun Digital"},{"no":9,"type":"pg","stim":"Tasya merasa curiga terhadap email yang mengatasnamakan “Admin Sekolah” karena alamat email pengirimnya terlihat aneh dan tidak resmi. Ia pun memutuskan untuk tidak mengklik tautan di dalamnya.","text":"Sikap kecurigaan Tasya terhadap alamat email pengirim yang “terlihat aneh dan tidak resmi” merupakan langkah tepat karena ...","options":[{"k":"A","t":"Email resmi dari sekolah justru selalu menggunakan alamat yang aneh"},{"k":"B","t":"Ciri umum email phishing adalah menggunakan identitas palsu yang menyerupai pihak resmi"},{"k":"C","t":"Semua email yang meminta tindakan cepat sudah pasti berasal dari sekolah"},{"k":"D","t":"Alamat email tidak pernah menjadi indikator keaslian pesan"}],"correct":["B"],"subject":"Keamanan Akun Digital"},{"no":10,"type":"pg","stim":"Tasya sudah membuat kata sandi yang kuat untuk akun belajarnya. Gurunya menyarankan satu langkah tambahan agar akun tetap aman meskipun kata sandinya sampai diketahui orang lain, yaitu meminta kode tambahan yang dikirim ke ponsel setiap kali akun dibuka.","text":"Selain membuat kata sandi yang kuat, langkah tambahan yang dapat membuat akun Tasya lebih aman meskipun kata sandinya sampai diketahui orang lain adalah dengan mengaktifkan ...","options":[{"k":"A","t":"Autocomplete"},{"k":"B","t":"Web crawler"},{"k":"C","t":"Verifikasi dua langkah (two-factor authentication)"},{"k":"D","t":"Fitur riwayat pencarian"}],"correct":["C"],"subject":"Keamanan Akun Digital"},{"no":11,"type":"pg","stim":"Di grup WhatsApp kelas, beberapa siswa membuat julukan ejekan untuk Bima karena penampilannya. Julukan itu terus-menerus diulang setiap kali Bima mengirim pesan.","text":"Tindakan teman-teman sekelas yang terus-menerus mengejek Bima di grup WhatsApp tergolong sebagai ...","options":[{"k":"A","t":"Candaan biasa antarteman yang wajar terjadi"},{"k":"B","t":"Cyberbullying karena menyakiti dan merendahkan seseorang melalui media digital"},{"k":"C","t":"Diskusi kelompok yang sah dalam pembelajaran"},{"k":"D","t":"Bentuk kebebasan berekspresi yang tidak melanggar aturan apa pun"}],"correct":["B"],"subject":"Cyberbullying"},{"no":12,"type":"pg","stim":"Karena julukan ejekan di grup kelas terus-menerus diulang, Bima akhirnya memilih diam dan tidak mau lagi membuka grup kelas.","text":"Perubahan sikap Bima yang memilih diam dan menghindari grup kelas mencerminkan salah satu dampak umum cyberbullying terhadap korban, yaitu ...","options":[{"k":"A","t":"Meningkatnya rasa percaya diri"},{"k":"B","t":"Munculnya semangat untuk membalas secara terbuka"},{"k":"C","t":"Menurunnya rasa percaya diri serta munculnya rasa takut atau tertekan"},{"k":"D","t":"Tidak adanya pengaruh apa pun terhadap kondisi psikologis korban"}],"correct":["C"],"subject":"Cyberbullying"},{"no":13,"type":"pg","stim":"Putri melihat tangkapan layar percakapan yang mengejek Bima di grup kelas. Ia menyimpan tangkapan layar tersebut sebagai bukti, lalu melaporkannya kepada wali kelas.","text":"Tindakan Putri menyimpan tangkapan layar sebagai bukti sebelum melapor ke wali kelas merupakan langkah yang tepat karena ...","options":[{"k":"A","t":"Bukti digital dapat memperkuat laporan dan membantu penanganan kasus secara objektif"},{"k":"B","t":"Tangkapan layar wajib disebarluaskan terlebih dahulu ke seluruh angkatan"},{"k":"C","t":"Laporan tanpa bukti sudah pasti akan ditindaklanjuti dengan cara yang sama"},{"k":"D","t":"Menyimpan bukti hanya diperlukan apabila pelaku adalah orang yang tidak dikenal"}],"correct":["A"],"subject":"Cyberbullying"},{"no":14,"type":"pg","stim":"Seorang siswa mengirimkan ejekan kepada temannya secara berulang-ulang setiap hari. Ia sengaja melakukannya agar temannya merasa takut berkepanjangan.","text":"Apabila ejekan serupa dilakukan secara berulang-ulang oleh pelaku yang sama dengan tujuan menimbulkan rasa takut berkepanjangan pada korban, tindakan tersebut lebih tepat dikategorikan sebagai ...","options":[{"k":"A","t":"Flaming"},{"k":"B","t":"Harassment"},{"k":"C","t":"Outing"},{"k":"D","t":"Impersonation"}],"correct":["B"],"subject":"Cyberbullying"},{"no":15,"type":"pg","stim":"Setelah mengetahui Bima diejek di grup kelas, Putri dan teman-temannya bingung harus meminta bantuan kepada siapa terlebih dahulu di lingkungan sekolah.","text":"Berdasarkan ilustrasi, pihak yang paling tepat dihubungi pertama kali oleh korban maupun saksi kasus cyberbullying di lingkungan sekolah adalah ...","options":[{"k":"A","t":"Menyebarkan kasus tersebut secara luas di media sosial agar viral"},{"k":"B","t":"Membalas pelaku dengan ejekan yang setimpal"},{"k":"C","t":"Guru, wali kelas, atau orang dewasa yang dipercaya di sekolah"},{"k":"D","t":"Mengabaikan kasus tersebut karena bukan urusan pribadi"}],"correct":["C"],"subject":"Cyberbullying"},{"no":16,"type":"pg","stim":"Seluruh komputer di laboratorium komputer sebuah sekolah dihubungkan melalui kabel ke satu router yang sama, sehingga antarkomputer di ruangan tersebut dapat saling berbagi file tanpa harus melalui internet.","text":"Jaringan komputer yang menghubungkan seluruh komputer dalam satu ruang laboratorium sebagaimana diilustrasikan tergolong sebagai ...","options":[{"k":"A","t":"Internet"},{"k":"B","t":"LAN (Local Area Network)"},{"k":"C","t":"WAN (Wide Area Network)"},{"k":"D","t":"MAN (Metropolitan Area Network)"}],"correct":["B"],"subject":"Jaringan Komputer"},{"no":17,"type":"pg","stim":"Router di laboratorium komputer sekolah tersambung ke sebuah modem yang menghubungkan jaringan sekolah ke internet.","text":"Perangkat yang berfungsi menghubungkan jaringan laboratorium sekolah ke internet sebagaimana disebutkan dalam ilustrasi adalah ...","options":[{"k":"A","t":"Router"},{"k":"B","t":"Modem"},{"k":"C","t":"Server"},{"k":"D","t":"Kabel UTP"}],"correct":["B"],"subject":"Jaringan Komputer"},{"no":18,"type":"pg","stim":"Ketika seorang siswa mengetikkan alamat situs pembelajaran di peramban (browser), komputer harus lebih dulu menerjemahkan nama situs tersebut menjadi deretan angka sebelum dapat terhubung ke server yang dituju.","text":"Proses menerjemahkan nama situs pembelajaran menjadi deretan angka sebelum komputer dapat terhubung ke server yang dituju merupakan fungsi dari ...","options":[{"k":"A","t":"DNS (Domain Name System)"},{"k":"B","t":"TCP/IP"},{"k":"C","t":"HTTP"},{"k":"D","t":"Web crawler"}],"correct":["A"],"subject":"Jaringan Komputer"},{"no":19,"type":"pg","stim":"Di laboratorium komputer, semua komputer terhubung ke router yang sama, dan router tersambung ke modem untuk mengakses internet. Suatu hari, kabel yang menghubungkan router ke modem terputus, namun seluruh komputer dan router tetap menyala.","text":"Apabila kabel yang menghubungkan router ke modem terputus, namun seluruh komputer di laboratorium tetap menyala dan terhubung ke router yang sama, maka yang paling mungkin terjadi adalah ...","options":[{"k":"A","t":"Seluruh komputer di laboratorium langsung mati total"},{"k":"B","t":"Komputer-komputer tersebut masih dapat saling berbagi file dalam jaringan lokal, tetapi tidak dapat mengakses internet"},{"k":"C","t":"Komputer-komputer tersebut otomatis berpindah menggunakan jaringan WAN"},{"k":"D","t":"Seluruh data yang tersimpan di komputer akan hilang secara otomatis"}],"correct":["B"],"subject":"Jaringan Komputer"},{"no":20,"type":"pg","stim":"Setiap perangkat yang terhubung ke jaringan laboratorium memiliki “deretan angka” unik, misalnya 192.168.1.10, yang digunakan untuk mengidentifikasinya agar data dikirim ke perangkat yang tepat.","text":"“Deretan angka” unik yang digunakan untuk mengidentifikasi setiap perangkat yang terhubung ke dalam suatu jaringan sebagaimana disinggung dalam ilustrasi disebut ...","options":[{"k":"A","t":"Query"},{"k":"B","t":"IP Address"},{"k":"C","t":"Domain"},{"k":"D","t":"Protokol"}],"correct":["B"],"subject":"Jaringan Komputer"},{"no":21,"type":"pg","stim":"Sebuah sekolah memasang beberapa access point di perpustakaan agar siswa dapat terhubung ke internet melalui Wi-Fi tanpa menggunakan kabel.","text":"Berdasarkan ilustrasi, access point berfungsi untuk ...","options":[{"k":"A","t":"Menerjemahkan nama situs menjadi alamat IP"},{"k":"B","t":"Menyimpan seluruh halaman situs perpustakaan digital"},{"k":"C","t":"Memancarkan sinyal Wi-Fi agar perangkat dapat terhubung ke jaringan tanpa kabel"},{"k":"D","t":"Mengindeks halaman web yang telah dijelajahi web crawler"}],"correct":["C"],"subject":"Jaringan Komputer"},{"no":22,"type":"pg","stim":"Setiap access point di perpustakaan sekolah dihubungkan dengan kabel UTP ke sebuah switch, kemudian switch tersebut dihubungkan ke router.","text":"Perangkat yang menghubungkan beberapa perangkat jaringan (seperti access point) dalam satu jaringan lokal melalui kabel UTP sebagaimana disebutkan dalam ilustrasi adalah ...","options":[{"k":"A","t":"Switch"},{"k":"B","t":"Browser"},{"k":"C","t":"Web crawler"},{"k":"D","t":"Mesin pencari"}],"correct":["A"],"subject":"Jaringan Komputer"},{"no":23,"type":"pg","stim":"Ketika Alya membuka ponselnya di perpustakaan sekolah, ponsel tersebut memperoleh alamat IP secara otomatis dari router.","text":"Alamat IP yang diperoleh ponsel Alya dari router berfungsi sebagai ...","options":[{"k":"A","t":"Pengaman agar kata sandi tidak dapat dibobol"},{"k":"B","t":"Identitas unik perangkat dalam jaringan agar data dikirim ke tujuan yang benar"},{"k":"C","t":"Penentu kecepatan mengetik pengguna"},{"k":"D","t":"Penyaring pesan yang mengandung phishing"}],"correct":["B"],"subject":"Jaringan Komputer"},{"no":24,"type":"pg","stim":"Saat Alya membuka situs perpustakaan digital, data dikirim dalam bentuk potongan-potongan kecil (paket) yang mengikuti aturan komunikasi tertentu agar dapat sampai ke tujuan dengan benar.","text":"Aturan komunikasi yang mengatur cara pengiriman paket data antarperangkat dalam jaringan sebagaimana disinggung dalam ilustrasi disebut ...","options":[{"k":"A","t":"Query"},{"k":"B","t":"Autocomplete"},{"k":"C","t":"Phishing"},{"k":"D","t":"Protokol"}],"correct":["D"],"subject":"Jaringan Komputer"},{"no":25,"type":"pg","stim":"Di perpustakaan sekolah, Wi-Fi disediakan oleh sebuah access point yang terhubung ke switch dan router. Komputer milik pustakawan terhubung langsung ke switch melalui kabel UTP. Suatu hari access point tersebut mati, sedangkan router, switch, dan perangkat lainnya tetap normal.","text":"Apabila access point di perpustakaan mati sementara router dan perangkat lainnya normal, kemungkinan yang terjadi adalah ...","options":[{"k":"A","t":"Perangkat yang bergantung pada Wi-Fi tidak dapat terhubung ke jaringan, sedangkan komputer berkabel lain masih dapat terhubung"},{"k":"B","t":"Seluruh komputer berkabel di sekolah ikut mati"},{"k":"C","t":"Seluruh data di dalam router akan hilang"},{"k":"D","t":"Semua perangkat otomatis berubah menjadi jaringan WAN"}],"correct":["A"],"subject":"Jaringan Komputer"},{"no":26,"type":"pg","stim":"Dimas menerima pesan berantai di grup keluarga yang berbunyi, “Air rebusan daun tertentu menyembuhkan semua penyakit — sebarkan sebelum pesan ini dihapus!” Pesan tersebut tidak mencantumkan penulis maupun sumber informasinya.","text":"Berdasarkan ilustrasi, ciri pesan berantai yang menunjukkan kemungkinan besar pesan tersebut hoaks adalah ...","options":[{"k":"A","t":"Mencantumkan penulis dan sumber yang jelas"},{"k":"B","t":"Memuat data penelitian yang dapat ditelusuri"},{"k":"C","t":"Berasal dari situs resmi suatu lembaga"},{"k":"D","t":"Tidak mencantumkan sumber dan mendorong pembaca segera menyebarkannya"}],"correct":["D"],"subject":"Hoaks & Verifikasi Informasi"},{"no":27,"type":"pg","stim":"Untuk memeriksa kebenaran pesan berantai yang diterimanya, Dimas mengetik kata kunci berikut di mesin pencari: hoaks air rebusan daun -blog","text":"Tanda minus (-) pada kata kunci “-blog” dalam pencarian Dimas berfungsi untuk ...","options":[{"k":"A","t":"Mencari halaman yang hanya memuat kata “blog”"},{"k":"B","t":"Mengecualikan hasil pencarian yang memuat kata “blog”"},{"k":"C","t":"Menggabungkan kata “blog” dengan kata kunci lainnya"},{"k":"D","t":"Mencari frasa “blog” persis seperti yang dituliskan"}],"correct":["B"],"subject":"Hoaks & Verifikasi Informasi"},{"no":28,"type":"pg","stim":"Dimas menemukan artikel klarifikasi dari situs resmi lembaga kesehatan yang menyatakan bahwa klaim dalam pesan berantai tersebut tidak terbukti. Setelah memeriksanya, Dimas memutuskan tidak menyebarkan pesan itu dan menjelaskannya kepada keluarganya.","text":"Tindakan Dimas memeriksa kebenaran pesan melalui situs lembaga kesehatan resmi sebelum menyebarkannya mencerminkan sikap ...","options":[{"k":"A","t":"Lebih memercayai pesan yang dibagikan oleh banyak orang"},{"k":"B","t":"Menyebarkan informasi terlebih dahulu, memeriksanya kemudian"},{"k":"C","t":"Bertanggung jawab dalam bermedia digital dengan memverifikasi informasi dari sumber kredibel"},{"k":"D","t":"Tidak peduli terhadap kebenaran suatu informasi"}],"correct":["C"],"subject":"Hoaks & Verifikasi Informasi"},{"no":29,"type":"pg","stim":"Dimas ingin memastikan kebenaran sebuah klaim kesehatan dalam pesan berantai dan mempertimbangkan berbagai sumber yang tersedia di internet.","text":"Sumber yang paling tepat digunakan Dimas untuk memverifikasi klaim kesehatan tersebut adalah ...","options":[{"k":"A","t":"Situs resmi lembaga kesehatan atau jurnal ilmiah"},{"k":"B","t":"Akun anonim di media sosial"},{"k":"C","t":"Kolom komentar pada unggahan pesan tersebut"},{"k":"D","t":"Pesan berantai lain dengan isi serupa"}],"correct":["A"],"subject":"Hoaks & Verifikasi Informasi"},{"no":30,"type":"pg","stim":"Dimas mempertimbangkan untuk langsung meneruskan pesan berantai berisi klaim kesehatan kepada banyak grup tanpa memeriksa kebenarannya terlebih dahulu.","text":"Apabila Dimas menyebarkan pesan tersebut tanpa memeriksanya terlebih dahulu, dampak yang paling mungkin terjadi adalah ...","options":[{"k":"A","t":"Anggota keluarga menjadi lebih sehat"},{"k":"B","t":"Informasi tersebut otomatis menjadi benar"},{"k":"C","t":"Informasi yang keliru tersebar luas dan dapat merugikan orang yang memercayainya"},{"k":"D","t":"Mesin pencari akan menghapus pesan tersebut secara otomatis"}],"correct":["C"],"subject":"Hoaks & Verifikasi Informasi"},{"no":31,"type":"multi","stim":"Kelompok Reno mendapat tugas membuat makalah tentang “dampak media sosial terhadap remaja”. Saat mencari sumber, mereka menemukan artikel berita resmi, forum diskusi tanpa identitas penulis, jurnal penelitian daring, dan unggahan blog pribadi tanpa rujukan data. Reno mengingatkan kelompoknya untuk memilih sumber secara selektif sebelum mengutipnya.","text":"Berdasarkan ilustrasi, manakah ciri sumber informasi daring yang LEBIH DAPAT DIPERCAYA untuk dikutip dalam makalah ilmiah?","options":[{"k":"A","t":"Mencantumkan penulis dan lembaga yang jelas"},{"k":"B","t":"Berupa jurnal penelitian yang dapat ditelusuri rujukannya"},{"k":"C","t":"Berasal dari forum diskusi tanpa identitas penulis"},{"k":"D","t":"Berupa blog pribadi tanpa data pendukung"}],"correct":["A","B"],"subject":"Hoaks & Verifikasi Informasi"},{"no":32,"type":"multi","stim":"Kelompok Reno ingin mencari bahan makalah tentang “dampak media sosial terhadap remaja” di mesin pencari, tetapi hasil pencarian awal mereka masih terlalu umum dan kurang spesifik.","text":"Manakah strategi pencarian berikut yang dapat membantu kelompok Reno memperoleh hasil pencarian yang LEBIH RELEVAN dan SPESIFIK dengan topik “dampak media sosial terhadap remaja”?","options":[{"k":"A","t":"Mengetik kata kunci “dampak media sosial terhadap remaja” lengkap dengan tanda kutip dua"},{"k":"B","t":"Mengetik satu kata saja, yaitu “remaja”"},{"k":"C","t":"Menggabungkan beberapa kata kunci penting menggunakan operator AND"},{"k":"D","t":"Mengetik kalimat tanya yang sangat panjang dan tidak baku"}],"correct":["A","C"],"subject":"Mesin Pencari & Pencarian Informasi"},{"no":33,"type":"multi","stim":"Reno menjelaskan kepada kelompoknya tentang mesin pencari yang mereka gunakan untuk mencari bahan makalah, mulai dari cara hasil pencarian ditampilkan, munculnya saran kata saat mengetik, hingga pengaruh susunan kata kunci terhadap hasil.","text":"Perhatikan pernyataan-pernyataan berikut mengenai mesin pencari. Manakah pernyataan yang BENAR?","options":[{"k":"A","t":"Mesin pencari menampilkan hasil berdasarkan proses pengindeksan yang telah dilakukan sebelumnya oleh web crawler"},{"k":"B","t":"Semua informasi yang muncul di halaman pertama hasil pencarian sudah pasti benar dan dapat dipercaya"},{"k":"C","t":"Fitur autocomplete menyarankan kata kunci berdasarkan pola pencarian yang sering digunakan pengguna lain"},{"k":"D","t":"Mesin pencari dapat menampilkan hasil yang berbeda untuk kata kunci yang sama apabila ditulis dengan susunan kata yang berbeda"}],"correct":["A","C","D"],"subject":"Mesin Pencari & Pencarian Informasi"},{"no":34,"type":"multi","stim":"Dina mengelola lebih dari lima akun aplikasi belajar daring. Setelah mengikuti sosialisasi keamanan digital di sekolah, ia mengubah kebiasaannya: membuat kata sandi berbeda untuk setiap akun, mengaktifkan verifikasi dua langkah pada akun pentingnya, dan tidak lagi membagikan kata sandinya kepada siapa pun termasuk teman dekat.","text":"Manakah perubahan kebiasaan Dina setelah mengikuti sosialisasi keamanan digital yang mencerminkan praktik keamanan akun yang baik?","options":[{"k":"A","t":"Membuat kata sandi berbeda untuk setiap akun"},{"k":"B","t":"Mengaktifkan verifikasi dua langkah pada akun penting"},{"k":"C","t":"Membagikan kata sandi kepada teman dekat agar mudah dibantu jika lupa"},{"k":"D","t":"Tidak lagi membagikan kata sandi kepada siapa pun"}],"correct":["A","B","D"],"subject":"Keamanan Akun Digital"},{"no":35,"type":"multi","stim":"Setelah mengikuti sosialisasi keamanan digital, Dina diminta gurunya menilai kekuatan beberapa contoh kata sandi untuk akun belajar daringnya.","text":"Perhatikan contoh kata sandi berikut: (1) Dina2010, (2) D!n4_SMP26#, (3) 11111111, (4) Bel4jarYuk!25. Manakah kata sandi yang tergolong KUAT?","options":[{"k":"A","t":"(1) Dina2010"},{"k":"B","t":"(2) D!n4_SMP26#"},{"k":"C","t":"(3) 11111111"},{"k":"D","t":"(4) Bel4jarYuk!25"}],"correct":["B","D"],"subject":"Keamanan Akun Digital"},{"no":36,"type":"multi","stim":"Dina menerima beberapa pesan mencurigakan melalui email dan WhatsApp yang mengaku berasal dari aplikasi belajar daringnya dan mengajaknya mengklik tautan. Gurunya meminta Dina mengenali ciri-ciri upaya phishing pada pesan-pesan tersebut.","text":"Manakah ciri-ciri yang menunjukkan sebuah pesan atau tautan kemungkinan merupakan upaya phishing?","options":[{"k":"A","t":"Meminta data pribadi atau kata sandi secara mendesak dalam waktu terbatas"},{"k":"B","t":"Dikirim dari alamat resmi yang telah dikenal dan telah diverifikasi sebelumnya"},{"k":"C","t":"Menyertakan tautan yang mengarah ke halaman yang menyerupai (tetapi bukan) situs resmi"},{"k":"D","t":"Mengancam akan memblokir akun apabila tidak segera mengikuti instruksi dalam pesan"}],"correct":["A","C","D"],"subject":"Keamanan Akun Digital"},{"no":37,"type":"multi","stim":"Setelah kasus yang menimpa Bima ditindaklanjuti wali kelas, sekolah mengadakan sosialisasi tentang bentuk-bentuk cyberbullying: flaming (mengirim pesan kasar), harassment (pelecehan berulang), outing (menyebarkan rahasia atau aib orang lain), impersonation (berpura-pura menjadi orang lain), dan cyberstalking (memantau serta mengintimidasi seseorang secara terus-menerus).","text":"Manakah tindakan berikut yang tergolong sebagai bentuk cyberbullying?","options":[{"k":"A","t":"Membuat akun palsu menggunakan nama dan foto orang lain untuk menghina pihak ketiga"},{"k":"B","t":"Memberikan kritik membangun secara sopan terhadap karya teman di media sosial"},{"k":"C","t":"Menyebarkan rahasia pribadi seorang teman tanpa izinnya kepada banyak orang"},{"k":"D","t":"Mengirim pesan berisi makian dan hinaan secara berulang kepada seseorang"}],"correct":["A","C","D"],"subject":"Cyberbullying"},{"no":38,"type":"multi","stim":"Dalam sosialisasi tentang cyberbullying di sekolah, para siswa diberi pengarahan mengenai langkah yang tepat dilakukan oleh korban maupun saksi ketika mengetahui adanya tindakan cyberbullying di lingkungan sekolah.","text":"Manakah langkah yang tepat dilakukan oleh korban maupun saksi ketika mengetahui adanya tindakan cyberbullying di lingkungan sekolah?","options":[{"k":"A","t":"Menyimpan bukti berupa tangkapan layar percakapan"},{"k":"B","t":"Melaporkan kejadian tersebut kepada guru, wali kelas, atau orang dewasa yang dipercaya"},{"k":"C","t":"Membalas pelaku dengan hinaan yang setimpal agar pelaku merasakan hal yang sama"},{"k":"D","t":"Memblokir akun pelaku apabila diperlukan untuk menghentikan kontak lebih lanjut"}],"correct":["A","B","D"],"subject":"Cyberbullying"},{"no":39,"type":"multi","stim":"Pak Budi mengelola warung internet (warnet) kecil. Ia memiliki satu modem yang tersambung ke penyedia layanan internet, satu router yang membagi koneksi ke seluruh komputer klien, serta satu komputer khusus yang berfungsi mengatur data dan menyediakan beberapa layanan bagi komputer-komputer lain di warnetnya.","text":"Berdasarkan ilustrasi, manakah pernyataan yang BENAR mengenai perangkat dan jaringan di warnet Pak Budi?","options":[{"k":"A","t":"Modem berfungsi menghubungkan jaringan warnet ke penyedia layanan internet"},{"k":"B","t":"Router berfungsi membagi koneksi internet ke seluruh komputer klien"},{"k":"C","t":"Komputer yang mengatur data dan menyediakan layanan bagi komputer lain disebut komputer server"},{"k":"D","t":"Seluruh komputer di warnet tersebut otomatis tergolong sebagai jaringan WAN"}],"correct":["A","B","C"],"subject":"Jaringan Komputer"},{"no":40,"type":"multi","stim":"Pak Budi mempelajari konsep dasar jaringan komputer untuk mengelola warnetnya, antara lain cakupan jaringan LAN dan WAN, protokol TCP/IP, jaringan nirkabel (wireless), dan DNS.","text":"Manakah pernyataan berikut yang BENAR mengenai jaringan komputer secara umum sebagaimana dikelola Pak Budi?","options":[{"k":"A","t":"LAN merupakan jaringan dengan cakupan area yang lebih kecil dibandingkan WAN"},{"k":"B","t":"TCP/IP merupakan salah satu protokol dasar yang mendukung komunikasi data dalam jaringan"},{"k":"C","t":"Jaringan nirkabel (wireless) hanya dapat dibentuk menggunakan kabel UTP"},{"k":"D","t":"DNS membantu menerjemahkan nama domain menjadi alamat IP yang dapat dikenali jaringan"}],"correct":["A","B","D"],"subject":"Jaringan Komputer"},{"no":41,"type":"matrix","stim":"Saat mengetik di kolom pencarian, Rani melihat saran kata muncul otomatis. Temannya berpendapat bahwa fitur saran kata tersebut bekerja dengan cara mengindeks seluruh halaman situs web yang ada di internet.","text":"Berdasarkan bacaan di atas, tentukan apakah setiap pernyataan berikut Benar atau Salah!","rows":[{"id":1,"text":"Fitur saran kata muncul otomatis berdasarkan pola pencarian yang sering dilakukan pengguna lain.","correct":"Benar"},{"id":2,"text":"Fitur autocomplete bekerja dengan cara mengindeks seluruh halaman situs web yang ada di internet.","correct":"Salah"},{"id":3,"text":"Saran kata yang muncul dapat membantu pengguna menyusun kata kunci dengan lebih cepat.","correct":"Benar"}],"subject":"Mesin Pencari & Pencarian Informasi"},{"no":42,"type":"matrix","stim":"Rizki membandingkan hasil pencarian dengan kata kunci pendek “sampah” dan kata kunci yang lebih detail “dampak sampah plastik laut”. Kata kunci pendek menghasilkan daftar halaman yang sangat banyak dan membahas berbagai hal.","text":"Berdasarkan bacaan di atas, tentukan apakah setiap pernyataan berikut Benar atau Salah!","rows":[{"id":1,"text":"Kata kunci yang sangat umum dan pendek cenderung menghasilkan daftar pencarian yang lebih sedikit dan lebih spesifik dibandingkan kata kunci yang detail.","correct":"Salah"},{"id":2,"text":"Kata kunci yang lebih detail, seperti “dampak sampah plastik laut”, cenderung menghasilkan hasil yang lebih relevan.","correct":"Benar"},{"id":3,"text":"Kata kunci “sampah” hanya akan menampilkan halaman yang membahas sampah plastik di laut.","correct":"Salah"}],"subject":"Mesin Pencari & Pencarian Informasi"},{"no":43,"type":"matrix","stim":"Sistem menolak kata sandi Tasya yang berupa tanggal lahir karena dinilai lemah. Tasya lalu membuat kata sandi baru yang menggabungkan huruf besar, huruf kecil, angka, dan simbol, yaitu T@sya_2026!","text":"Berdasarkan bacaan di atas, tentukan apakah setiap pernyataan berikut Benar atau Salah!","rows":[{"id":1,"text":"Kata sandi yang menggabungkan huruf besar, huruf kecil, angka, dan simbol cenderung lebih sulit ditebak dibandingkan kata sandi yang hanya berupa tanggal lahir.","correct":"Benar"},{"id":2,"text":"Tanggal lahir aman dijadikan kata sandi karena mudah diingat oleh pemiliknya.","correct":"Salah"},{"id":3,"text":"Kata sandi yang hanya terdiri dari angka berurutan, seperti 12345678, tergolong kata sandi yang kuat.","correct":"Salah"}],"subject":"Keamanan Akun Digital"},{"no":44,"type":"matrix","stim":"Tasya mengaktifkan verifikasi dua langkah pada akun belajarnya. Setiap kali login, setelah memasukkan kata sandi yang benar, ia diminta memasukkan kode tambahan yang dikirim ke ponselnya.","text":"Berdasarkan bacaan di atas, tentukan apakah setiap pernyataan berikut Benar atau Salah!","rows":[{"id":1,"text":"Verifikasi dua langkah menyebabkan akun menjadi tidak dapat diakses sama sekali meskipun kata sandi yang dimasukkan sudah benar.","correct":"Salah"},{"id":2,"text":"Verifikasi dua langkah menambah lapisan keamanan karena proses masuk memerlukan kode tambahan selain kata sandi.","correct":"Benar"},{"id":3,"text":"Dengan verifikasi dua langkah, akun tetap lebih sulit dibobol meskipun kata sandinya diketahui orang lain.","correct":"Benar"}],"subject":"Keamanan Akun Digital"},{"no":45,"type":"matrix","stim":"Tasya menerima email yang mengatasnamakan “Admin Sekolah”. Email tersebut meminta Tasya segera memasukkan ulang kata sandi melalui sebuah tautan, dengan ancaman akun akan diblokir dalam 1 jam.","text":"Berdasarkan bacaan di atas, tentukan apakah setiap pernyataan berikut Benar atau Salah!","rows":[{"id":1,"text":"Email yang meminta pengguna segera memasukkan ulang kata sandi melalui tautan tertentu dengan ancaman batas waktu merupakan ciri umum upaya phishing.","correct":"Benar"},{"id":2,"text":"Tasya sebaiknya segera mengklik tautan tersebut agar akunnya tidak diblokir.","correct":"Salah"},{"id":3,"text":"Tasya dapat memastikan keaslian pesan dengan menghubungi pihak sekolah melalui jalur resmi.","correct":"Benar"}],"subject":"Keamanan Akun Digital"},{"no":46,"type":"matrix","stim":"Bima diejek terus-menerus di grup kelas. Sebagian teman menyarankan Bima membalas pelaku dengan hinaan yang setara agar pelaku merasakan dampak yang sama, sedangkan Putri menyarankan agar kasus tersebut dilaporkan.","text":"Berdasarkan bacaan di atas, tentukan apakah setiap pernyataan berikut Benar atau Salah!","rows":[{"id":1,"text":"Korban cyberbullying dianjurkan untuk membalas pelaku dengan hinaan yang setara agar pelaku merasakan dampak yang sama.","correct":"Salah"},{"id":2,"text":"Menyimpan tangkapan layar sebagai bukti dapat membantu penanganan kasus cyberbullying.","correct":"Benar"},{"id":3,"text":"Melaporkan kasus cyberbullying kepada guru atau wali kelas merupakan langkah yang tepat.","correct":"Benar"}],"subject":"Cyberbullying"},{"no":47,"type":"matrix","stim":"Seorang siswa membuat akun palsu di media sosial dengan memakai nama dan foto temannya, lalu menggunakan akun itu untuk menghina siswa lain.","text":"Berdasarkan bacaan di atas, tentukan apakah setiap pernyataan berikut Benar atau Salah!","rows":[{"id":1,"text":"Membuat akun palsu dengan identitas orang lain untuk menghina pihak ketiga tergolong impersonation yang termasuk bentuk cyberbullying.","correct":"Benar"},{"id":2,"text":"Tindakan siswa tersebut hanya candaan sehingga tidak termasuk cyberbullying.","correct":"Salah"},{"id":3,"text":"Menyebarkan rahasia pribadi seseorang tanpa izin melalui media digital tergolong outing.","correct":"Benar"}],"subject":"Cyberbullying"},{"no":48,"type":"matrix","stim":"Saat seorang siswa mengetikkan alamat situs pembelajaran di peramban, komputer lebih dulu menerjemahkan nama situs tersebut menjadi deretan angka sebelum terhubung ke server yang dituju.","text":"Berdasarkan bacaan di atas, tentukan apakah setiap pernyataan berikut Benar atau Salah!","rows":[{"id":1,"text":"DNS berfungsi menerjemahkan nama domain menjadi alamat IP agar komputer dapat menemukan server yang dituju.","correct":"Benar"},{"id":2,"text":"Proses penerjemahan nama situs menjadi deretan angka dilakukan oleh web crawler.","correct":"Salah"},{"id":3,"text":"DNS berfungsi memancarkan sinyal Wi-Fi ke seluruh ruangan.","correct":"Salah"}],"subject":"Jaringan Komputer"},{"no":49,"type":"matrix","stim":"Warnet Pak Budi memiliki satu modem yang tersambung ke penyedia layanan internet dan satu router. Router tersebut tersambung ke modem dan menghubungkan seluruh komputer klien di warnet.","text":"Berdasarkan bacaan di atas, tentukan apakah setiap pernyataan berikut Benar atau Salah!","rows":[{"id":1,"text":"Modem berfungsi membagi satu koneksi internet ke banyak komputer klien dalam satu jaringan lokal.","correct":"Salah"},{"id":2,"text":"Router berfungsi membagi koneksi internet dari modem ke seluruh komputer klien.","correct":"Benar"},{"id":3,"text":"Modem berfungsi menghubungkan jaringan warnet ke penyedia layanan internet.","correct":"Benar"}],"subject":"Jaringan Komputer"},{"no":50,"type":"matrix","stim":"Pak Budi memastikan setiap komputer di warnetnya memiliki alamat pengenal masing-masing agar dapat saling berkomunikasi dengan benar dalam jaringan tersebut.","text":"Berdasarkan bacaan di atas, tentukan apakah setiap pernyataan berikut Benar atau Salah!","rows":[{"id":1,"text":"Setiap perangkat yang terhubung ke suatu jaringan memerlukan IP Address sebagai identitas unik agar dapat saling berkomunikasi dengan benar.","correct":"Benar"},{"id":2,"text":"Dua komputer dalam satu jaringan boleh menggunakan IP Address yang persis sama pada waktu bersamaan.","correct":"Salah"},{"id":3,"text":"IP Address digunakan sebagai kata sandi akun media sosial.","correct":"Salah"}],"subject":"Jaringan Komputer"}]</script>
+<script>
+(function(){
+"use strict";
+
+/* ================= CONFIG ================= */
+const SUBJECT_ORDER = ["Mesin Pencari & Pencarian Informasi","Keamanan Akun Digital","Cyberbullying","Jaringan Komputer","Hoaks & Verifikasi Informasi"];
+const DURATION_SEC = 90*60;
+const MIN_SUBMIT_SEC = 40*60;   // jawaban baru boleh dikirim setelah 40 menit
+const MAPEL = "Informatika";
+const ASESMEN = "ASAS";
+const KELAS_TINGKAT = "VIII";
+const MATERI = "Mesin Pencari, Keamanan Akun Digital, Cyberbullying, Jaringan Komputer, Hoaks & Verifikasi Informasi";
+const JUDUL = "ASAS Informatika KELAS 8";
+const VALID_TOKEN = "INK8DWK";
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxd3EOhB6UA_jla86cSVBIFmHze6_lKBuafbc5WRSnPpBTpmBqMCHcLzULibDZx4EJK/exec";
+
+const RAW_QUESTIONS = JSON.parse(document.getElementById('questions-data').textContent);
+document.getElementById('infoJumlah').textContent = RAW_QUESTIONS.length + " Soal";
+
+/* Data siswa dari assets/js/data-siswa.js (const DATA_SISWA) — hanya rombel kelas VIII */
+const STUDENTS = {};
+(function(){
+  let src = {};
+  try{ if(typeof DATA_SISWA !== 'undefined') src = DATA_SISWA; }catch(e){}
+  Object.keys(src).forEach(k=>{ if(/^VIII\s/.test(k)) STUDENTS[k] = src[k]; });
+})();
+
+/* ================= STATE ================= */
+let examQuestions = [];
+let answers = {};
+let current = 0;
+let violCount = 0;
+let timeLeft = DURATION_SEC;
+let timerHandle = null;
+let studentName = "", studentClass = "";
+let examStarted = false;
+let examFinished = false;
+
+/* ================= UTIL ================= */
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; }
+  return a;
+}
+function fmtTime(s){ const m=Math.floor(s/60), sec=s%60; return String(m).padStart(2,'0')+":"+String(sec).padStart(2,'0'); }
+function esc(str){ return String(str).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function imgList(img){ if(!img) return []; return Array.isArray(img) ? img : [img]; }
+
+/* ================= LIGHTBOX ================= */
+document.getElementById('lightboxClose').addEventListener('click',()=>{ document.getElementById('lightbox').classList.remove('open'); });
+document.getElementById('lightbox').addEventListener('click',(e)=>{ if(e.target.id==='lightbox') document.getElementById('lightbox').classList.remove('open'); });
+
+/* ================= TABS ================= */
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-'+btn.dataset.tab).classList.add('active');
+  });
+});
+
+/* ================= NAMA & KELAS (otomatis dari menu kelas / data-siswa.js) ================= */
+(function initStudent(){
+  const selKelas = document.getElementById('inputKelas');
+  Object.keys(STUDENTS).forEach(kelas=>{
+    const opt = document.createElement('option'); opt.value = kelas; opt.textContent = kelas; selKelas.appendChild(opt);
+  });
+  selKelas.addEventListener('change',()=>{
+    const selNama = document.getElementById('inputNama');
+    const kelas = selKelas.value;
+    selNama.innerHTML = '';
+    if(!kelas){
+      const o = document.createElement('option'); o.value=''; o.textContent='— Pilih kelas terlebih dahulu —';
+      selNama.appendChild(o); selNama.disabled = true; return;
+    }
+    const o0 = document.createElement('option'); o0.value=''; o0.textContent='— Pilih Nama —'; selNama.appendChild(o0);
+    (STUDENTS[kelas]||[]).forEach(nm=>{ const o = document.createElement('option'); o.value = nm; o.textContent = nm; selNama.appendChild(o); });
+    selNama.disabled = false;
+  });
+
+  /* Prefill dari kelas-8.html: ?kelas=VIII%20A&nama=NAMA%20SISWA */
+  const params = new URLSearchParams(window.location.search);
+  const norm = s => String(s||'').replace(/\s+/g,' ').trim().toUpperCase();
+  const pKelasRaw = params.get('kelas'), pNama = params.get('nama');
+  const pKelas = pKelasRaw ? Object.keys(STUDENTS).find(k=>norm(k)===norm(pKelasRaw)) : null;
+  if(pKelas){
+    selKelas.value = pKelas;
+    selKelas.dispatchEvent(new Event('change'));
+    const match = pNama ? STUDENTS[pKelas].find(n=>norm(n)===norm(pNama)) : null;
+    if(match){
+      document.getElementById('inputNama').value = match;
+      document.getElementById('idNama').textContent = match;
+      document.getElementById('idKelas').textContent = pKelas;
+      document.getElementById('idBox').classList.remove('hidden');
+      document.getElementById('pickWrap').classList.add('hidden');
+    }
+    document.querySelector('.tab-btn[data-tab="mulai"]').click();
+    document.getElementById('inputToken').focus();
+  }
+})();
+
+/* ================= BUILD EXAM (acak soal + opsi + pernyataan) ================= */
+function buildExam(){
+  examQuestions = shuffle(RAW_QUESTIONS).map(src=>{
+    const q = JSON.parse(JSON.stringify(src));
+    q._id = q.no;
+    if(q.type==='pg' || q.type==='multi') q.options = shuffle(q.options);
+    if(q.type==='matrix') q.rows = shuffle(q.rows);
+    return q;
+  });
+}
+
+/* ================= NAV PANEL ================= */
+function renderNavPanel(){
+  const panel = document.getElementById('navPanel');
+  let html = '<h3>Nomor Soal (1–'+examQuestions.length+')</h3>';
+  html += '<div class="legend"><span><i class="dot" style="background:#6a4fb8"></i>Terjawab</span><span><i class="dot" style="background:#fff;border:1.5px solid #d8cdef"></i>Belum</span></div>';
+  let grid = '';
+  examQuestions.forEach((q,idx)=>{
+    grid += '<button class="navbtn'+(isAnswered(q)?' answered':'')+(idx===current?' current':'')+'" data-idx="'+idx+'">'+(idx+1)+'</button>';
+  });
+  html += '<div class="navgrid">'+grid+'</div>';
+  html += '<button id="navSubmitBtn">✅ Kirim Jawaban</button>';
+  panel.innerHTML = html;
+  panel.querySelectorAll('.navbtn').forEach(b=>{
+    b.addEventListener('click',()=>{ current=parseInt(b.dataset.idx,10); renderQuestion(); closeMobilePanel(); });
+  });
+  document.getElementById('navSubmitBtn').addEventListener('click', confirmSubmit);
+  updateSubmitLock();
+}
+function closeMobilePanel(){ document.getElementById('navPanel').classList.remove('open'); }
+
+function isAnswered(q){
+  const v = answers[q._id];
+  if(q.type==='pg') return !!v;
+  if(q.type==='multi') return Array.isArray(v) && v.length>0;
+  if(q.type==='matrix'){ if(!v) return false; return q.rows.every(r=>v[r.id]); }
+  return false;
+}
+
+/* ================= RENDER QUESTION ================= */
+const LETTERS = ['A','B','C','D','E','F'];
+
+function renderQuestion(keepScroll){
+  const q = examQuestions[current];
+  const prevScroll = document.getElementById('questionArea').scrollTop;
+  const wrap = document.getElementById('qwrap');
+  let html = '<div class="qnum">Soal '+(current+1)+' dari '+examQuestions.length+'</div>';
+  if(q.stim){
+    html += '<div class="stim"><div class="stim-h">Bacalah teks berikut untuk menjawab soal ini!</div><div class="stim-t">'+esc(q.stim)+'</div></div>';
+  }
+  html += '<div class="qtext">'+esc(q.text)+'</div>';
+  const imgs = imgList(q.img);
+  if(imgs.length){
+    html += '<div class="qimg-wrap">';
+    imgs.forEach(name=>{
+      const src = encodeURI(name);
+      html += '<div class="imgbox" data-full="'+esc(src)+'"><img src="'+esc(src)+'" alt="Gambar soal" loading="lazy" '+
+        'onerror="this.parentElement.outerHTML=\'<div class=&quot;imgph&quot;>🖼️ Gambar tidak termuat</div>\'">'+
+        '<span class="zoomhint">🔍 Ketuk untuk perbesar</span></div>';
+    });
+    html += '</div>';
+  }
+  if(q.type==='multi') html += '<div class="qtype-hint">☑ Pilihan Ganda Kompleks — centang SEMUA jawaban yang benar (bisa lebih dari satu)</div>';
+  if(q.type==='matrix') html += '<div class="qtype-hint">☑ Benar/Salah — tentukan Benar atau Salah untuk setiap pernyataan</div>';
+
+  if(q.type==='pg') html += renderPG(q);
+  else if(q.type==='multi') html += renderMulti(q);
+  else if(q.type==='matrix') html += renderMatrix(q);
+
+  wrap.innerHTML = html;
+  attachOptionEvents(q);
+  wrap.querySelectorAll('.imgbox').forEach(box=>{
+    box.addEventListener('click',()=>{
+      document.getElementById('lightboxImg').src = box.dataset.full;
+      document.getElementById('lightbox').classList.add('open');
+    });
+  });
+  document.getElementById('btnPrev').disabled = (current===0);
+  document.getElementById('btnNext').textContent = (current===examQuestions.length-1) ? 'Selesai →' : 'Selanjutnya →';
+  document.querySelectorAll('.navbtn').forEach(b=>b.classList.toggle('current', parseInt(b.dataset.idx,10)===current));
+  document.getElementById('questionArea').scrollTop = keepScroll ? prevScroll : 0;
+}
+
+function renderPG(q){
+  const v = answers[q._id]; let html='';
+  q.options.forEach((o,i)=>{
+    const sel = v===o.k;
+    html += '<label class="option'+(sel?' selected':'')+'"><input type="radio" name="pg" value="'+i+'" '+(sel?'checked':'')+'>'+
+      '<span class="otext"><span class="olabel">'+LETTERS[i]+'.</span>'+esc(o.t)+'</span></label>';
+  });
+  return html;
+}
+function renderMulti(q){
+  const v = answers[q._id] || []; let html='';
+  q.options.forEach((o,i)=>{
+    const sel = v.includes(o.k);
+    html += '<label class="option'+(sel?' selected':'')+'"><input type="checkbox" name="multi" value="'+i+'" '+(sel?'checked':'')+'>'+
+      '<span class="otext"><span class="olabel">'+LETTERS[i]+'.</span>'+esc(o.t)+'</span></label>';
+  });
+  return html;
+}
+function renderMatrix(q){
+  const v = answers[q._id] || {};
+  let html = '<table class="matrix"><thead><tr><th style="text-align:left">Pernyataan</th><th>Benar</th><th>Salah</th></tr></thead><tbody>';
+  q.rows.forEach(r=>{
+    html += '<tr><td class="stmt">'+esc(r.text)+'</td>';
+    ['Benar','Salah'].forEach(c=>{
+      const checked = v[r.id]===c;
+      html += '<td class="pick'+(checked?' sel':'')+'"><label><input type="radio" name="row_'+r.id+'" value="'+c+'" data-row="'+r.id+'" '+(checked?'checked':'')+' aria-label="'+c+'"></label></td>';
+    });
+    html += '</tr>';
+  });
+  return html + '</tbody></table>';
+}
+function attachOptionEvents(q){
+  if(q.type==='pg'){
+    document.querySelectorAll('input[name=pg]').forEach(inp=>{
+      inp.addEventListener('change',()=>{ answers[q._id]=q.options[parseInt(inp.value,10)].k; renderQuestion(true); renderNavPanel(); });
+    });
+  } else if(q.type==='multi'){
+    document.querySelectorAll('input[name=multi]').forEach(inp=>{
+      inp.addEventListener('change',()=>{
+        let cur = answers[q._id] ? answers[q._id].slice() : [];
+        const k = q.options[parseInt(inp.value,10)].k;
+        if(inp.checked){ if(!cur.includes(k)) cur.push(k); } else { cur = cur.filter(x=>x!==k); }
+        answers[q._id]=cur; renderQuestion(true); renderNavPanel();
+      });
+    });
+  } else if(q.type==='matrix'){
+    document.querySelectorAll('table.matrix input').forEach(inp=>{
+      inp.addEventListener('change',()=>{
+        const cur = answers[q._id] ? Object.assign({},answers[q._id]) : {};
+        cur[inp.dataset.row] = inp.value; answers[q._id]=cur; renderQuestion(true); renderNavPanel();
+      });
+    });
+  }
+}
+
+/* ================= NAVIGASI ================= */
+document.getElementById('btnPrev').addEventListener('click',()=>{ if(current>0){ current--; renderQuestion(); } });
+document.getElementById('btnNext').addEventListener('click',()=>{
+  if(current<examQuestions.length-1){ current++; renderQuestion(); } else { confirmSubmit(); }
+});
+document.getElementById('panelToggle').addEventListener('click',()=>{ document.getElementById('navPanel').classList.toggle('open'); });
+
+/* ================= TIMER (berbasis jam sistem) ================= */
+let startTs = 0, endTs = 0;
+function elapsedSec(){ return Math.floor((Date.now()-startTs)/1000); }
+function canSubmitNow(){ return elapsedSec() >= MIN_SUBMIT_SEC; }
+function updateSubmitLock(){
+  const b = document.getElementById('navSubmitBtn');
+  if(!b || !examStarted) return;
+  const rem = MIN_SUBMIT_SEC - elapsedSec();
+  if(rem > 0){ b.textContent = '🔒 Kirim dibuka dalam '+fmtTime(rem); b.classList.add('locked'); }
+  else { b.textContent = '✅ Kirim Jawaban'; b.classList.remove('locked'); }
+}
+function tick(){
+  timeLeft = Math.max(0, Math.ceil((endTs-Date.now())/1000));
+  const box = document.getElementById('timerBox');
+  box.textContent = fmtTime(timeLeft);
+  if(timeLeft<=300) box.classList.add('low');
+  updateSubmitLock();
+  if(timeLeft<=0){ clearInterval(timerHandle); finishExam(true); }
+}
+function startTimer(){
+  startTs = Date.now(); endTs = startTs + DURATION_SEC*1000;
+  tick(); timerHandle = setInterval(tick,1000);
+}
+
+/* ================= LAYAR PENUH & PELANGGARAN ================= */
+const logPelanggaran = [];
+let dialogOpen = false, lastViolAt = 0, splitActive = false, blurTimer = null;
+const areaMax = {portrait:0, landscape:0};
+
+function enterFullscreen(){
+  const el = document.documentElement;
+  const req = el.requestFullscreen||el.webkitRequestFullscreen||el.msRequestFullscreen;
+  if(req){ try{ const p = req.call(el); if(p && p.catch) p.catch(()=>{}); }catch(e){} }
+}
+function isFullscreen(){ return !!(document.fullscreenElement||document.webkitFullscreenElement||document.msFullscreenElement); }
+function showWarn(title,text,onOk){
+  const ov = document.getElementById('warnOverlay');
+  document.getElementById('warnTitle').textContent = title;
+  document.getElementById('warnText').textContent = text;
+  ov.style.display='flex';
+  document.getElementById('warnBtn').onclick = ()=>{ ov.style.display='none'; if(onOk) onOk(); };
+}
+function safeAlert(msg){ dialogOpen = true; try{ alert(msg); } finally { dialogOpen = false; } }
+function safeConfirm(msg){ dialogOpen = true; try{ return confirm(msg); } finally { dialogOpen = false; } }
+
+// Jenis: "Pindah tab", "Keluar fullscreen", "Salin teks", "Screenshot", "Split screen", "Kehilangan fokus jendela"
+function catatPelanggaran(jenis){
+  if(!examStarted || examFinished) return;
+  const last = logPelanggaran[logPelanggaran.length-1];
+  if(last && last.jenis===jenis && Date.now()-new Date(last.waktu).getTime() < 1500) return;
+  logPelanggaran.push({ jenis: jenis, waktu: new Date().toISOString() });
+  violCount = logPelanggaran.length;
+  lastViolAt = Date.now();
+  const badge = document.getElementById('violationBadge');
+  badge.style.display='inline-block';
+  document.getElementById('violCount').textContent = violCount;
+  showWarn('⚠ Pelanggaran Terdeteksi ('+violCount+')',
+    'Sistem mendeteksi: '+jenis+'. Tindakan ini tercatat dan akan dilaporkan kepada guru bersama hasil ujianmu. Tetaplah pada halaman ujian hingga selesai.',
+    ()=>{ if(!isFullscreen()) enterFullscreen(); });
+}
+function ringkasPelanggaran(){
+  const c = {}; logPelanggaran.forEach(p=>{ c[p.jenis]=(c[p.jenis]||0)+1; });
+  return Object.keys(c).map(k=>k+' ×'+c[k]).join('; ') || '-';
+}
+
+// 1) pindah tab / minimize
+document.addEventListener('visibilitychange',()=>{
+  if(document.hidden && examStarted && !examFinished) catatPelanggaran('Pindah tab');
+});
+// 2) keluar layar penuh
+function onFsChange(){ if(!isFullscreen() && examStarted && !examFinished) catatPelanggaran('Keluar fullscreen'); }
+document.addEventListener('fullscreenchange', onFsChange);
+document.addEventListener('webkitfullscreenchange', onFsChange);
+// 3) menyalin teks
+['copy','cut'].forEach(ev=>document.addEventListener(ev,e=>{
+  if(examStarted && !examFinished){ e.preventDefault(); catatPelanggaran('Salin teks'); }
+}));
+document.addEventListener('contextmenu',e=>{ if(examStarted && !examFinished) e.preventDefault(); });
+document.addEventListener('selectstart',e=>{ if(examStarted && !examFinished) e.preventDefault(); });
+document.addEventListener('dragstart',e=>{ if(examStarted && !examFinished) e.preventDefault(); });
+// 4) screenshot & pintasan terlarang
+function clearClip(){ try{ navigator.clipboard && navigator.clipboard.writeText('').catch(()=>{}); }catch(e){} }
+document.addEventListener('keydown',e=>{
+  if(!examStarted || examFinished) return;
+  const k = (e.key||'').toLowerCase();
+  if(e.key==='F12' || (e.ctrlKey&&e.shiftKey&&['i','j','c'].includes(k)) || (e.altKey&&e.key==='Tab')) e.preventDefault();
+  if((e.ctrlKey||e.metaKey) && ['p','s','u'].includes(k)) e.preventDefault();
+  if((e.ctrlKey||e.metaKey) && ['c','x','a'].includes(k)){ e.preventDefault(); if(k!=='a') catatPelanggaran('Salin teks'); }
+  if(e.key==='PrintScreen' || (e.metaKey&&e.shiftKey&&k==='s') || (e.metaKey&&e.shiftKey&&['Digit3','Digit4','Digit5'].includes(e.code))){
+    catatPelanggaran('Screenshot'); clearClip();
+  }
+});
+document.addEventListener('keyup',e=>{
+  if(!examStarted || examFinished) return;
+  if(e.key==='PrintScreen'){ catatPelanggaran('Screenshot'); clearClip(); }
+});
+// 5) split screen: luas jendela (piksel perangkat) turun tajam dari ukuran terbesar
+function cekSplitScreen(){
+  if(!examStarted || examFinished) return;
+  const dpr = window.devicePixelRatio || 1;
+  const o = window.innerWidth > window.innerHeight ? 'landscape' : 'portrait';
+  const a = (window.innerWidth*dpr)*(window.innerHeight*dpr);
+  if(a > areaMax[o]) areaMax[o] = a;
+  if(areaMax[o] > 0 && a < areaMax[o]*0.8){
+    if(!splitActive){ splitActive = true; catatPelanggaran('Split screen'); }
+  } else if(a > areaMax[o]*0.9){ splitActive = false; }
+}
+let resizeT = null;
+window.addEventListener('resize',()=>{ clearTimeout(resizeT); resizeT = setTimeout(cekSplitScreen,400); });
+setInterval(cekSplitScreen,3000);
+// 6) jendela kehilangan fokus
+window.addEventListener('blur',()=>{
+  if(!examStarted || examFinished) return;
+  document.getElementById('screen-exam').classList.add('blurred');
+  clearTimeout(blurTimer);
+  blurTimer = setTimeout(()=>{
+    if(dialogOpen || examFinished || document.hidden) return;
+    if(!document.hasFocus() && Date.now()-lastViolAt > 4000) catatPelanggaran('Kehilangan fokus jendela');
+  },1500);
+});
+window.addEventListener('focus',()=>{
+  clearTimeout(blurTimer);
+  document.getElementById('screen-exam').classList.remove('blurred');
+});
+window.addEventListener('beforeunload',(e)=>{ if(examStarted && !examFinished){ e.preventDefault(); e.returnValue=''; } });
+
+/* ================= MULAI UJIAN ================= */
+document.getElementById('btnStart').addEventListener('click',()=>{
+  const token = document.getElementById('inputToken').value.trim();
+  const nama = document.getElementById('inputNama').value.trim();
+  const kelas = document.getElementById('inputKelas').value.trim();
+  const err = document.getElementById('startErr');
+  if(!token){ err.textContent='Token ujian wajib diisi.'; return; }
+  if(token !== VALID_TOKEN){ err.textContent='Token salah. Tanyakan token yang benar kepada gurumu.'; return; }
+  if(!kelas || !nama){ err.textContent='Nama dan kelas belum terbaca. Buka ujian dari Menu Kelas 8 atau pilih nama & kelas pada kolom yang tersedia.'; return; }
+  err.textContent='';
+  studentName = nama; studentClass = kelas;
+  buildExam();
+  answers = {}; current=0; logPelanggaran.length=0; violCount=0; examStarted=true; examFinished=false;
+  areaMax.portrait = 0; areaMax.landscape = 0; splitActive = false;
+
+  document.getElementById('screen-start').style.display='none';
+  document.getElementById('screen-exam').style.display='flex';
+  document.getElementById('brandStudent').textContent = nama+' · Kelas '+kelas;
+  startTimer(); renderNavPanel(); renderQuestion(); enterFullscreen();
+  setTimeout(cekSplitScreen, 1800);
+});
+
+/* ================= KIRIM / PENILAIAN PARSIAL ================= */
+function confirmSubmit(){
+  if(!canSubmitNow()){
+    safeAlert('Jawaban baru dapat dikirim setelah 40 menit pengerjaan. Sisa waktu tunggu: '+fmtTime(MIN_SUBMIT_SEC-elapsedSec())+'. Silakan periksa kembali jawabanmu.');
+    return;
+  }
+  const unansweredIdx = examQuestions.findIndex(q=>!isAnswered(q));
+  if(unansweredIdx !== -1){
+    const cnt = examQuestions.filter(q=>!isAnswered(q)).length;
+    safeAlert('Masih ada '+cnt+' soal yang belum dijawab. Silakan lengkapi semua soal terlebih dahulu. Kamu akan diarahkan ke soal pertama yang belum dijawab.');
+    current = unansweredIdx; renderQuestion(); renderNavPanel(); closeMobilePanel();
+    return;
+  }
+  if(safeConfirm('Semua soal telah dijawab. Kirim jawaban sekarang? Jawaban tidak dapat diubah setelah dikirim.')) finishExam(false);
+}
+
+/* Penilaian PARSIAL
+   PG            : benar = 1, salah = 0.
+   PG Kompleks   : tiap opsi dinilai (dicentang & kunci, atau tidak dicentang & bukan kunci = tepat). frac = tepat / jumlah opsi.
+   Benar/Salah   : tiap pernyataan dinilai. frac = pernyataan tepat / jumlah pernyataan.
+   Skor soal = frac x bobot (100 / jumlah soal). Soal kosong = 0. */
+function scoreFrac(q){
+  const v = answers[q._id];
+  if(q.type==='pg') return (v && v===q.correct[0]) ? 1 : 0;
+  if(q.type==='multi'){
+    if(!Array.isArray(v) || !v.length) return 0;
+    const n = q.options.length; let m = 0;
+    q.options.forEach(o=>{ if(q.correct.includes(o.k) === v.includes(o.k)) m++; });
+    return n ? m/n : 0;
+  }
+  if(q.type==='matrix'){
+    if(!v) return 0;
+    let m = 0; q.rows.forEach(r=>{ if(v[r.id]===r.correct) m++; });
+    return q.rows.length ? m/q.rows.length : 0;
+  }
+  return 0;
+}
+
+function finishExam(autoSubmit){
+  examFinished = true;
+  clearInterval(timerHandle);
+  if(isFullscreen()){ (document.exitFullscreen||document.webkitExitFullscreen||function(){}).call(document); }
+  document.getElementById('screen-exam').style.display='none';
+  document.getElementById('warnOverlay').style.display='none';
+
+  const totalMaks = examQuestions.length;
+  const weight = totalMaks ? 100/totalMaks : 0;
+  const perSubject = {};
+  SUBJECT_ORDER.forEach(s=>perSubject[s]={score:0,max:0});
+  let totalScore = 0, fullCount = 0;
+  const perQuestion = [];
+  examQuestions.forEach(q=>{
+    if(!perSubject[q.subject]){ perSubject[q.subject]={score:0,max:0}; SUBJECT_ORDER.push(q.subject); }
+    const frac = scoreFrac(q), qScore = frac*weight;
+    totalScore += qScore;
+    if(frac>=0.999) fullCount++;
+    perSubject[q.subject].score += qScore;
+    perSubject[q.subject].max += weight;
+    perQuestion.push({q, frac, qScore});
+  });
+  totalScore = Math.round(totalScore*100)/100;
+  let grade='D', gradeLabel='Perlu Bimbingan';
+  if(totalScore>=90){grade='A';gradeLabel='Sangat Baik';}
+  else if(totalScore>=75){grade='B';gradeLabel='Baik';}
+  else if(totalScore>=60){grade='C';gradeLabel='Cukup';}
+
+  document.getElementById('resScore').textContent = totalScore.toFixed(2)+' / 100';
+  document.getElementById('resGrade').textContent = 'Predikat '+grade+' — '+gradeLabel+' · '+fullCount+' dari '+totalMaks+' soal terjawab sempurna (penilaian parsial)' + (autoSubmit?' · waktu habis, jawaban terkirim otomatis':'');
+  document.getElementById('rNama').textContent = studentName;
+  document.getElementById('rKelas').textContent = studentClass;
+  document.getElementById('rViol').textContent = violCount;
+
+  let tbl = '<tr><th>Materi</th><th>Skor</th><th>Maks</th></tr>';
+  const detailParts = [];
+  SUBJECT_ORDER.forEach(s=>{
+    const sc = Math.round(perSubject[s].score*100)/100, mx = Math.round(perSubject[s].max*100)/100;
+    tbl += '<tr><td>'+esc(s)+'</td><td>'+sc+'</td><td>'+mx+'</td></tr>';
+    detailParts.push(s+' '+sc+'/'+mx);
+  });
+  document.getElementById('resTable').innerHTML = tbl;
+
+  window._examResult = {
+    nama: studentName, kelas: studentClass, skor: totalScore, skorMaks: 100, pct: totalScore,
+    grade: grade+' ('+gradeLabel+')', detail: detailParts.join(' | ') + ' | Pelanggaran: '+violCount+'x',
+    violasi: logPelanggaran.length, ringkasanPelanggaran: ringkasPelanggaran(),
+    durasiDetik: Math.min(elapsedSec(),DURATION_SEC)
+  };
+  document.getElementById('screen-result').style.display='block';
+  window.scrollTo(0,0);
+  autoSubmitToSheet();
+}
+
+/* ================= GOOGLE APPS SCRIPT ================= */
+function setSubmitStatus(state, text){
+  const el = document.getElementById('submitStatus');
+  el.className = 'submit-status '+state;
+  document.getElementById('submitStatusText').textContent = text;
+  document.getElementById('btnRetrySubmit').classList.toggle('hidden', state==='sending' || state==='ok');
+}
+function jawabanText(q){
+  const v = answers[q._id];
+  if(q.type==='pg'){ const o = q.options.find(x=>x.k===v); return o ? o.k+'. '+o.t : '(kosong)'; }
+  if(q.type==='multi'){
+    if(!v || !v.length) return '(kosong)';
+    return q.options.filter(o=>v.includes(o.k)).sort((a,b)=>a.k.localeCompare(b.k)).map(o=>o.k+'. '+o.t).join(' ; ');
+  }
+  if(q.type==='matrix'){
+    if(!v) return '(kosong)';
+    return q.rows.slice().sort((a,b)=>a.id-b.id).map(r=>r.id+':'+(v[r.id]||'-')).join(' ; ');
+  }
+  return '(kosong)';
+}
+function kunciText(q){
+  if(q.type==='matrix') return q.rows.slice().sort((a,b)=>a.id-b.id).map(r=>r.id+':'+r.correct).join(' ; ');
+  return q.correct.join(', ');
+}
+function hurufDipilih(q){
+  const v = answers[q._id];
+  if(q.type==='pg') return v || '';
+  if(q.type==='multi') return Array.isArray(v) ? v.slice().sort().join(',') : '';
+  if(q.type==='matrix') return v ? q.rows.slice().sort((a,b)=>a.id-b.id).map(r=>(v[r.id]==='Benar'?'B':(v[r.id]==='Salah'?'S':'-'))).join('') : '';
+  return '';
+}
+function buildAnswerDetail(){
+  return examQuestions.map((q,idx)=>({
+    no: idx+1, noAsli: q.no, subject: q.subject, jenis: q.type,
+    jawaban: jawabanText(q), kode: hurufDipilih(q), benar: Math.round(scoreFrac(q)*100)/100
+  }));
+}
+function autoSubmitToSheet(){
+  if(!navigator.onLine){
+    setSubmitStatus('fail','❌ Gagal terkirim — perangkat sedang offline. Sambungkan internet lalu klik "Kirim Ulang".');
+    return;
+  }
+  setSubmitStatus('sending','Mengirim jawaban ke guru...');
+  const r = window._examResult;
+  const payload = {
+    timestamp: new Date().toISOString(),
+    mapel: MAPEL, jenisAsesmen: ASESMEN, judul: JUDUL, materi: MATERI, tingkat: KELAS_TINGKAT,
+    nama: r.nama, kelas: r.kelas, skor: r.skor, skorMaks: r.skorMaks, persentase: r.pct,
+    grade: r.grade,
+    pelanggaran: logPelanggaran.length, jenisPelanggaran: logPelanggaran,
+    ringkasanPelanggaran: r.ringkasanPelanggaran,
+    durasiDetik: r.durasiDetik, detailPerMapel: r.detail,
+    jawaban: buildAnswerDetail()
+  };
+  fetch(APPS_SCRIPT_URL, {
+    method: 'POST', mode: 'no-cors',
+    headers: {'Content-Type':'text/plain;charset=utf-8'},
+    body: JSON.stringify(payload)
+  }).then(()=>{
+    setSubmitStatus('ok','✅ Jawaban berhasil terkirim ke Google Spreadsheet guru.');
+  }).catch(()=>{
+    setSubmitStatus('fail','❌ Gagal terkirim (masalah jaringan). Klik "Kirim Ulang" untuk mencoba lagi.');
+  });
+}
+document.getElementById('btnRetrySubmit').addEventListener('click', autoSubmitToSheet);
+
+/* ================= EXCEL (cadangan) ================= */
+document.getElementById('btnExcel').addEventListener('click',()=>{
+  const r = window._examResult;
+  const rows = [['Nama','Kelas','No','Materi','Soal','Jawaban Siswa','Kunci Jawaban','Skor Soal (0-1, parsial)']];
+  examQuestions.forEach((q,idx)=>{
+    rows.push([r.nama, r.kelas, idx+1, q.subject, q.text.replace(/\s+/g,' ').slice(0,80)+'...', jawabanText(q), kunciText(q), Math.round(scoreFrac(q)*100)/100]);
+  });
+  rows.push([]);
+  rows.push(['RINGKASAN']);
+  rows.push(['Nama','Kelas','Skor Akhir (0-100)','Grade','Pelanggaran','Jenis Pelanggaran']);
+  rows.push([r.nama, r.kelas, r.skor, r.grade, r.violasi, r.ringkasanPelanggaran]);
+  const ws = XLSX.utils.aoa_to_sheet(rows);
+  ws['!cols'] = [{wch:18},{wch:8},{wch:5},{wch:30},{wch:60},{wch:40},{wch:30},{wch:10}];
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Hasil ASAS Informatika K8');
+  XLSX.writeFile(wb, 'Hasil_ASAS_Informatika_Kelas8_'+r.nama.replace(/[^a-zA-Z0-9]/g,'_')+'.xlsx');
+});
+
+})();
+</script>
 </body>
 </html>
