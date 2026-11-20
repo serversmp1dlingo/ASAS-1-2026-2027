@@ -2,46 +2,979 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pendidikan Jasmani, Olahraga dan Kesehatan — Kelas 7 — ASAS SMP Negeri 1 Dlingo</title>
-<meta name="description" content="Soal Pendidikan Jasmani, Olahraga dan Kesehatan Kelas 7">
-<meta name="robots" content="noindex">
-<link rel="icon" href="../../assets/img/logo-smpn1dlingo.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../../assets/css/style.css">
-<script>document.documentElement.classList.add('js');</script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Asesmen Sumatif Akhir Semester — PJOK — SMP N 1 Dlingo</title>
+<link rel="icon" type="image/png" href="../../assets/img/logo-smpn1dlingo.png">
+<!-- Konfigurasi MathJax 3 untuk notasi matematika -->
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      displayMath: [['$$', '$$'], ['\\[', '\\]']],
+      processEscapes: true
+    },
+    options: {
+      ignoreHtmlClass: 'tex2jax_ignore',
+      processHtmlClass: 'tex2jax_process'
+    }
+  };
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-chtml.min.js" id="mathjax-script" async></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+  :root{
+    --navy:#2f6b4b; --blue:#3f9b6c; --blue-light:#e4f5e9; --green:#2e8b57;
+    --red:#b04a4a; --amber:#d9a23a; --gray:#4a5f54; --bg:#e6f4ea; --border:#cfe5d6; --radius:10px;
+    --card:#ffffff;
+  }
+  *{box-sizing:border-box;}
+  html,body{height:100%;}
+  body{margin:0;font-family:'Segoe UI',Roboto,Arial,sans-serif;background:var(--bg);color:#1b2430;-webkit-tap-highlight-color:transparent;}
+  /* anti-screenshot / anti-copy deterrents (best-effort; see note in app) */
+  #screen-exam, #screen-exam *{
+    -webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;
+    -webkit-touch-callout:none;
+  }
+  #screen-exam img{-webkit-user-drag:none;user-drag:none;pointer-events:none;}
+  #screen-exam.blurred{filter:blur(18px);transition:filter .15s;}
+  @media print{
+    #screen-exam, #screen-start, #screen-result{display:none !important;}
+    body::before{content:"Konten ujian tidak dapat dicetak.";display:block;text-align:center;padding:40px;font-size:18px;}
+  }
+  img{max-width:100%;height:auto;border-radius:6px;border:1px solid var(--border);}
+  button{font-family:inherit;cursor:pointer;}
+  .hidden{display:none !important;}
+
+  /* ===== START / INSTRUCTIONS ===== */
+  #screen-start{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;
+    background:linear-gradient(135deg,#e3f5e8,#c6e9d3);}
+  .start-card{background:var(--card);border-radius:16px;max-width:640px;width:100%;padding:34px 32px;box-shadow:0 20px 60px rgba(0,0,0,.25);}
+  .school-header{display:flex;align-items:center;gap:14px;margin-bottom:18px;}
+  .school-header img{width:56px;height:auto;border:none;border-radius:0;flex-shrink:0;}
+  .school-header .stxt{line-height:1.35;}
+  .school-header .stxt b{display:block;color:var(--navy);font-size:15px;}
+  .school-header .stxt span{color:var(--gray);font-size:12px;}
+  .start-card h1{margin:0 0 4px;font-size:21px;color:var(--navy);}
+  .start-card .sub{color:var(--gray);margin:0 0 20px;font-size:14px;}
+  .tabs{display:flex;gap:8px;margin-bottom:18px;border-bottom:1.5px solid var(--border);}
+  .tab-btn{padding:9px 16px;border:none;background:none;font-weight:700;font-size:13.5px;color:var(--gray);
+    border-bottom:3px solid transparent;margin-bottom:-2px;}
+  .tab-btn.active{color:var(--blue);border-bottom-color:var(--blue);}
+  .tab-panel{display:none;}
+  .tab-panel.active{display:block;}
+  .info-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px 18px;background:var(--blue-light);
+    border-radius:10px;padding:14px 16px;margin-bottom:18px;font-size:13px;}
+  .info-grid div b{display:block;color:var(--navy);font-size:13px;}
+  .info-grid div span{color:var(--gray);}
+  label{display:block;font-size:13px;font-weight:600;color:var(--navy);margin:14px 0 6px;}
+  input[type=text],input[type=password]{width:100%;padding:12px 14px;border:1.5px solid var(--border);
+    border-radius:8px;font-size:15px;}
+  input:focus{outline:none;border-color:var(--blue);}
+  select{width:100%;padding:12px 14px;border:1.5px solid var(--border);border-radius:8px;font-size:15px;
+    background:var(--card);color:#1b2430;appearance:none;
+    background-image:url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235b6472' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat:no-repeat;background-position:right 12px center;background-size:18px;}
+  select:focus{outline:none;border-color:var(--blue);}
+  select:disabled{background-color:#f4f6f9;color:var(--gray);cursor:not-allowed;}
+  .instr-list{font-size:13.5px;line-height:1.8;color:#33404f;padding-left:20px;margin:0 0 10px;}
+  .rules{font-size:12.5px;color:var(--gray);line-height:1.6;margin:18px 0;padding:12px 14px;
+    background:#fff8ea;border:1px solid #f1e0ad;border-radius:8px;}
+  .btn-primary{width:100%;padding:14px;background:var(--blue);color:#fff;border:none;border-radius:9px;
+    font-size:16px;font-weight:700;margin-top:12px;transition:.15s;}
+  .btn-primary:hover{background:var(--navy);}
+  .btn-primary:disabled{background:#aab6c8;cursor:not-allowed;}
+  .err-msg{color:var(--red);font-size:12.5px;margin-top:6px;min-height:16px;}
+
+  /* ===== EXAM LAYOUT ===== */
+  #screen-exam{display:none;min-height:100vh;flex-direction:column;}
+  #topbar{background:var(--navy);color:#fff;padding:10px 18px;display:flex;align-items:center;
+    justify-content:space-between;gap:12px;flex-wrap:wrap;position:sticky;top:0;z-index:50;}
+  #topbar .brand{display:flex;align-items:center;gap:10px;font-size:13px;font-weight:700;}
+  #topbar .brand img{width:28px;height:auto;border:none;border-radius:0;}
+  #topbar .brand .who{font-weight:400;opacity:.85;font-size:11.5px;display:block;}
+  #timerBox{background:rgba(255,255,255,.12);padding:8px 16px;border-radius:8px;font-weight:700;
+    font-size:18px;letter-spacing:1px;min-width:110px;text-align:center;}
+  #timerBox.low{background:#c0392b;animation:pulse 1s infinite;}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.6}}
+  #violationBadge{background:var(--red);padding:5px 10px;border-radius:20px;font-size:12px;font-weight:700;display:none;}
+  #panelToggle{background:rgba(255,255,255,.15);color:#fff;border:none;padding:8px 12px;border-radius:8px;font-size:13px;}
+
+  #examBody{display:flex;flex:1;overflow:hidden;}
+  #navPanel{width:280px;flex-shrink:0;background:var(--card);border-right:1px solid var(--border);padding:16px;overflow-y:auto;}
+  #navPanel h3{font-size:11.5px;text-transform:uppercase;letter-spacing:.4px;color:var(--gray);margin:14px 0 8px;}
+  #navPanel h3:first-child{margin-top:0;}
+  .navgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;}
+  .navbtn{aspect-ratio:1;border:1.5px solid var(--border);background:var(--card);border-radius:6px;font-size:12px;
+    font-weight:700;color:var(--navy);display:flex;align-items:center;justify-content:center;}
+  .navbtn.answered{background:var(--green);border-color:var(--green);color:#fff;}
+  .navbtn.current{outline:3px solid var(--amber);outline-offset:1px;}
+  .legend{display:flex;gap:14px;font-size:11px;color:var(--gray);margin:14px 0 4px;flex-wrap:wrap;}
+  .legend span{display:inline-flex;align-items:center;gap:5px;}
+  .dot{width:10px;height:10px;border-radius:3px;display:inline-block;}
+  #navSubmitBtn{width:100%;margin-top:18px;padding:12px;background:var(--red);color:#fff;border:none;
+    border-radius:8px;font-weight:700;font-size:14px;}
+  #navSubmitBtn.locked{background:#8fa397;}
+  .idbox{background:var(--blue-light);border:1.5px solid var(--border);border-radius:10px;padding:12px 16px;margin-top:14px;font-size:14px;line-height:1.7;}
+  .idbox b{color:var(--navy);}
+
+  #questionArea{flex:1;overflow-y:auto;padding:26px 32px 100px;}
+  .qwrap{max-width:820px;margin:0 auto;}
+  .qsubject{display:inline-block;background:var(--blue-light);color:var(--blue);font-size:11.5px;font-weight:700;
+    padding:4px 12px;border-radius:20px;margin-bottom:10px;text-transform:uppercase;letter-spacing:.3px;}
+  .qnum{font-size:14px;color:var(--gray);margin-bottom:4px;}
+  .qtext{font-size:16px;line-height:1.7;white-space:pre-wrap;margin-bottom:16px;}
+  .qimg-wrap{margin:14px 0;display:flex;flex-wrap:wrap;gap:14px;}
+  .qimg-wrap .imgbox{position:relative;cursor:zoom-in;width:100%;max-width:760px;}
+  .qimg-wrap img{width:100%;max-width:760px;display:block;}
+  .qimg-wrap .zoomhint{position:absolute;bottom:8px;right:8px;background:rgba(15,39,69,.75);color:#fff;
+    font-size:11px;font-weight:700;padding:4px 9px;border-radius:20px;pointer-events:none;}
+  .qimg-wrap .imgph{width:100%;max-width:760px;height:200px;border:2px dashed var(--border);border-radius:8px;
+    display:flex;align-items:center;justify-content:center;color:var(--gray);font-size:12.5px;text-align:center;
+    background:#fafbfc;padding:10px;}
+  #lightbox{position:fixed;inset:0;background:rgba(10,20,35,.94);z-index:1200;display:none;
+    align-items:center;justify-content:center;padding:14px;}
+  #lightbox.open{display:flex;}
+  #lightbox img{max-width:100%;max-height:92vh;width:auto;border-radius:6px;box-shadow:0 10px 40px rgba(0,0,0,.5);}
+  #lightbox .lb-close{position:absolute;top:16px;right:18px;background:#fff;color:var(--navy);border:none;
+    width:38px;height:38px;border-radius:50%;font-size:18px;font-weight:700;}
+  .qtype-hint{font-size:12.5px;color:var(--amber);font-weight:700;margin-bottom:10px;}
+
+  .option{display:flex;align-items:flex-start;gap:12px;padding:13px 16px;border:1.5px solid var(--border);
+    border-radius:10px;margin-bottom:10px;background:var(--card);transition:.12s;}
+  .option:hover{border-color:var(--blue);}
+  .option.selected{border-color:var(--blue);background:var(--blue-light);}
+  .option input{margin-top:3px;flex-shrink:0;width:17px;height:17px;}
+  .option .otext{font-size:15px;line-height:1.5;}
+  .option .olabel{font-weight:700;color:var(--navy);margin-right:4px;}
+
+  table.matrix{width:100%;border-collapse:collapse;margin-top:8px;font-size:14px;}
+  table.matrix th,table.matrix td{border:1px solid var(--border);padding:10px;text-align:center;}
+  table.matrix th{background:var(--blue-light);color:var(--navy);}
+  table.matrix td.stmt{text-align:left;font-size:14px;}
+  table.matrix input{width:17px;height:17px;}
+
+  #navRow{max-width:820px;margin:24px auto 0;display:flex;justify-content:space-between;gap:10px;}
+  .btn-nav{padding:11px 22px;border-radius:8px;border:1.5px solid var(--border);background:var(--card);
+    font-weight:700;color:var(--navy);font-size:14px;}
+  .btn-nav:disabled{opacity:.4;}
+  .btn-nav.primary{background:var(--blue);color:#fff;border:none;}
+
+  #warnOverlay{position:fixed;inset:0;background:rgba(15,39,69,.95);z-index:999;display:none;
+    align-items:center;justify-content:center;padding:20px;color:#fff;text-align:center;}
+  #warnOverlay .box{max-width:420px;}
+  #warnOverlay h2{color:#ffd166;font-size:22px;}
+  #warnOverlay p{font-size:14.5px;line-height:1.6;opacity:.9;}
+  #warnOverlay button{margin-top:16px;padding:12px 28px;background:#ffd166;border:none;border-radius:8px;
+    font-weight:700;font-size:14.5px;color:#432;}
+
+  /* ===== RESULT ===== */
+  #screen-result{display:none;min-height:100vh;padding:30px 16px;background:var(--bg);}
+  .result-card{max-width:720px;margin:0 auto;background:var(--card);border-radius:16px;padding:32px;box-shadow:0 10px 40px rgba(0,0,0,.08);}
+  .result-card h1{color:var(--navy);margin-top:0;font-size:22px;}
+  .score-hero{text-align:center;padding:26px;background:linear-gradient(135deg,var(--navy),var(--blue));
+    border-radius:14px;color:#fff;margin:18px 0 24px;}
+  .score-hero .num{font-size:46px;font-weight:800;}
+  .score-hero .grade{font-size:15px;opacity:.9;margin-top:4px;}
+  .breakdown{width:100%;border-collapse:collapse;font-size:14px;margin-bottom:20px;}
+  .breakdown th,.breakdown td{padding:9px 10px;border-bottom:1px solid var(--border);text-align:left;}
+  .breakdown th{color:var(--gray);font-size:12px;text-transform:uppercase;}
+  .result-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px;}
+  .result-actions button{flex:1;min-width:180px;padding:13px;border-radius:9px;font-weight:700;font-size:14px;border:none;}
+  #btnExcel{background:var(--blue);color:#fff;}
+  #btnRetrySubmit{background:var(--amber);color:#432;}
+  .submit-status{display:flex;align-items:center;gap:10px;padding:12px 16px;border-radius:9px;font-size:13.5px;
+    font-weight:600;margin-bottom:18px;}
+  .submit-status.sending{background:#fff8ea;color:#8a6d00;border:1px solid #f1e0ad;}
+  .submit-status.ok{background:#e9f9f0;color:#0f7a45;border:1px solid #b7ecd0;}
+  .submit-status.fail{background:#fdecea;color:#a4271f;border:1px solid #f3c3bd;}
+  .dotpulse{width:9px;height:9px;border-radius:50%;background:currentColor;flex-shrink:0;animation:pulse 1s infinite;}
+  .submit-status.ok .dotpulse,.submit-status.fail .dotpulse{animation:none;}
+  .note-small{font-size:12px;color:var(--gray);margin-top:14px;line-height:1.6;}
+
+  @media (max-width:820px){
+    #navPanel{position:fixed;left:-300px;top:0;bottom:0;z-index:60;transition:.2s;box-shadow:4px 0 20px rgba(0,0,0,.15);}
+    #navPanel.open{left:0;}
+    #questionArea{padding:18px 16px 90px;}
+    .qimg-wrap img,.qimg-wrap .imgph{max-width:100%;width:100%;}
+  }
+
+  /* ===== TEMA UNGU GRADASI PINK ===== */
+  :root{
+    --navy:#5b1a8f; --blue:#9c27b0; --blue-light:#f8ebfc; --green:#9c27b0; --pink:#e91e8c;
+    --red:#c2185b; --amber:#d9a23a; --gray:#6a5878; --bg:#f6ecfb; --border:#e4cdef; --radius:10px;
+    --grad:linear-gradient(135deg,#6a1bb8 0%,#a928c4 50%,#f0509f 100%);
+  }
+  body{background:linear-gradient(160deg,#f3e8ff 0%,#ffeaf5 100%);background-attachment:fixed;}
+  #screen-start{background:var(--grad);}
+  #topbar{background:var(--grad);}
+  .btn-primary,.btn-nav.primary,#btnExcel{background:var(--grad);color:#fff;}
+  .btn-primary:hover{background:var(--grad);filter:brightness(1.1);}
+  .btn-primary:disabled{background:#cbb7d8;}
+  .score-hero{background:var(--grad);}
+  #navSubmitBtn{background:linear-gradient(135deg,#c2185b,#e91e8c);}
+  #navSubmitBtn.locked{background:#a898b8;}
+  .navbtn.answered{background:var(--grad);border-color:transparent;}
+  .navbtn.current{outline:3px solid #f0509f;}
+  .tab-btn.active{color:var(--blue);border-bottom-color:var(--pink);}
+  #warnOverlay{background:rgba(46,12,80,.95);}
+  #lightbox .lb-close{color:var(--navy);}
+  .qimg-wrap .zoomhint{background:rgba(91,26,143,.82);}
+  /* gambar soal dibuat besar & mudah dilihat di HP */
+  .qimg-wrap .imgbox,.qimg-wrap img,.qimg-wrap .imgph{max-width:900px;}
+  .qimg-wrap img{border:1.5px solid var(--border);background:#fff;}
+  /* tampilan layar penuh gambar: bisa digeser bila lebih lebar dari layar HP */
+  #lightbox{overflow:auto;-webkit-overflow-scrolling:touch;align-items:flex-start;justify-content:flex-start;}
+  #lightbox img{margin:auto;max-width:none;max-height:none;width:max(100%,860px);}
+  /* kotak teks, daftar & tabel pada soal */
+  .textbox{border:2px solid #8e24aa;border-radius:8px;padding:14px 18px;margin:12px 0 18px;background:#fff;font-size:15.5px;line-height:1.75;}
+  .textbox .tb-title{text-align:center;font-weight:800;color:var(--navy);margin-bottom:8px;font-size:16px;}
+  .textbox p{margin:0;text-align:justify;text-indent:1.6em;}
+  .stim{border-left:5px solid var(--pink);background:#fff;border-radius:6px;padding:12px 16px;margin:12px 0 18px;font-size:15.5px;line-height:1.75;box-shadow:0 1px 4px rgba(91,26,143,.08);text-align:left;}
+  .stim .stlist,.textbox .stlist{margin:0;padding-left:22px;}
+  .table-scroll{overflow-x:auto;margin:10px 0 18px;}
+  table.qtable{width:100%;border-collapse:collapse;font-size:14.5px;background:#fff;}
+  table.qtable th,table.qtable td{border:1.5px solid #8e24aa;padding:9px 11px;text-align:left;vertical-align:top;}
+  table.qtable th{background:var(--blue-light);color:var(--navy);text-align:center;}
+  table.qtable td:first-child{text-align:center;font-weight:700;}
+  @media (max-width:820px){ .qtext{font-size:16.5px;} .option .otext{font-size:15.5px;} .textbox p{text-align:left;} }
+</style>
 </head>
 <body>
-<div class="bg-deco" aria-hidden="true"><span class="orb o1"></span><span class="orb o2"></span><span class="orb o3"></span></div>
-<div class="page">
-<header class="kop">
-  <div class="kop-inner">
-    <a class="kembali reveal" href="../../kelas-7.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg> Kelas 7</a>
-    <div class="logo-wrap reveal"><img src="../../assets/img/logo-smpn1dlingo.png" alt="Logo SMP Negeri 1 Dlingo"></div>
-    <p class="sekolah reveal" style="--d:.08s">SMP NEGERI 1 DLINGO</p>
-    <h1 class="judul reveal" style="--d:.16s">Pendidikan Jasmani, Olahraga dan Kesehatan</h1>
-    <div class="ornamen reveal" style="--d:.24s"><i></i></div>
-    <div class="chips reveal" style="--d:.32s"><span class="chip">Kelas <strong>VII</strong></span><span class="chip">Tahun Pelajaran <strong>2026/2027</strong></span></div>
+
+<!-- ============ START / INSTRUCTIONS SCREEN ============ -->
+<div id="screen-start">
+  <div class="start-card">
+    <a href="../../kelas-7.html" style="display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;color:var(--gray);margin-bottom:14px;">&larr; Menu Kelas 7</a>
+    <div class="school-header">
+      <img src="../../assets/img/logo-smpn1dlingo.png" alt="Logo Sekolah">
+      <div class="stxt"><b>SMP NEGERI 1 DLINGO</b><span>Asesmen Sumatif Akhir Semester · PJOK · TP 2026/2027</span></div>
+    </div>
+    <h1>📝 Asesmen Sumatif Akhir Semester — PJOK</h1>
+    <p class="sub">Jenjang SMP · Kelas 7 · Semester Ganjil · Materi: Bola Besar, Atletik, Pencak Silat, Senam Irama, Permainan Tradisional &amp; Kebugaran Jasmani</p>
+
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="petunjuk">📋 Petunjuk</button>
+      <button class="tab-btn" data-tab="mulai">🚀 Mulai Ujian</button>
+    </div>
+
+    <div class="tab-panel active" id="tab-petunjuk">
+      <div class="info-grid">
+        <div><b id="infoJumlah">40 Soal</b><span>Pilihan Ganda &amp; Benar/Salah</span></div>
+        <div><b>90 Menit</b><span>Alokasi waktu · jawaban baru bisa dikirim setelah 40 menit</span></div>
+        <div><b>6 Materi</b><span>Bola Besar, Atletik, Pencak Silat, Senam Irama, Permainan Tradisional, Kebugaran Jasmani</span></div>
+        <div><b>Acak Soal</b><span>Urutan soal &amp; opsi diacak</span></div>
+      </div>
+      <p style="font-size:13.5px;color:#33404f;margin:0 0 8px;font-weight:700;">Petunjuk Pengerjaan:</p>
+      <ol class="instr-list">
+        <li>Nama dan kelasmu terisi otomatis dari Menu Kelas 7. Masukkan token ujian pada tab "Mulai Ujian" lalu mulai.</li>
+        <li>Bacalah setiap butir soal dengan cermat sebelum menjawab.</li>
+        <li>Terdapat soal Pilihan Ganda (pilih satu jawaban) dan soal Benar/Salah (tentukan Benar atau Salah pada pernyataan yang diberikan). Beberapa soal dilengkapi gambar — ketuk gambar untuk memperbesar.</li>
+        <li>Ujian akan tampil dalam mode layar penuh (fullscreen) sejak dimulai.</li>
+        <li>Jangan berpindah tab/aplikasi, keluar dari layar penuh, menyalin teks, mengambil tangkapan layar, atau memakai split screen — semuanya tercatat sebagai pelanggaran.</li>
+        <li>Waktu berjalan otomatis selama 90 menit dan tidak dapat dijeda. Jawaban baru dapat dikirim setelah 40 menit pengerjaan.</li>
+        <li>Gunakan panel navigasi soal untuk melompat ke nomor soal tertentu dan memantau soal yang sudah/belum dijawab.</li>
+        <li>Tekan "Kirim Jawaban" setelah selesai. Jika pengiriman gagal, gunakan tombol "Kirim Ulang" yang akan muncul otomatis.</li>
+      </ol>
+    </div>
+
+    <div class="tab-panel" id="tab-mulai">
+      <label>Token Ujian</label>
+      <input type="password" id="inputToken" placeholder="Masukkan token dari guru">
+      <div class="idbox hidden" id="idBox">👤 <b id="idNama"></b><br>🏫 Kelas <b id="idKelas"></b></div>
+      <div id="pickWrap">
+        <div class="note-small" style="margin-top:12px;color:#8a6d00;">Data nama &amp; kelas tidak terbaca dari Menu Kelas 7. Silakan buka ujian melalui menu kelas, atau pilih manual di bawah ini.</div>
+        <label>Kelas</label>
+        <select id="inputKelas"><option value="">— Pilih Kelas —</option></select>
+        <label>Nama Lengkap</label>
+        <select id="inputNama" disabled><option value="">— Pilih kelas terlebih dahulu —</option></select>
+      </div>
+      <div class="rules">
+        ⚠️ <b>Perhatian sebelum memulai:</b><br>
+        • Ujian akan tampil dalam mode <b>layar penuh (fullscreen)</b>.<br>
+        • Jangan membuka tab/aplikasi lain atau memakai <b>split screen</b> — sistem akan mencatat pelanggaran.<br>
+        • Waktu berjalan otomatis dan tidak dapat dijeda. Jawaban <b>baru dapat dikirim setelah 40 menit</b>; ujian terkirim otomatis saat waktu habis.<br>
+        • Pastikan koneksi internet stabil agar hasil dapat terkirim ke guru secara real-time.<br>
+        • Layar akan mengabur otomatis dan pelanggaran tercatat jika kamu mencoba keluar layar penuh, menyalin teks, mengambil tangkapan layar (screenshot), atau memakai split screen.
+      </div>
+      <div class="err-msg" id="startErr"></div>
+      <button class="btn-primary" id="btnStart">🚀 Mulai Ujian (Layar Penuh)</button>
+    </div>
   </div>
-</header>
-<main>
-  <div class="glass panel-segera reveal">
-    <div class="ikon-besar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg></div>
-    <span class="lencana">Segera hadir</span>
-    <h2>Soal belum tersedia</h2>
-    <p>Berkas soal <strong>Pendidikan Jasmani, Olahraga dan Kesehatan</strong> Kelas VII sedang disiapkan dan akan diunggah menyusul.</p>
-    <p>Berkas ini akan digantikan pada alamat berikut, sehingga tautan menu tidak perlu diubah.</p>
-    <span class="berkas">soal/kelas-7/pjok.html</span><br>
-    <a class="tombol" href="../../kelas-7.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg> Kembali ke Kelas VII</a>
-  </div>
-</main>
-<footer>
-  <p><strong>SMP Negeri 1 Dlingo</strong> — Bantul, Daerah Istimewa Yogyakarta<br>
-  Portal Asesmen Sumatif Akhir Semester &middot; Tahun Pelajaran 2026/2027</p>
-</footer>
 </div>
-<script src="../../assets/js/main.js"></script>
+
+<!-- ============ EXAM SCREEN ============ -->
+<div id="screen-exam">
+  <div id="topbar">
+    <button id="panelToggle">☰ Soal</button>
+    <div class="brand"><img src="../../assets/img/logo-smpn1dlingo.png" alt="Logo"><span>ASAS PJOK KELAS 7 · TP 2026/2027<small class="who" id="brandStudent"></small></span></div>
+    <div id="violationBadge">⚠ Pelanggaran: <span id="violCount">0</span></div>
+    <div id="timerBox">90:00</div>
+  </div>
+  <div id="examBody">
+    <div id="navPanel"></div>
+    <div id="questionArea">
+      <div class="qwrap" id="qwrap"></div>
+      <div id="navRow">
+        <button class="btn-nav" id="btnPrev">← Sebelumnya</button>
+        <button class="btn-nav primary" id="btnNext">Selanjutnya →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="lightbox">
+  <button class="lb-close" id="lightboxClose">✕</button>
+  <img id="lightboxImg" src="" alt="Gambar diperbesar">
+</div>
+
+<div id="warnOverlay">
+  <div class="box">
+    <h2 id="warnTitle">⚠ Peringatan</h2>
+    <p id="warnText"></p>
+    <button id="warnBtn">Kembali ke Ujian</button>
+  </div>
+</div>
+
+<!-- ============ RESULT SCREEN ============ -->
+<div id="screen-result">
+  <div class="result-card">
+    <div class="school-header">
+      <img src="../../assets/img/logo-smpn1dlingo.png" alt="Logo Sekolah">
+      <div class="stxt"><b>SMP NEGERI 1 DLINGO BANTUL</b><span>Asesmen Sumatif Akhir Semester · PJOK · TP 2026/2027</span></div>
+    </div>
+    <h1>✅ Hasil Ujian</h1>
+    <div class="score-hero">
+      <div class="num" id="resScore">0 / 0</div>
+      <div class="grade" id="resGrade">Predikat —</div>
+    </div>
+    <div id="submitStatus" class="submit-status sending">
+      <span class="dotpulse"></span><span id="submitStatusText">Mengirim jawaban ke guru...</span>
+    </div>
+    <table class="breakdown" id="resTable"></table>
+    <div class="result-actions">
+      <button id="btnRetrySubmit" class="hidden">🔁 Kirim Ulang</button>
+      <button id="btnExcel">⬇️ Unduh Hasil (Excel)</button>
+    </div>
+    <p class="note-small">
+      Nama: <b id="rNama"></b> · Kelas: <b id="rKelas"></b> · Pelanggaran layar tercatat: <b id="rViol"></b> kali.<br>
+      Jawaban dikirim otomatis secara real-time ke Google Spreadsheet guru begitu halaman ini muncul. Jika status di atas menunjukkan gagal terkirim, gunakan tombol "Kirim Ulang", atau pastikan koneksi internet aktif lalu klik tombol tersebut. Tombol "Unduh Hasil (Excel)" tetap tersedia sebagai cadangan.
+    </p>
+  </div>
+</div>
+
+<script id="questions-data" type="application/json">[{"no": 1, "subject": "Permainan Bola Besar", "type": "pg", "text": "Berdasarkan tabel tersebut, kelompok yang seluruh anggotanya termasuk ke dalam kategori permainan bola besar ditunjukkan oleh ....", "options": ["Kelompok I dan II", "Kelompok I dan III", "Kelompok II dan IV", "Kelompok III dan IV"], "correct": "Kelompok I dan III", "pre": "Perhatikan tabel pengelompokan cabang olahraga berdasarkan jenis permainan dan gerak dominannya di bawah ini!", "box": "<div class=\"table-scroll\"><table class=\"qtable\"><thead><tr><th>Kelompok</th><th>Cabang Olahraga</th><th>Gerak Dominan Manipulatif</th></tr></thead><tbody><tr><td>I</td><td>Sepak bola, Futsal, Bola tangan</td><td>Menendang, menggiring, melempar bola</td></tr><tr><td>II</td><td>Bola voli, Tenis meja, Bulu tangkis</td><td>Memukul bola melewati net</td></tr><tr><td>III</td><td>Sepak Takraw, Bola basket, Bola voli</td><td>Memantulkan, mengoper, menembak bola</td></tr><tr><td>IV</td><td>Kasti, Sofbol, Tenis lapangan</td><td>Memukul bola menggunakan alat pemukul</td></tr></tbody></table></div>"}, {"no": 2, "subject": "Permainan Bola Besar", "type": "pg", "text": "Berdasarkan isi teks di atas, perhatikan pernyataan di bawah ini!\n(1) Sepak bola sudah dimainkan oleh berbagai peradaban kuno sebelum peraturan modernnya disusun di Inggris.\n(2) Peraturan permainan sepak bola modern disusun pada hari yang sama dengan berdirinya <i>English Football Association.</i>\n(3) Nama kejuaraan \"Piala Soeratin\" digunakan sebagai bentuk penghormatan terhadap ketua umum pertama PSSI.\n(4) Kejuaraan sepak bola dunia pertama diselenggarakan pada tahun 1930 di Montevideo, Uruguay.\nPernyataan yang benar berdasarkan teks tersebut adalah....", "options": ["Pernyataan 1 dan 2 saja yang benar", "Pernyataan 1, 3, dan 4 benar", "Pernyataan 2, 3 dan 4 benar", "Semua pernyataan benar"], "correct": "Pernyataan 1, 3, dan 4 benar", "pre": "Perhatikan teks di bawah ini!", "box": "<div class=\"textbox\"><div class=\"tb-title\">Sejarah Permainan Sepak bola</div><p>Kita mengenal beberapa sebutan sepak bola. Pada zaman Cina Kuno semasa pemerintahan Dinasti Han, sepak bola dikenal dengan istilah <i>tanchu.</i> Di Italia pada zaman Romawi dikenal sebagai haspartun, di Perancis yang selanjutnya menyebar ke Normandia dan Britania (Inggris) dikenal dengan <i>choule.</i> Di Yunani Kuno dikenal istilah epishyros dan di Jepang dikenal istilah Kemari. Pada tanggal 26 Oktober 1863 didirikan sebuah badan yang disebut \"English Football Assosiation\". Tanggal 8 Desember 1863 lahirlah peraturan permainan sepak bola modern yang disusun oleh badan tersebut yang dalam perkembangannya mengalami perubahan. Atas inisiatif Guerin (Perancis) pada tanggal 21 Mei 1904 berdirilah federasi sepak bola internasional dengan nama \"Federation International de Football Assosiation\" (FIFA). Atas inisiatif Julies Rimet pada tahun 1930 diselenggarakan kejuaraan dunia sepak bola pertama di Montevideo, Uruguay. Kejuaraan sepak bola dunia diadakan 4 tahun sekali. Pada tanggal 19 April 1930 dibentuk Persatuan Sepak bola Seluruh Indonesia (PSSI) di Yogyakarta dengan dukungan seluruh bond- bond. Pengurus PSSI pertama kali diketuai oleh Ir. Soeratin Sosrosoegondo. Mulai tahun 1966 diadakan kejuaraan sepak bola tingkat taruna remaja dengan nama \"Piala Soeratin\" (Soeratin Cup). Sumber: www.pssi-football.com.</p></div>"}, {"no": 3, "subject": "Permainan Bola Besar", "type": "pg", "text": "Sepak bola dimainkan oleh dua tim dengan lama permainan adalah 90 menit yang terbagi menjadi dua babak dengan durasi masing-masing 45 menit. Setelah babak pertama selesai, para pemain mendapatkan waktu jeda sebelum melanjutkan babak kedua selama ...", "options": ["5 menit", "10 menit", "15 menit", "30 menit"], "correct": "15 menit"}, {"no": 4, "subject": "Permainan Bola Besar", "type": "pg", "text": "Pada sebuah pertandingan sepak bola, Tim A berhasil mencetak gol ke gawang Tim B pada menit ke-35. Setelah wasit mengesahkan gol tersebut, langkah yang tepat untuk melanjutkan pertandingan adalah ....", "options": ["Tim A melakukan <i>kick-off</i> dari titik tengah lapangan", "Tim B melakukan <i>kick-off</i> dari titik tengah lapangan", "Wasit melakukan lemparan bola (<i>dropped ball</i>) di area penalti Tim B", "Tim B melakukan tendangan gawang dari dalam kotak penalti"], "correct": "Tim B melakukan <i>kick-off</i> dari titik tengah lapangan"}, {"no": 5, "subject": "Permainan Bola Besar", "type": "pg", "text": "Berdasarkan ciri-ciri dari teknik menendang bola tersebut, menggunakan kaki bagian…", "options": ["Luar", "Dalam", "Penggung Kaki", "Kura-kura Kaki"], "correct": "Luar", "pre": "Perhatikan teks di bawah ini!", "box": "<div class=\"stim\"><ol class=\"stlist\"><li>Sikap awal berdiri menghadap kearah bola</li><li>Kaki tumpu diletakkan di samping bola dengan kedua tangan bergerak rileks untuk keseimbangan.</li><li>Kaki yang digunakan untuk menendang sedikit diputar ke dalam.</li><li>Pandangan mata kea rah bola, kaki yang digunakan menendang diayunkan ke depan.</li></ol></div>"}, {"no": 6, "subject": "Permainan Bola Besar", "type": "pg", "text": "Setiap bagian kaki yang digunakan untuk menendang bola dalam permainan sepak bola memiliki karakteristik hasil tendangan yang berbeda-beda di lapangan. Jika menendang bola menggunakan kaki bagian dalam lebih banyak dipilih pemain ketika ingin melakukan operan pendek yang akurat kepada teman terdekat, maka teknik menendang bola menggunakan punggung kaki pada umumnya digunakan oleh pemain untuk ....", "options": ["Tembakan melambung jarak jauh", "Operan mendatar pelan di area sempit", "Menghentikan bola yang memantul dari udara", "Menggiring bola secara zig-zag melewati lawan"], "correct": "Tembakan melambung jarak jauh"}, {"no": 7, "subject": "Permainan Bola Besar", "type": "pg", "text": "Berdasarkan gambar tersebut, aktivitas kombinasi gerak lokomotor dan manipulatif pada permainan sepakbola yang sedang dipraktikkan oleh siswa adalah ....", "options": ["Berjalan santai sambil menendang bola ke arah gawang", "Melompati rintangan <i>cone</i> sambil menghentikan bola menggunakan telapak kaki", "Berlari lurus dengan cepat sambil mengoper bola kepada teman di depannya", "Berlari berkelok-kelok (zig-zag) sambil menggiring bola melewati rintangan"], "correct": "Berlari berkelok-kelok (zig-zag) sambil menggiring bola melewati rintangan", "pre": "Perhatikan gambar di bawah ini!", "img": "../../assets/img/PJOK_7_7.png"}, {"no": 8, "subject": "Permainan Bola Besar", "type": "pg", "text": "Sebelum pertandingan sepak bola, pemeriksaan bola sepak harus dilakukan. Sebuah bola sepak sudah diukur dan diketahui memiliki diameter lingkaran sebesar 21 cm. Jika dihitung menggunakan rumus keliling lingkaran $(\\pi \\times d)$ dengan nilai $\\pi = \\frac{22}{7}$, maka berdasarkan hasil perhitungan, keliling bola tersebut, dan status kelayakannya menurut standar resmi FIFA bola berukuran 68–71 cm adalah…", "options": ["63 cm, sesuai dengan standar resmi FIFA", "66 cm, tidak sesuai dengan standar resmi FIFA karena terlalu kecil", "69 cm, sesuai dengan standar resmi FIFA", "72 cm, tidak sesuai dengan standar resmi FIFA karena terlalu besar"], "correct": "66 cm, tidak sesuai dengan standar resmi FIFA karena terlalu kecil"}, {"no": 9, "subject": "Permainan Bola Besar", "type": "pg", "text": "Bagian kepala yang paling tepat, kuat, dan aman digunakan untuk menyundul (<i>heading</i>) bola dalam permainan sepak bola adalah...", "options": ["Bagian ubun-ubun atau bagian atas kepala dengan menutup mata rapat-rapat agar tidak takut terkena bola", "Bagian kening atau dahi dengan mata tetap terbuka dan tetap fokus mengawasi bola", "Bagian belakang kepala dengan melihat ke bawah ke arah rumput lapangan", "Bagian samping kepala atau pelipis dengan mata melihat ke arah gawang lawan tanpa memperdulikan posisi bola"], "correct": "Bagian kening atau dahi dengan mata tetap terbuka dan tetap fokus mengawasi bola"}, {"no": 10, "subject": "Permainan Bola Besar", "type": "pg", "text": "Pada pertandingan sepak bola yang berlangsung selama 2 x 45 menit, penentuan pemenang dalam pertandingan sepak bola adalah ....", "options": ["Tim yang paling lama menguasai bola di tengah lapangan", "Tim yang paling banyak melakukan tendangan sudut dan lemparan ke dalam", "Tim yang paling banyak memasukkan bola secara sah ke gawang lawan hingga peluit akhir dibunyikan", "Tim yang paling sedikit mendapatkan kartu kuning dari wasit selama pertandingan"], "correct": "Tim yang paling banyak memasukkan bola secara sah ke gawang lawan hingga peluit akhir dibunyikan"}, {"no": 11, "subject": "Permainan Bola Besar", "type": "pg", "text": "Pada tahun 1891, lahir sebuah cabang olahraga baru di kota New York, Amerika yang kini menjadi salah satu olahraga paling bergengsi dan mendunia, yaitu bola basket. Pencetus pertama kali ide permainan bola basket tersebut adalah…", "options": ["William G. Morgan", "Dr. Elmer Beny", "Dr. James Naismith", "George Washington"], "correct": "Dr. James Naismith"}, {"no": 12, "subject": "Permainan Bola Besar", "type": "pg", "text": "Jawaban paling tepat yang harus disampaikan oleh Yosep adalah .....", "options": ["5 orang", "6 orang", "10 orang", "12 orang"], "correct": "10 orang", "pre": "Pada suatu hari siswa bernama Dion dan Yosep berbincang di lapangan sekolah SMP Negeri Pertiwi. Mereka berdua sedang asyik membicarakan tentang olahraga bola basket yang baru saja mereka tonton.", "box": "<div class=\"stim\">Dion : “Yosep, minggu depan mata pelajaran PJOK kita materinya permainan bola basket bukan ya?”<br>Yosep : “Benar, Yon.”<br>Dion : “Kalau pertandingan resmi bola basket dimulai, ada berapa total pemain dari kedua tim yang berada di dalam lapangan?”</div>"}, {"no": 13, "subject": "Permainan Bola Besar", "type": "pg", "text": "Sebelum memulai pertandingan resmi bola basket pada kuarter pertama, wasit akan memanggil dua orang pemain dari masing-masing regu untuk bersiap memperebutkan bola pertama yang dilambungkan ke atas. Proses perebutan bola oleh dua pemain yang saling berhadapan saat wasit melambungkan bola ke udara untuk memulai jalannya pertandingan ini dikenal dengan istilah <i>jump ball</i>, dan secara aturan resmi harus dilaksanakan di bagian lapangan yang disebut...", "options": ["Garis lemparan bebas (<i>free throw line</i>)", "Area bersyarat (<i>keyhole</i> atau <i>paint area</i>)", "Garis batas samping lapangan (<i>sideline</i>)", "Lingkaran tengah lapangan (<i>center circle</i>)"], "correct": "Lingkaran tengah lapangan (<i>center circle</i>)"}, {"no": 14, "subject": "Permainan Bola Besar", "type": "pg", "text": "Berdasarkan daftar di atas, teknik yang termasuk dalam permainan bola basket ditunjukkan oleh nomor…", "options": ["(1), (2), dan (3)", "(1), (3), dan (5)", "(2), (3), dan (4)", "(2), (4), dan (5)"], "correct": "(1), (3), dan (5)", "pre": "Perhatikan daftar teknik dasar olahraga berikut ini!", "box": "<div class=\"stim\">(1) <i>Chest pass</i><br>(2) <i>Smash</i><br>(3) <i>Bounce pass</i><br>(4) <i>Servis</i><br>(5) <i>Jump shoot</i></div>"}, {"no": 15, "subject": "Permainan Bola Besar", "type": "pg", "text": "Pada permainan bola basket, <i>chest pass</i> merupakan operan jarak dekat yang efektif untuk mengalirkan bola dengan cepat. Pemain memegang bola setinggi dada dengan posisi jari terbuka dan melangkahkan satu kaki ke depan saat menolakkan bola. Agar laju bola tetap stabil setelah lepas dari tangan, gerakan lanjutan yang harus dilakukan pemain adalah…", "options": ["Menahan kedua siku tetap menekuk di depan dada dengan posisi ibu jari tegak ke atas.", "Meluruskan kedua lengan ke depan sejajar bahu dengan telapak tangan menengadah ke atas.", "Mengayunkan kedua lengan ke arah bawah hingga menyentuh paha bagian samping.", "Meluruskan kedua lengan sepenuhnya ke arah penerima dengan posisi ibu jari menghadap ke bawah."], "correct": "Meluruskan kedua lengan sepenuhnya ke arah penerima dengan posisi ibu jari menghadap ke bawah.", "pre": "Perhatikan gambar ini!", "img": "../../assets/img/PJOK_7_15.png"}, {"no": 16, "subject": "Permainan Bola Besar", "type": "pg", "text": "Berdasarkan pernyataan-pernyataan di atas, gerakan tersebut merupakan gerak spesifik permainan bola basket yang dinamakan dengan…", "options": ["<i>Shooting</i>", "<i>Chest pass</i>", "<i>Over head pass</i>", "<i>Dribbling</i>"], "correct": "<i>Dribbling</i>", "pre": "Perhatikan teks di bawah ini!", "box": "<div class=\"stim\"><b>Sikap badan pada saat pelaksanaan:</b><br>1) Badan sedikit membungkuk<br>2) Gerakan tangan naik turun berporos pada siku-siku dalam keadaan telapak tangan terbuka<br>3) Dapat dilaksanakan dengan cara di tempat, berjalan, bahkan bisa berlari<br>4) Padangan kea rah depan</div>"}, {"no": 17, "subject": "Permainan Bola Besar", "type": "pg", "text": "Gerakan dalam permainan bola basket yang baru saja diperagakan tersebut dinamakan ....", "options": ["<i>Chest pass</i>", "<i>Bounce pass</i>", "<i>Overhead pass</i>", "<i>Drible</i>"], "correct": "<i>Overhead pass</i>", "pre": "Bacalah instruksi berikut!", "box": "<div class=\"stim\">\"Berdirilah menghadap ke depan, pegang bola dengan kedua tangan, lalu tarik bola ke belakang kepala hingga melewati atas kepala. Ayunkan kedua lengan ke depan untuk melempar bola sambil tetap menempelkan kedua telapak kaki di lantai.\"</div>"}, {"no": 18, "subject": "Permainan Bola Besar", "type": "pg", "text": "Pada saat pertandingan bola basket, kamu sedang memegang bola basket di lapangan, dan ingin mengoper bola kepada rekan setimmu. Namun, tepat di depanmu berdiri seorang pemain bertahan lawan yang postur tubuhnya jauh lebih tinggi darimu dengan kedua tangan terangkat ke atas dan ke samping untuk menghalangi operan atas dan menutup jalur operan lurus setinggi dada. Berdasarkan situasi pertandingan tersebut, tindakan yang paling tepat untuk dilakukan adalah ....", "options": ["Melepaskan <i>bounce pass</i> dengan mendorong bola kuat ke lantai melewati celah bawah lawan", "Melakukan <i>chest pass</i> lurus dengan tenaga penuh tepat ke arah dada pemain bertahan lawan", "Menggunakan <i>overhead pass</i> dengan harapan bola tidak menyentuh ujung jari lawan yang tinggi", "Membawa lari bola untuk menghindari lawan tanpa dipantulkan bola ke lantai"], "correct": "Melepaskan <i>bounce pass</i> dengan mendorong bola kuat ke lantai melewati celah bawah lawan"}, {"no": 19, "subject": "Atletik", "type": "pg", "text": "Setelah membaca kutipan teks tersebut dengan saksama, gagasan utama atau ide pokok yang dibahas dalam paragraf di atas adalah…", "options": ["Tata cara pelaksanaan perlombaan lari dan jalan pada masa Yunani Kuno.", "Alasan mengapa perayaan keagamaan di Yunani Kuno selalu dimeriahkan dengan pertandingan olahraga.", "Asal-usul istilah, sejarah singkat, serta gerak dasar atletik sebagai cabang olahraga tertua.", "Perbedaan antara olahraga atletik pada masa Olimpiade Kuno dengan olimpiade pada era modern"], "correct": "Asal-usul istilah, sejarah singkat, serta gerak dasar atletik sebagai cabang olahraga tertua.", "pre": "Bacalah kutipan teks berikut dengan saksama!", "box": "<div class=\"stim\">Atletik dikenal sebagai induk dari segala cabang olahraga sekaligus salah satu olahraga paling tua di muka bumi. Hal ini disebabkan karena gerak dasarnya lahir dari aktivitas fisik alami manusia dalam kehidupan sehari-hari, yakni jalan, lari, lompat, dan lempar. Secara tercatat, perlombaan atletik sudah digelar sejak zaman Yunani Kuno sebagai acara utama dalam perayaan keagamaan yang populer dengan sebutan Olimpiade Kuno. Kata \"atletik\" berakar dari kosakata Yunani, \"athlos\" atau \"athlon\", yang bermakna \"perlombaan\" atau \"kontes\". Seiring berjalannya waktu, nomor pertandingan dalam Olimpiade Kuno semakin beragam dengan hadirnya lompat jauh, lempar lembing, hingga tolak peluru.</div>"}, {"no": 20, "subject": "Atletik", "type": "pg", "text": "Salah satu prinsip utama dalam jalan cepat adalah menjaga kaki depan tetap lurus dan tidak menekuk pada bagian lutut sejak tumit menyentuh tanah hingga posisi tegak lurus. Kondisi berikut yang paling tepat menggambarkan penerapan prinsip tersebut adalah..", "options": ["Lutut kaki yang melangkah segera ditekuk untuk persiapan langkah berikutnya.", "Kaki belakang dan kaki depan diangkat bersama-sama tanpa menyentuh tanah.", "Kaki yang pertama kali menyentuh tanah harus tetap lurus sampai kaki lainnya diangkat dari tanah.", "Seluruh telapak kaki harus menyentuh tanah secara bersamaan."], "correct": "Kaki yang pertama kali menyentuh tanah harus tetap lurus sampai kaki lainnya diangkat dari tanah."}, {"no": 21, "subject": "Atletik", "type": "pg", "text": "Agar dapat melangkah dengan cepat tanpa melanggar aturan, atlet jalan cepat perlu memadukan empat fase gerakan secara tepat dan berurutan. Susunan empat fase dalam teknik jalan cepat yang tepat adalah…", "options": ["Fase bersedia, siap, yak.", "Fase yak, bersedia, mulai.", "Fase dorongan, relaksasi, tarikan, bersedia, dan tumpuan.", "Fase tumpuan kedua kaki, tarikan, relaksasi, dan dorongan."], "correct": "Fase tumpuan kedua kaki, tarikan, relaksasi, dan dorongan."}, {"no": 22, "subject": "Atletik", "type": "pg", "text": "Pada saat jam pelajaran PJOK, guru meminta siswa mempraktikkan cara memulai lari jarak pendek secara bergantian di lapangan sekolah. Guru mengingatkan bahwa kesalahan meletakkan anggota tubuh di garis start dapat mengurangi dorongan lari. Posisi start yang benar saat akan melakukan lari jarak pendek adalah…", "options": ["Jongkok dengan satu lutut menyentuh tanah dan tangan di belakang garis start.", "Berdiri tegak dengan kedua kaki rapat di belakang garis start.", "Jongkok dengan kedua lutut menyentuh tanah dan kedua tangan di depan garis start.", "Berdiri condong ke depan dengan tangan siap diayun."], "correct": "Jongkok dengan satu lutut menyentuh tanah dan tangan di belakang garis start."}, {"no": 23, "subject": "Atletik", "type": "pg", "text": "Pada perlombaan lari jarak pendek seperti nomor 100 meter, 200 meter, dan 400 meter, setiap pelari harus memulai dengan teknik start. Agar semua peserta berangkat secara bersamaan dan tidak terjadi mencuri start (<i>false start</i>), petugas akan memberikan panduan suara secara bertahap sebelum peserta mulai berlari. Urutan tiga aba-aba resmi yang digunakan dalam start lari jarak pendek adalah…", "options": ["\"Siap\", \"Bersedia\", \"Mulai\"", "\"Bersedia\", \"Mulai\", \"Lari\"", "\"Siap\", \"Awas\", \"Ya\" (atau bunyi pistol)", "\"Bersedia\", \"Siap\", \"Ya\" (atau bunyi pistol)"], "correct": "\"Bersedia\", \"Siap\", \"Ya\" (atau bunyi pistol)"}, {"no": 24, "subject": "Atletik", "type": "pg", "text": "Seorang pelari jarak pendek ingin tolakan dalam start menjadi lebih cepat dan kuat saat berlari. Jenis latihan yang paling tepat dilakukan secara rutin untuk mencapai tujuan tersebut adalah…", "options": ["Melatih kecepatan merespons aba-aba dan memperkuat otot kaki.", "Berlari jarak jauh secara perlahan untuk melatih napas.", "Melakukan peregangan untuk melenturkan tubuh dan pinggul setiap hari.", "Mengangkat beban berat untuk memperbesar massa otot lengan."], "correct": "Melatih kecepatan merespons aba-aba dan memperkuat otot kaki."}, {"no": 25, "subject": "Atletik", "type": "pg", "text": "Pada perlombaan O2SN Jenjang SMP lari jarak pendek 60 meter, ada dua pelari dengan kekuatan kaki yang sama. Pelari A berlari cepat dengan langkah yang lebar, sedangkan Pelari B berlari cepat dengan langkah yang pendek. Pelari yang kemungkinan besar akan menang adalah…", "options": ["Pelari A, karena langkah lebar menghemat tenaga saat berlari.", "Pelari B, karena langkah pendek membuat kaki bergerak lebih cepat dengan kecepatan maksimal.", "Keduanya punya peluang yang sama, karena kekuatan kaki mereka sama.", "Pemenangnya ditentukan oleh daya tahan napas, bukan cara melangkah."], "correct": "Pelari B, karena langkah pendek membuat kaki bergerak lebih cepat dengan kecepatan maksimal."}, {"no": 26, "subject": "Pencak Silat", "type": "pg", "text": "Indonesia memiliki kekayaan budaya yang sangat beragam, salah satunya adalah seni bela diri tradisional yang telah diwariskan secara turun-temurun oleh nenek moyang dan kini telah diakui oleh UNESCO sebagai Warisan Budaya Takbenda Dunia. Seni bela diri asli Nusantara ini tidak hanya mengajarkan teknik pertahanan diri dan kebugaran fisik saat bertanding, tetapi juga memadukan keindahan gerak seni tari, pembentukan mental, serta nilai-nilai spiritual dan budi pekerti luhur. Nama seni bela diri tradisional Indonesia yang dimaksud adalah...", "options": ["Karate", "Taekwondo", "Pencak Silat", "Judo"], "correct": "Pencak Silat"}, {"no": 27, "subject": "Pencak Silat", "type": "pg", "text": "Gerakan serangan tangan yang dilakukan dengan lintasan lurus ke depan dengan menggunakan pangkal jari tengah dan telunjuk yang menargetkan bagian dada lawan, disebut...", "options": ["Tendangan", "Pukulan Lurus Depan", "Tangkisan Atas", "Pukulan Bandul"], "correct": "Pukulan Lurus Depan"}, {"no": 28, "subject": "Pencak Silat", "type": "pg", "text": "Selain kuda-kuda yang kokoh, seorang pesilat harus memiliki kelincahan dalam mengubah posisi tumpuan kaki agar mudah mencari celah pertahanan lawan atau menghindar dari serangan mendadak. Pada ilmu bela diri pencak silat, perubahan injakan kaki dari satu tempat ke tempat lain disebut dengan pola langkah, yang pergerakannya selalu mengacu pada titik pusat tubuh menuju…", "options": ["4 arah mata angin utama", "6 sudut segitiga pertahanan", "8 arah penjuru mata angin", "10 titik serangan lawan"], "correct": "8 arah penjuru mata angin"}, {"no": 29, "subject": "Pencak Silat", "type": "pg", "text": "Gambar di atas merupakan salah satu gerakan dalam pencak silat, yang sering disebut dengan…", "options": ["Sikap Tegak 4", "Sikap Tegak 3", "Sikap Tegak 2", "Sikap Tegak 1"], "correct": "Sikap Tegak 4", "pre": "Perhatikan gambar di bawah ini!", "img": "../../assets/img/PJOK_7_29.png"}, {"no": 30, "subject": "Senam Irama", "type": "pg", "text": "Perkembangan senam irama secara internasional terus mengalami kemajuan sejak pertama kali dilombakan di Rusia pada tahun 1940 hingga diakui oleh Federasi Senam Internasional (FIG) pada tahun 1961. Awalnya senam ini diberi nama <i>gymnastic</i>, kemudian berubah menjadi <i>gymnastic Rhythmic</i>, dan perubahan terakhir menjadi….", "options": ["<i>Swedish Estetic System</i>", "<i>Floor Exercise</i>", "<i>Grace Without Dancing</i>", "<i>Gymnastic Ritmik</i>"], "correct": "<i>Gymnastic Ritmik</i>"}, {"no": 31, "subject": "Senam Irama", "type": "pg", "text": "Siswa kelas sedang mempraktikkan rangkaian gerak dasar senam irama yang terdiri dari langkah satu kaki secara bergantian dan ayunan satu lengan ke depan dan belakang. Gerakan langkah kaki dan ayunan lengan dalam senam irama sebaiknya dilakukan secara terus-menerus tanpa terputus mengikuti irama lagu. Ciri utama dari gerakan senam irama tersebut termasuk pada unsur...", "options": ["Kelincahan dan kecepatan", "Keseimbangan dan ketepatan irama", "Kekuatan dan daya ledak otot", "Ketangkasan dan pertahanan diri"], "correct": "Keseimbangan dan ketepatan irama"}, {"no": 32, "subject": "Senam Irama", "type": "pg", "text": "Pada pembelajaran senam irama kelas VII, gerakan langkah kaki (<i>legwork</i>) merupakan fondasi utama yang harus dikuasai oleh siswa. Salah satu variasi gerak langkah kaki dasar adalah <i>looppas</i>, yang dilakukan dengan berjalan santai secara bergantian menggunakan lutut yang mengeper. Urutan bagian telapak kaki yang benar saat mendarat ke lantai pada gerakan <i>looppas</i> adalah...", "options": ["Ujung jari kaki terlebih dahulu, disusul telapak kaki, lalu tumit", "Telapak kaki bagian tengah, diikuti tumit, lalu ujung jari kaki", "Tumit menyentuh lantai terlebih dahulu, disusul telapak kaki, hingga ujung jari kaki", "Ujung jari kaki dan tumit mendarat secara bersamaan dengan lutut lurus"], "correct": "Tumit menyentuh lantai terlebih dahulu, disusul telapak kaki, hingga ujung jari kaki"}, {"no": 33, "subject": "Senam Irama", "type": "pg", "text": "Berdasarkan langkah-langkah di atas, nama variasi gerak langkah kaki yang sedang dipraktikkan adalah...", "options": ["Langkah Biasa (Looppas)", "Langkah Rapat (Bijtrekpas)", "Langkah Keseimbangan (Balanspas)", "Langkah Samping (Zijpas)"], "correct": "Langkah Rapat (Bijtrekpas)", "pre": "Perhatikan tahapan melakukan salah satu gerak langkah kaki dalam senam irama berikut ini:", "box": "<div class=\"stim\"><ol class=\"stlist\"><li>Berdiri tegak dengan posisi kedua tangan berada di pinggang.</li><li>Langkahkan kaki kiri ke depan</li><li>Langkahkan kaki kanan ke depan dan rapatkan persis di sebelah kaki kiri.</li><li>Langkahkan kembali kaki kanan ke depan, lalu rapatkan dengan kaki kiri secara bergantian mengikuti ketukan.</li></ol></div>"}, {"no": 34, "subject": "Permainan Tradisional", "type": "pg", "text": "Indonesia memiliki beragam permainan rakyat yang diwariskan secara turun-temurun dan memiliki sebutan berbeda di tiap daerah. Di beberapa wilayah, terdapat permainan tradisional yang mengandalkan strategi serta kecepatan berlari untuk mempertahankan wilayah kelompok, yang dikenal dengan nama permainan Kratonan. Di daerah lain pada umumnya, permainan Kratonan ini lebih sering disebut dengan…", "options": ["Permainan Gobag Sodor", "Permainan Engklek", "Permainan Bentengan", "Permainan Bola Beracun"], "correct": "Permainan Bentengan"}, {"no": 35, "subject": "Permainan Tradisional", "type": "pg", "text": "Penamaan sebuah permainan tradisional biasanya berkaitan erat dengan budaya maupun istilah lokal masyarakat setempat yang menggambarkan suasana permainan tersebut. Istilah permainan Kratonan sendiri berasal dari kata dasar kraton dalam bahasa Jawa yang memiliki arti…..", "options": ["Istana dan berdasarkan aturan jumlah pemain dimainkan secara berkelompok berjumlah 7 pemain", "Perlombaan dan berdasarkan aturan jumlah pemain dimainkan secara perorangan berjumlah 1 orang", "<i>Basecamp</i> dan berdasarkan aturan jumlah pemain dimainkan secara berpasangan berjumlah 2 pemain", "Tawanan dan berdasarkan aturan jumlah pemain dimainkan secara bergantian satu per satu"], "correct": "Istana dan berdasarkan aturan jumlah pemain dimainkan secara berkelompok berjumlah 7 pemain"}, {"no": 36, "subject": "Permainan Tradisional", "type": "pg", "text": "Berdasarkan gambar di atas, permainan tradisional tidak hanya menyenangkan, tetapi juga bermanfaat untuk melatih kebugaran jasmani seperti kekuatan otot kaki, kelincahan, dan keseimbangan. Berdasarkan gambar tersebut, permainan yang dinamakan Engklek ditunjukkan pada nomor…", "options": ["1", "2", "3", "4"], "correct": "1", "pre": "Perhatikan gambar di bawah ini!", "img": "../../assets/img/PJOK_7_36.png"}, {"no": 37, "subject": "Permainan Tradisional", "type": "pg", "text": "Pada permainan Engklek, setiap pemain wajib memiliki sebuah penanda khusus yang dilemparkan ke dalam kotak sasaran sebelum mulai melompat dengan satu kaki. Penanda pipih yang biasanya terbuat dari pecahan genteng, keramik, atau batu tipis tersebut dalam istilah permainan tradisional dikenal dengan nama…", "options": ["Benteng atau pos", "Tongkat estafet", "Bola bekel", "Gaco atau gacuk"], "correct": "Gaco atau gacuk"}, {"no": 38, "subject": "Kebugaran Jasmani", "type": "pg", "text": "Setiap individu membutuhkan kondisi fisik yang prima agar mampu menjalankan aktivitas rutin sehari-hari tanpa harus kehabisan tenaga sebelum waktunya selesai. Kemampuan tubuh seseorang untuk melakukan tugas dan pekerjaan sehari-hari dengan giat tanpa mengalami kelelahan yang berarti serta masih memiliki cadangan energi untuk menikmati waktu luang disebut…", "options": ["Kebugaran jasmani", "Kekuatan otot maksimal", "Daya tahan kardiovaskular", "Kesehatan rohani dan mental"], "correct": "Kebugaran jasmani"}, {"no": 39, "subject": "Kebugaran Jasmani", "type": "pg", "text": "Kebugaran jasmani tidak hanya berdampak pada kemampuan fisik semata, tetapi juga berpengaruh positif terhadap kondisi mental dan konsentrasi seseorang. Siswa yang memiliki tingkat kebugaran jasmani yang baik biasanya akan menunjukkan ciri-ciri berikut saat berada di sekolah, kecuali…", "options": ["Tubuh terasa sehat dan bugar sehingga lebih fokus dan berkonsentrasi penuh saat mengikuti pelajaran di kelas", "Memiliki daya tahan tubuh yang kuat sehingga tidak mudah terserang penyakit", "Memiliki waktu tidur yang cukup namun masih sering mengantuk dan merasa lemas ketika berangkat sekolah", "Tidak mudah Lelah sehingga tetap sigap dan berenergi saat mengikuti kegiatan ekstrakurikuler di sore hari"], "correct": "Memiliki waktu tidur yang cukup namun masih sering mengantuk dan merasa lemas ketika berangkat sekolah"}, {"no": 40, "subject": "Kebugaran Jasmani", "type": "pg", "text": "Tes lari multitahap atau sering disebut <i>Bleep Test</i> digunakan untuk mengukur komponen kebugaran jasmani yaitu….", "options": ["Kekuatan Otot", "Daya Tahan Otot", "Daya tahan jantung-paru", "Daya ledak (power)"], "correct": "Daya tahan jantung-paru"}, {"no": 41, "subject": "Kebugaran Jasmani", "type": "matrix", "text": "Berilah tanda centang (✓) pada kolom Benar atau Salah sesuai dengan pernyataan berikut!", "rows": [{"label": "41", "text": "Komposisi tubuh merupakan perbandingan massa lemak dengan massa nonlemak tubuh.", "cols": ["Benar", "Salah"], "correct": "Benar"}]}, {"no": 42, "subject": "Kebugaran Jasmani", "type": "matrix", "text": "Berilah tanda centang (✓) pada kolom Benar atau Salah sesuai dengan pernyataan berikut!", "rows": [{"label": "42", "text": "Waktu reaksi adalah jarak waktu antara munculnya stimulus dan dimulainya respons gerakan tubuh.", "cols": ["Benar", "Salah"], "correct": "Benar"}]}, {"no": 43, "subject": "Kebugaran Jasmani", "type": "matrix", "text": "Berilah tanda centang (✓) pada kolom Benar atau Salah sesuai dengan pernyataan berikut!", "rows": [{"label": "43", "text": "Lompat katak merupakan latihan melompat ke depan secara beruntun dari posisi jongkok.", "cols": ["Benar", "Salah"], "correct": "Benar"}]}, {"no": 44, "subject": "Kebugaran Jasmani", "type": "matrix", "text": "Berilah tanda centang (✓) pada kolom Benar atau Salah sesuai dengan pernyataan berikut!", "rows": [{"label": "44", "text": "Prinsip overload menyatakan bahwa beban latihan harus lebih ringan dari aktivitas sehari-hari agar kebugaran meningkat.", "cols": ["Benar", "Salah"], "correct": "Salah"}]}, {"no": 45, "subject": "Kebugaran Jasmani", "type": "matrix", "text": "Berilah tanda centang (✓) pada kolom Benar atau Salah sesuai dengan pernyataan berikut!", "rows": [{"label": "45", "text": "Koordinasi merupakan kemampuan menyelaraskan pandangan mata dengan gerakan tangan saat menangkap bola.", "cols": ["Benar", "Salah"], "correct": "Benar"}]}, {"no": 46, "subject": "Kebugaran Jasmani", "type": "matrix", "text": "Berilah tanda centang (✓) pada kolom Benar atau Salah sesuai dengan pernyataan berikut!", "rows": [{"label": "46", "text": "Waktu reaksi tidak berhubungan dengan kecepatan seseorang merespons bunyi peluit.", "cols": ["Benar", "Salah"], "correct": "Salah"}]}, {"no": 47, "subject": "Kebugaran Jasmani", "type": "matrix", "text": "Berilah tanda centang (✓) pada kolom Benar atau Salah sesuai dengan pernyataan berikut!", "rows": [{"label": "47", "text": "Lompat katak dapat digunakan sebagai bentuk latihan kebugaran jasmani.", "cols": ["Benar", "Salah"], "correct": "Benar"}]}, {"no": 48, "subject": "Kebugaran Jasmani", "type": "matrix", "text": "Berilah tanda centang (✓) pada kolom Benar atau Salah sesuai dengan pernyataan berikut!", "rows": [{"label": "48", "text": "Prinsip overload berarti beban latihan harus ditingkatkan agar kebugaran tubuh berkembang.", "cols": ["Benar", "Salah"], "correct": "Benar"}]}, {"no": 49, "subject": "Kebugaran Jasmani", "type": "matrix", "text": "Berilah tanda centang (✓) pada kolom Benar atau Salah sesuai dengan pernyataan berikut!", "rows": [{"label": "49", "text": "Koordinasi mata dan tangan diperlukan ketika seseorang menangkap bola.", "cols": ["Benar", "Salah"], "correct": "Benar"}]}, {"no": 50, "subject": "Kebugaran Jasmani", "type": "matrix", "text": "Berilah tanda centang (✓) pada kolom Benar atau Salah sesuai dengan pernyataan berikut!", "rows": [{"label": "50", "text": "Komposisi tubuh hanya terdiri atas massa lemak tanpa massa nonlemak.", "cols": ["Benar", "Salah"], "correct": "Salah"}]}]</script>
+<script id="embedded-images-data" type="application/json">{}</script>
+<script src="../../assets/js/data-siswa.js"></script>
+<script>
+(function(){
+"use strict";
+
+/* ================= CONFIG ================= */
+const SUBJECT_ORDER = ["Permainan Bola Besar", "Atletik", "Pencak Silat", "Senam Irama", "Permainan Tradisional", "Kebugaran Jasmani"];
+const DURATION_SEC = 90*60;
+const MIN_SUBMIT_SEC = 40*60;   // batas minimal sebelum jawaban boleh dikirim (40 menit)
+const MAPEL = "PJOK";
+const ASESMEN = "ASAS";
+const KELAS_TINGKAT = "VII";
+const MATERI = "Permainan Bola Besar, Atletik, Pencak Silat, Senam Irama, Permainan Tradisional, dan Kebugaran Jasmani";
+const JUDUL = "ASAS PJOK KELAS 7";
+const VALID_TOKEN = "PJK7ARM";
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzdrSdLUFEbm1SazucnDTjXNmXga4b4y49OYE8PVsANSyFi8oTEUwr_kHsySVlRuqzg/exec";
+
+const RAW_QUESTIONS = JSON.parse(document.getElementById('questions-data').textContent);
+document.getElementById('infoJumlah').textContent = RAW_QUESTIONS.length + " Soal";
+/* Data siswa dari ../../assets/js/data-siswa.js (const DATA_SISWA) — hanya rombel kelas VII (VII A–VII F) */
+const STUDENTS = (function(){
+  const src = (typeof DATA_SISWA !== 'undefined') ? DATA_SISWA : {};
+  const out = {};
+  Object.keys(src).forEach(k=>{ if(/^VII\s+[A-Z]$/.test(String(k).trim())) out[k] = src[k]; });
+  return out;
+})();
+const EMBEDDED_IMAGES = JSON.parse(document.getElementById('embedded-images-data').textContent);
+
+/* ================= STATE ================= */
+let examQuestions = [];
+let answers = {};
+let current = 0;
+let violCount = 0;
+let timeLeft = DURATION_SEC;
+let timerHandle = null;
+let studentName = "", studentClass = "";
+let examStarted = false;
+let examFinished = false;
+
+/* ================= UTIL ================= */
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; }
+  return a;
+}
+function fmtTime(s){ const m=Math.floor(s/60), sec=s%60; return String(m).padStart(2,'0')+":"+String(sec).padStart(2,'0'); }
+function plain(s){ return String(s==null?'':s).replace(/<[^>]*>/g,'').replace(/\s+/g,' ').trim(); }
+function escapeHtml(str){ return String(str).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function renderText(t){ return String(t).replace(/\n/g,'<br>'); }
+function imgList(img){ if(!img) return []; return Array.isArray(img) ? img : [img]; }
+function imgSrc(name){ return EMBEDDED_IMAGES[name] || encodeURI(name); }
+function typesetMath(){ if(window.MathJax && window.MathJax.typesetPromise){ window.MathJax.typesetPromise(); } }
+
+/* ================= LIGHTBOX (tap-to-zoom for question images) ================= */
+document.getElementById('lightboxClose').addEventListener('click',()=>{
+  document.getElementById('lightbox').classList.remove('open');
+});
+document.getElementById('lightbox').addEventListener('click',(e)=>{
+  if(e.target.id==='lightbox') document.getElementById('lightbox').classList.remove('open');
+});
+
+/* ================= TABS (start screen) ================= */
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-'+btn.dataset.tab).classList.add('active');
+  });
+});
+
+/* ================= STUDENT DROPDOWNS ================= */
+(function populateClassDropdown(){
+  const selKelas = document.getElementById('inputKelas');
+  Object.keys(STUDENTS).forEach(kelas=>{
+    const opt = document.createElement('option');
+    opt.value = kelas; opt.textContent = kelas;
+    selKelas.appendChild(opt);
+  });
+
+  selKelas.addEventListener('change',()=>{
+    const selNama = document.getElementById('inputNama');
+    const kelas = selKelas.value;
+    selNama.innerHTML = '';
+    if(!kelas){
+      const opt = document.createElement('option'); opt.value=''; opt.textContent='— Pilih kelas terlebih dahulu —';
+      selNama.appendChild(opt); selNama.disabled = true; return;
+    }
+    const opt0 = document.createElement('option'); opt0.value=''; opt0.textContent='— Pilih Nama —';
+    selNama.appendChild(opt0);
+    (STUDENTS[kelas]||[]).forEach(nm=>{
+      const opt = document.createElement('option'); opt.value = nm; opt.textContent = nm;
+      selNama.appendChild(opt);
+    });
+    selNama.disabled = false;
+  });
+
+  /* Prefill dari menu Kelas (kelas-7.html): ?kelas=VII%20A&nama=NAMA%20SISWA */
+  const params = new URLSearchParams(window.location.search);
+  const _pk = String(params.get('kelas')||'').replace(/\s+/g,' ').trim().toUpperCase();
+  const pKelas = Object.keys(STUDENTS).find(k=>String(k).replace(/\s+/g,' ').trim().toUpperCase()===_pk) || null;
+  const pNama = params.get('nama');
+  if(pKelas && STUDENTS[pKelas]){
+    selKelas.value = pKelas;
+    selKelas.dispatchEvent(new Event('change'));
+    const norm = s => String(s||'').replace(/\s+/g,' ').trim().toUpperCase();
+    const match = pNama ? STUDENTS[pKelas].find(n=>norm(n)===norm(pNama)) : null;
+    if(match){
+      document.getElementById('inputNama').value = match;
+      document.getElementById('idNama').textContent = match;
+      document.getElementById('idKelas').textContent = pKelas;
+      document.getElementById('idBox').classList.remove('hidden');
+      document.getElementById('pickWrap').classList.add('hidden');
+    }
+    document.querySelector('.tab-btn[data-tab="mulai"]').click();
+    document.getElementById('inputToken').focus();
+  }
+})();
+
+/* ================= BUILD EXAM (shuffle) ================= */
+function buildExam(){
+  const all = RAW_QUESTIONS.map((q,i)=>({q,i}));
+  const shuffledAll = shuffle(all);
+  examQuestions = shuffledAll.map(o=>{
+    const q = JSON.parse(JSON.stringify(o.q));
+    q._id = o.i;
+    if((q.type==='pg' || q.type==='multi') && Array.isArray(q.options)){
+      q.options = shuffle(q.options);
+    }
+    if(q.type==='matrix' && Array.isArray(q.rows)){ q.rows = shuffle(q.rows); }
+    return q;
+  });
+}
+
+/* ================= NAV PANEL ================= */
+function renderNavPanel(){
+  const panel = document.getElementById('navPanel');
+  let html = '<h3>Nomor Soal (1–'+examQuestions.length+')</h3>';
+  html += '<div class="legend"><span><i class="dot" style="background:#9b27af"></i>Terjawab</span><span><i class="dot" style="background:#fff;border:1.5px solid #dde3ec"></i>Belum</span></div>';
+  let grid = '';
+  examQuestions.forEach((q,idx)=>{
+    const answered = isAnswered(q);
+    grid += '<button class="navbtn'+(answered?' answered':'')+(idx===current?' current':'')+'" data-idx="'+idx+'">'+(idx+1)+'</button>';
+  });
+  html += '<div class="navgrid">'+grid+'</div>';
+  html += '<button id="navSubmitBtn">✅ Kirim Jawaban</button>';
+  panel.innerHTML = html;
+  panel.querySelectorAll('.navbtn').forEach(b=>{
+    b.addEventListener('click',()=>{ current=parseInt(b.dataset.idx,10); renderQuestion(); closeMobilePanel(); });
+  });
+  document.getElementById('navSubmitBtn').addEventListener('click', confirmSubmit);
+  updateSubmitLock();
+}
+function closeMobilePanel(){ document.getElementById('navPanel').classList.remove('open'); }
+
+function isAnswered(q){
+  const v = answers[q._id];
+  if(q.type==='pg') return !!v;
+  if(q.type==='multi') return Array.isArray(v) && v.length>0;
+  if(q.type==='matrix'){ if(!v) return false; return q.rows.every(r=>v[r.label]); }
+  return false;
+}
+
+/* ================= RENDER QUESTION ================= */
+function renderQuestion(){
+  const q = examQuestions[current];
+  const wrap = document.getElementById('qwrap');
+  let html = '';
+  html += '<div class="qnum">Soal '+(current+1)+' dari '+examQuestions.length+'</div>';
+  html += '<div class="qtext">'+renderText(q.pre || q.text)+'</div>';
+  if(q.box) html += q.box;
+  const imgs = imgList(q.img);
+  if(imgs.length){
+    html += '<div class="qimg-wrap">';
+    imgs.forEach(name=>{
+      const src = imgSrc(name);
+      html += '<div class="imgbox" data-full="'+src+'">'+
+        '<img src="'+src+'" alt="'+escapeHtml(name)+'" loading="lazy" '+
+        'onerror="this.parentElement.outerHTML=\'<div class=&quot;imgph&quot;>🖼️ '+escapeHtml(name)+'<br>(gambar menyusul dari guru)</div>\'">'+
+        '<span class="zoomhint">🔍 Ketuk untuk perbesar</span></div>';
+    });
+    html += '</div>';
+  }
+  if(q.pre) html += '<div class="qtext">'+renderText(q.text)+'</div>';
+  if(q.type==='multi') html += '<div class="qtype-hint">☑ Pilihan Ganda Kompleks — pilih semua jawaban yang benar (bisa lebih dari satu)</div>';
+  if(q.type==='matrix') html += '<div class="qtype-hint">☑ Benar/Salah — tentukan Benar atau Salah untuk setiap pernyataan</div>';
+
+  if(q.type==='pg') html += renderPG(q);
+  else if(q.type==='multi') html += renderMulti(q);
+  else if(q.type==='matrix') html += renderMatrix(q);
+
+  wrap.innerHTML = html;
+  typesetMath();
+  attachOptionEvents(q);
+  wrap.querySelectorAll('.imgbox').forEach(box=>{
+    box.addEventListener('click',()=>{
+      document.getElementById('lightboxImg').src = box.dataset.full;
+      document.getElementById('lightbox').classList.add('open');
+    });
+  });
+
+  document.getElementById('btnPrev').disabled = (current===0);
+  document.getElementById('btnNext').textContent = (current===examQuestions.length-1) ? 'Selesai →' : 'Selanjutnya →';
+  document.querySelectorAll('.navbtn').forEach(b=>b.classList.toggle('current', parseInt(b.dataset.idx,10)===current));
+  document.getElementById('questionArea').scrollTop = 0;
+}
+
+const LETTERS = ['A','B','C','D','E','F'];
+
+function renderPG(q){
+  const v = answers[q._id]; let html='';
+  q.options.forEach((opt,i)=>{
+    const selected = v===opt;
+    html += '<label class="option'+(selected?' selected':'')+'"><input type="radio" name="pg" value="'+i+'" '+(selected?'checked':'')+'>'+
+      '<span class="otext"><span class="olabel">'+LETTERS[i]+'.</span>'+opt+'</span></label>';
+  });
+  return html;
+}
+function renderMulti(q){
+  const v = answers[q._id] || []; let html='';
+  q.options.forEach((opt,i)=>{
+    const selected = v.includes(opt);
+    html += '<label class="option'+(selected?' selected':'')+'"><input type="checkbox" name="multi" value="'+i+'" '+(selected?'checked':'')+'>'+
+      '<span class="otext"><span class="olabel">'+LETTERS[i]+'.</span>'+opt+'</span></label>';
+  });
+  return html;
+}
+function renderMatrix(q){
+  const v = answers[q._id] || {};
+  let html = '<table class="matrix"><thead><tr><th style="text-align:left">Pernyataan</th>';
+  q.rows[0].cols.forEach(c=>{ html += '<th>'+escapeHtml(c)+'</th>'; });
+  html += '</tr></thead><tbody>';
+  q.rows.forEach(r=>{
+    html += '<tr><td class="stmt">'+r.text+'</td>';
+    r.cols.forEach(c=>{
+      const checked = v[r.label]===c;
+      html += '<td><input type="radio" name="row_'+r.label+'" value="'+escapeHtml(c)+'" data-row="'+escapeHtml(r.label)+'" '+(checked?'checked':'')+'></td>';
+    });
+    html += '</tr>';
+  });
+  html += '</tbody></table>';
+  return html;
+}
+function attachOptionEvents(q){
+  if(q.type==='pg'){
+    document.querySelectorAll('input[name=pg]').forEach(inp=>{
+      inp.addEventListener('change',()=>{ answers[q._id]=q.options[parseInt(inp.value,10)]; renderQuestion(); renderNavPanel(); });
+    });
+  } else if(q.type==='multi'){
+    document.querySelectorAll('input[name=multi]').forEach(inp=>{
+      inp.addEventListener('change',()=>{
+        let cur = answers[q._id] ? answers[q._id].slice() : [];
+        const val = q.options[parseInt(inp.value,10)];
+        if(inp.checked){ if(!cur.includes(val)) cur.push(val); } else { cur = cur.filter(x=>x!==val); }
+        answers[q._id]=cur; renderQuestion(); renderNavPanel();
+      });
+    });
+  } else if(q.type==='matrix'){
+    document.querySelectorAll('table.matrix input').forEach(inp=>{
+      inp.addEventListener('change',()=>{
+        const rowLabel = inp.dataset.row;
+        const cur = answers[q._id] ? Object.assign({},answers[q._id]) : {};
+        cur[rowLabel] = inp.value; answers[q._id]=cur; renderQuestion(); renderNavPanel();
+      });
+    });
+  }
+}
+
+/* ================= NAVIGATION ================= */
+document.getElementById('btnPrev').addEventListener('click',()=>{ if(current>0){ current--; renderQuestion(); } });
+document.getElementById('btnNext').addEventListener('click',()=>{
+  if(current<examQuestions.length-1){ current++; renderQuestion(); } else { confirmSubmit(); }
+});
+document.getElementById('panelToggle').addEventListener('click',()=>{ document.getElementById('navPanel').classList.toggle('open'); });
+
+/* ================= TIMER (berbasis jam sistem, tetap akurat walau tab di-throttle) ================= */
+let startTs = 0, endTs = 0;
+function elapsedSec(){ return Math.floor((Date.now()-startTs)/1000); }
+function canSubmitNow(){ return elapsedSec() >= MIN_SUBMIT_SEC; }
+function updateSubmitLock(){
+  const b = document.getElementById('navSubmitBtn');
+  if(!b || !examStarted) return;
+  const rem = MIN_SUBMIT_SEC - elapsedSec();
+  if(rem > 0){ b.textContent = '🔒 Kirim dibuka dalam '+fmtTime(rem); b.classList.add('locked'); }
+  else { b.textContent = '✅ Kirim Jawaban'; b.classList.remove('locked'); }
+}
+function tick(){
+  timeLeft = Math.max(0, Math.ceil((endTs-Date.now())/1000));
+  const box = document.getElementById('timerBox');
+  box.textContent = fmtTime(timeLeft);
+  if(timeLeft<=300) box.classList.add('low');
+  updateSubmitLock();
+  if(timeLeft<=0){ clearInterval(timerHandle); finishExam(true); }
+}
+function startTimer(){
+  startTs = Date.now(); endTs = startTs + DURATION_SEC*1000;
+  tick(); timerHandle = setInterval(tick,1000);
+}
+
+/* ================= LAYAR PENUH & PENCATATAN PELANGGARAN ================= */
+const logPelanggaran = [];
+let dialogOpen = false, lastViolAt = 0, splitActive = false, blurTimer = null;
+const areaMax = {portrait:0, landscape:0};
+
+function enterFullscreen(){
+  const el = document.documentElement;
+  const req = el.requestFullscreen||el.webkitRequestFullscreen||el.msRequestFullscreen;
+  if(req){ try{ const p = req.call(el); if(p && p.catch) p.catch(()=>{}); }catch(e){} }
+}
+function isFullscreen(){ return !!(document.fullscreenElement||document.webkitFullscreenElement||document.msFullscreenElement); }
+function showWarn(title,text,onOk){
+  const ov = document.getElementById('warnOverlay');
+  document.getElementById('warnTitle').textContent = title;
+  document.getElementById('warnText').textContent = text;
+  ov.style.display='flex';
+  document.getElementById('warnBtn').onclick = ()=>{ ov.style.display='none'; if(onOk) onOk(); };
+}
+function safeAlert(msg){ dialogOpen = true; try{ alert(msg); } finally { dialogOpen = false; } }
+function safeConfirm(msg){ dialogOpen = true; try{ return confirm(msg); } finally { dialogOpen = false; } }
+
+// Jenis: "Pindah tab", "Keluar fullscreen", "Salin teks", "Screenshot", "Split screen", "Kehilangan fokus jendela"
+function catatPelanggaran(jenis){
+  if(!examStarted || examFinished) return;
+  const last = logPelanggaran[logPelanggaran.length-1];
+  if(last && last.jenis===jenis && Date.now()-new Date(last.waktu).getTime() < 1500) return; // satu kejadian, satu catatan
+  logPelanggaran.push({ jenis: jenis, waktu: new Date().toISOString() });
+  violCount = logPelanggaran.length;
+  lastViolAt = Date.now();
+  const badge = document.getElementById('violationBadge');
+  badge.style.display='inline-block';
+  document.getElementById('violCount').textContent = violCount;
+  showWarn('⚠ Pelanggaran Terdeteksi ('+violCount+')',
+    'Sistem mendeteksi: '+jenis+'. Tindakan ini tercatat dan akan dilaporkan kepada guru bersama hasil ujianmu. Tetaplah pada halaman ujian hingga selesai.',
+    ()=>{ if(!isFullscreen()) enterFullscreen(); });
+}
+function ringkasPelanggaran(){
+  const c = {}; logPelanggaran.forEach(p=>{ c[p.jenis]=(c[p.jenis]||0)+1; });
+  return Object.keys(c).map(k=>k+' ×'+c[k]).join('; ') || '-';
+}
+
+// 1) pindah tab / minimize
+document.addEventListener('visibilitychange',()=>{
+  if(document.hidden && examStarted && !examFinished) catatPelanggaran('Pindah tab');
+});
+// 2) keluar layar penuh
+function onFsChange(){ if(!isFullscreen() && examStarted && !examFinished) catatPelanggaran('Keluar fullscreen'); }
+document.addEventListener('fullscreenchange', onFsChange);
+document.addEventListener('webkitfullscreenchange', onFsChange);
+// 3) menyalin teks
+['copy','cut'].forEach(ev=>document.addEventListener(ev,e=>{
+  if(examStarted && !examFinished){ e.preventDefault(); catatPelanggaran('Salin teks'); }
+}));
+document.addEventListener('contextmenu',e=>{ if(examStarted && !examFinished) e.preventDefault(); });
+document.addEventListener('selectstart',e=>{ if(examStarted && !examFinished) e.preventDefault(); });
+document.addEventListener('dragstart',e=>{ if(examStarted && !examFinished) e.preventDefault(); });
+// 4) screenshot & pintasan terlarang
+function clearClip(){ try{ navigator.clipboard && navigator.clipboard.writeText('').catch(()=>{}); }catch(e){} }
+document.addEventListener('keydown',e=>{
+  if(!examStarted || examFinished) return;
+  const k = (e.key||'').toLowerCase();
+  if(e.key==='F12' || (e.ctrlKey&&e.shiftKey&&['i','j','c'].includes(k)) || (e.altKey&&e.key==='Tab')) e.preventDefault();
+  if((e.ctrlKey||e.metaKey) && ['p','s','u'].includes(k)) e.preventDefault();
+  if((e.ctrlKey||e.metaKey) && ['c','x','a'].includes(k)){ e.preventDefault(); if(k!=='a') catatPelanggaran('Salin teks'); }
+  if(e.key==='PrintScreen' || (e.metaKey&&e.shiftKey&&k==='s') || (e.metaKey&&e.shiftKey&&['Digit3','Digit4','Digit5'].includes(e.code))){
+    catatPelanggaran('Screenshot'); clearClip();
+  }
+});
+document.addEventListener('keyup',e=>{
+  if(!examStarted || examFinished) return;
+  if(e.key==='PrintScreen'){ catatPelanggaran('Screenshot'); clearClip(); }
+});
+// 5) split screen: ukuran jendela (piksel perangkat, tahan terhadap zoom) turun tajam dibanding ukuran terbesar
+function cekSplitScreen(){
+  if(!examStarted || examFinished) return;
+  const dpr = window.devicePixelRatio || 1;
+  const o = window.innerWidth > window.innerHeight ? 'landscape' : 'portrait';
+  const a = (window.innerWidth*dpr)*(window.innerHeight*dpr);
+  if(a > areaMax[o]) areaMax[o] = a;
+  if(areaMax[o] > 0 && a < areaMax[o]*0.8){
+    if(!splitActive){ splitActive = true; catatPelanggaran('Split screen'); }
+  } else if(a > areaMax[o]*0.9){ splitActive = false; }
+}
+let resizeT = null;
+window.addEventListener('resize',()=>{ clearTimeout(resizeT); resizeT = setTimeout(cekSplitScreen,400); });
+setInterval(cekSplitScreen,3000);
+// 6) jendela kehilangan fokus (mis. membuka aplikasi lain berdampingan)
+window.addEventListener('blur',()=>{
+  if(!examStarted || examFinished) return;
+  document.getElementById('screen-exam').classList.add('blurred');
+  clearTimeout(blurTimer);
+  blurTimer = setTimeout(()=>{
+    if(dialogOpen || examFinished || document.hidden) return;
+    if(!document.hasFocus() && Date.now()-lastViolAt > 4000) catatPelanggaran('Kehilangan fokus jendela');
+  },1500);
+});
+window.addEventListener('focus',()=>{
+  clearTimeout(blurTimer);
+  document.getElementById('screen-exam').classList.remove('blurred');
+});
+window.addEventListener('beforeunload',(e)=>{ if(examStarted && !examFinished){ e.preventDefault(); e.returnValue=''; } });
+
+/* ================= START EXAM ================= */
+document.getElementById('btnStart').addEventListener('click',()=>{
+  const token = document.getElementById('inputToken').value.trim();
+  const nama = document.getElementById('inputNama').value.trim();
+  const kelas = document.getElementById('inputKelas').value.trim();
+  const err = document.getElementById('startErr');
+  if(!token){ err.textContent='Token ujian wajib diisi.'; return; }
+  if(token !== VALID_TOKEN){ err.textContent='Token salah. Tanyakan token yang benar kepada gurumu.'; return; }
+  if(!kelas || !nama){ err.textContent='Nama dan kelas belum terbaca. Buka ujian dari Menu Kelas 7 atau pilih nama & kelas pada kolom yang tersedia.'; return; }
+  err.textContent='';
+  studentName = nama; studentClass = kelas;
+  buildExam();
+  answers = {}; current=0; logPelanggaran.length=0; violCount=0; examStarted=true; examFinished=false;
+  areaMax.portrait = 0; areaMax.landscape = 0; splitActive = false;
+
+  document.getElementById('screen-start').style.display='none';
+  document.getElementById('screen-exam').style.display='flex';
+  document.getElementById('brandStudent').textContent = nama+' · Kelas '+kelas;
+  startTimer(); renderNavPanel(); renderQuestion(); enterFullscreen();
+  setTimeout(cekSplitScreen, 1800);
+});
+
+/* ================= SUBMIT / SCORING ================= */
+function confirmSubmit(){
+  if(!canSubmitNow()){
+    safeAlert('Jawaban baru dapat dikirim setelah 40 menit pengerjaan. Sisa waktu tunggu: '+fmtTime(MIN_SUBMIT_SEC-elapsedSec())+'. Silakan periksa kembali jawabanmu.');
+    return;
+  }
+  const unansweredIdx = examQuestions.findIndex(q=>!isAnswered(q));
+  if(unansweredIdx !== -1){
+    const unansweredCount = examQuestions.filter(q=>!isAnswered(q)).length;
+    safeAlert('Masih ada '+unansweredCount+' soal yang belum dijawab. Silakan lengkapi semua soal terlebih dahulu sebelum mengirim jawaban. Kamu akan diarahkan ke soal pertama yang belum dijawab.');
+    current = unansweredIdx;
+    renderQuestion(); renderNavPanel(); closeMobilePanel();
+    return;
+  }
+  if(safeConfirm('Semua soal telah dijawab. Kirim jawaban sekarang? Jawaban tidak dapat diubah setelah dikirim.')) finishExam(false);
+}
+/* ---- Penilaian PARSIAL ----
+   Soal PG: 1 (benar) atau 0 (salah).
+   Soal PG Kompleks / Matrix: dinilai per-opsi/per-pernyataan, bukan semua-atau-tidak.
+   scoreFrac = (jumlah opsi/pernyataan yang cocok dengan kunci) / (jumlah opsi/pernyataan).
+   Contoh: dari 4 opsi, siswa benar menandai 3 -> scoreFrac = 0.75 (bukan 0). */
+function scoreFrac(q){
+  const v = answers[q._id];
+  if(q.type==='pg'){
+    return (v===q.correct) ? 1 : 0;
+  }
+  if(q.type==='multi'){
+    const n = q.options.length;
+    let matches = 0;
+    for(let i=0;i<n;i++){
+      const opt = q.options[i];
+      const correctFlag = q.correct.includes(opt);
+      const studentFlag = Array.isArray(v) && v.includes(opt);
+      if(correctFlag === studentFlag) matches++;
+    }
+    return n ? matches/n : 0;
+  }
+  if(q.type==='matrix'){
+    if(!v) return 0;
+    let matches = 0;
+    q.rows.forEach(r=>{ if(v[r.label]===r.correct) matches++; });
+    return q.rows.length ? matches/q.rows.length : 0;
+  }
+  return 0;
+}
+// isCorrect: dipakai untuk pelaporan "benar/salah" per-soal (mis. sheet Excel) — soal dianggap
+// "benar penuh" hanya jika scoreFrac mencapai 1 (semua opsi/pernyataan tepat).
+function isCorrect(q){ return scoreFrac(q) >= 0.999; }
+
+function finishExam(autoSubmit){
+  examFinished = true;
+  clearInterval(timerHandle);
+  if(isFullscreen()){ (document.exitFullscreen||document.webkitExitFullscreen||function(){}).call(document); }
+  document.getElementById('screen-exam').style.display='none';
+  document.getElementById('warnOverlay').style.display='none';
+
+  const totalMaks = examQuestions.length;
+  const weight = totalMaks ? 100/totalMaks : 0;
+  const perSubject = {};
+  SUBJECT_ORDER.forEach(s=>perSubject[s]={score:0,max:0,total:0,penuh:0});
+  let totalScore = 0, fullCount = 0;
+  const perQuestion = [];
+  examQuestions.forEach(q=>{
+    if(!perSubject[q.subject]){ perSubject[q.subject]={score:0,max:0,total:0,penuh:0}; if(!SUBJECT_ORDER.includes(q.subject)) SUBJECT_ORDER.push(q.subject); }
+    const frac = scoreFrac(q);
+    const qScore = frac*weight;
+    totalScore += qScore;
+    if(frac>=0.999) fullCount++;
+    perSubject[q.subject].total++;
+    perSubject[q.subject].score += qScore;
+    perSubject[q.subject].max += weight;
+    if(frac>=0.999) perSubject[q.subject].penuh++;
+    perQuestion.push({q, frac, qScore});
+  });
+  totalScore = Math.round(totalScore*100)/100;
+  let grade='D', gradeLabel='Perlu Bimbingan';
+  if(totalScore>=90){grade='A';gradeLabel='Sangat Baik';}
+  else if(totalScore>=75){grade='B';gradeLabel='Baik';}
+  else if(totalScore>=60){grade='C';gradeLabel='Cukup';}
+
+  document.getElementById('resScore').textContent = totalScore.toFixed(2)+' / 100';
+  document.getElementById('resGrade').textContent = 'Predikat '+grade+' — '+gradeLabel+' · '+fullCount+' dari '+totalMaks+' soal terjawab sempurna (penilaian bersifat parsial per opsi)' + (autoSubmit?' · waktu habis, jawaban terkirim otomatis':'');
+  document.getElementById('rNama').textContent = studentName;
+  document.getElementById('rKelas').textContent = studentClass;
+  document.getElementById('rViol').textContent = violCount;
+
+  let tbl = '<tr><th>Materi</th><th>Skor</th><th>Maks</th></tr>';
+  const detailParts = [];
+  SUBJECT_ORDER.forEach(s=>{
+    const sc = Math.round(perSubject[s].score*100)/100, mx = Math.round(perSubject[s].max*100)/100;
+    tbl += '<tr><td>'+escapeHtml(s)+'</td><td>'+sc+'</td><td>'+mx+'</td></tr>';
+    detailParts.push(s+' '+sc+'/'+mx);
+  });
+  document.getElementById('resTable').innerHTML = tbl;
+
+  window._examResult = {
+    nama: studentName, kelas: studentClass, skor: totalScore, skorMaks: 100, pct: totalScore,
+    grade: grade+' ('+gradeLabel+')', detail: detailParts.join(' | ') + ' | Pelanggaran: '+violCount+'x',
+    perSubject: perSubject, violasi: logPelanggaran.length, jenisPelanggaran: logPelanggaran.slice(), ringkasanPelanggaran: ringkasPelanggaran(), durasiDetik: Math.min(elapsedSec(),DURATION_SEC),
+    skorPerSoal: perQuestion.map(p=>Math.round(p.qScore*100)/100)
+  };
+
+  document.getElementById('screen-result').style.display='block';
+  autoSubmitToSheet();
+}
+
+/* ================= GOOGLE APPS SCRIPT AUTO-SUBMIT (real-time to Google Sheets) ================= */
+function setSubmitStatus(state, text){
+  const el = document.getElementById('submitStatus');
+  el.className = 'submit-status '+state;
+  document.getElementById('submitStatusText').textContent = text;
+  document.getElementById('btnRetrySubmit').classList.toggle('hidden', state==='sending');
+}
+function buildAnswerDetail(){
+  return examQuestions.map((q,idx)=>{
+    const v = answers[q._id];
+    let jawaban = '(kosong)';
+    if(q.type==='pg'){ jawaban = v ? plain(v) : '(kosong)'; }
+    else if(q.type==='multi'){ jawaban = (v&&v.length) ? v.join(' ; ') : '(kosong)'; }
+    else if(q.type==='matrix'){ jawaban = v ? q.rows.map(r=>r.label+':'+(v[r.label]||'-')).join(' ; ') : '(kosong)'; }
+    return { no: idx+1, noAsli: q.no, subject: q.subject, jawaban: jawaban, benar: Math.round(scoreFrac(q)*100)/100 };
+  });
+}
+function autoSubmitToSheet(){
+  if(!navigator.onLine){
+    setSubmitStatus('fail','❌ Gagal terkirim — perangkat sedang offline. Sambungkan internet lalu klik "Kirim Ulang".');
+    return;
+  }
+  if(!APPS_SCRIPT_URL || APPS_SCRIPT_URL.indexOf('PASTE_YOUR_DEPLOYMENT_ID_HERE')>-1){
+    setSubmitStatus('fail','⚠ URL Google Apps Script belum dipasang oleh guru. Gunakan "Unduh Hasil (Excel)" sebagai cadangan.');
+    return;
+  }
+  setSubmitStatus('sending','Mengirim jawaban ke guru...');
+  const r = window._examResult;
+  const payload = {
+    timestamp: new Date().toISOString(),
+    mapel: MAPEL, jenisAsesmen: ASESMEN, judul: JUDUL, materi: MATERI, tingkat: KELAS_TINGKAT,
+    nama: r.nama, kelas: r.kelas, skor: r.skor, skorMaks: r.skorMaks, persentase: r.pct,
+    grade: r.grade, pelanggaran: logPelanggaran.length, jenisPelanggaran: logPelanggaran, ringkasanPelanggaran: r.ringkasanPelanggaran, durasiDetik: r.durasiDetik, detailPerMapel: r.detail,
+    jawaban: buildAnswerDetail()
+  };
+  fetch(APPS_SCRIPT_URL, {
+    method: 'POST', mode: 'no-cors',
+    headers: {'Content-Type':'text/plain;charset=utf-8'},
+    body: JSON.stringify(payload)
+  }).then(()=>{
+    setSubmitStatus('ok','✅ Jawaban berhasil terkirim ke Google Spreadsheet guru.');
+  }).catch(()=>{
+    setSubmitStatus('fail','❌ Gagal terkirim (masalah jaringan). Klik "Kirim Ulang" untuk mencoba lagi.');
+  });
+}
+document.getElementById('btnRetrySubmit').addEventListener('click', autoSubmitToSheet);
+
+/* ================= EXCEL EXPORT (backup) ================= */
+document.getElementById('btnExcel').addEventListener('click',()=>{
+  const r = window._examResult;
+  const rows = [];
+  rows.push(['Nama','Kelas','No','Materi','Soal','Jawaban Siswa','Kunci Jawaban','Skor Soal (0-1, parsial)']);
+  function answerLabel(q){
+    if(q.type==='pg') return plain(q.correct);
+    if(q.type==='multi') return q.correct.join(' ; ');
+    if(q.type==='matrix') return q.rows.map(row=>row.label+':'+row.correct).join(' ; ');
+    return '';
+  }
+  examQuestions.forEach((q,idx)=>{
+    let jawabanSiswa='';
+    const v = answers[q._id];
+    if(q.type==='pg'){ jawabanSiswa = v ? plain(v) : '(kosong)'; }
+    else if(q.type==='multi'){ jawabanSiswa = (v&&v.length)? v.join(' ; ') : '(kosong)'; }
+    else if(q.type==='matrix'){ jawabanSiswa = v ? q.rows.map(row=>row.label+':'+(v[row.label]||'-')).join(' ; ') : '(kosong)'; }
+    const baseTxt = (q.type==='matrix') ? q.rows.map(rw=>rw.text).join(' ; ') : (q.text||q.pre||'');
+    const shortText = baseTxt.replace(/<[^>]*>/g,' ').replace(/\s+/g,' ').slice(0,80)+'...';
+    rows.push([r.nama, r.kelas, idx+1, q.subject, shortText, jawabanSiswa, answerLabel(q), Math.round(scoreFrac(q)*100)/100]);
+  });
+  rows.push([]);
+  rows.push(['RINGKASAN']);
+  rows.push(['Nama','Kelas','Skor Akhir (0-100)','Grade','Pelanggaran','Jenis Pelanggaran']);
+  rows.push([r.nama, r.kelas, r.skor, r.grade, r.violasi, r.ringkasanPelanggaran]);
+
+  const ws = XLSX.utils.aoa_to_sheet(rows);
+  ws['!cols'] = [{wch:18},{wch:8},{wch:5},{wch:22},{wch:60},{wch:30},{wch:30},{wch:10}];
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Hasil ASAS PJOK K7');
+  const fname = 'Hasil_ASAS_PJOK_Kelas7_'+r.nama.replace(/[^a-zA-Z0-9]/g,'_')+'.xlsx';
+  XLSX.writeFile(wb, fname);
+});
+
+})();
+</script>
 </body>
 </html>
