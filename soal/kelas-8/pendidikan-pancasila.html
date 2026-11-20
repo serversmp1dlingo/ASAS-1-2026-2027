@@ -2,46 +2,928 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pendidikan Pancasila — Kelas 8 — ASAS SMP Negeri 1 Dlingo</title>
-<meta name="description" content="Soal Pendidikan Pancasila Kelas 8">
-<meta name="robots" content="noindex">
-<link rel="icon" href="../../assets/img/logo-smpn1dlingo.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../../assets/css/style.css">
-<script>document.documentElement.classList.add('js');</script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Asesmen Sumatif Akhir Semester — Pendidikan Pancasila Kelas 8 — SMP N 1 Dlingo</title>
+<link rel="icon" type="image/png" href="../../assets/img/logo-smpn1dlingo.png">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+  :root{
+    --navy:#6b4e00; --blue:#a87400; --blue-light:#fff1bd; --green:#8f6a00;
+    --red:#b04a4a; --amber:#d9a23a; --gray:#6a5a2e; --bg:#fff8d9; --border:#ecd98f; --radius:10px;
+    --card:#ffffff;
+  }
+  *{box-sizing:border-box;}
+  html,body{height:100%;}
+  body{margin:0;font-family:'Segoe UI',Roboto,Arial,sans-serif;background:var(--bg);color:#2b2300;-webkit-tap-highlight-color:transparent;}
+  /* anti-screenshot / anti-copy deterrents (best-effort; see note in app) */
+  #screen-exam, #screen-exam *{
+    -webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;
+    -webkit-touch-callout:none;
+  }
+  #screen-exam img{-webkit-user-drag:none;user-drag:none;pointer-events:none;}
+  #screen-exam.blurred{filter:blur(18px);transition:filter .15s;}
+  @media print{
+    #screen-exam, #screen-start, #screen-result{display:none !important;}
+    body::before{content:"Konten ujian tidak dapat dicetak.";display:block;text-align:center;padding:40px;font-size:18px;}
+  }
+  img{max-width:100%;height:auto;border-radius:6px;border:1px solid var(--border);}
+  button{font-family:inherit;cursor:pointer;}
+  .hidden{display:none !important;}
+
+  /* ===== START / INSTRUCTIONS ===== */
+  #screen-start{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;
+    background:linear-gradient(135deg,#fff8d6,#fbe9a0);}
+  .start-card{background:var(--card);border-radius:16px;max-width:640px;width:100%;padding:34px 32px;box-shadow:0 20px 60px rgba(0,0,0,.25);}
+  .school-header{display:flex;align-items:center;gap:14px;margin-bottom:18px;}
+  .school-header img{width:56px;height:auto;border:none;border-radius:0;flex-shrink:0;}
+  .school-header .stxt{line-height:1.35;}
+  .school-header .stxt b{display:block;color:var(--navy);font-size:15px;}
+  .school-header .stxt span{color:var(--gray);font-size:12px;}
+  .start-card h1{margin:0 0 4px;font-size:21px;color:var(--navy);}
+  .start-card .sub{color:var(--gray);margin:0 0 20px;font-size:14px;}
+  .tabs{display:flex;gap:8px;margin-bottom:18px;border-bottom:1.5px solid var(--border);}
+  .tab-btn{padding:9px 16px;border:none;background:none;font-weight:700;font-size:13.5px;color:var(--gray);
+    border-bottom:3px solid transparent;margin-bottom:-2px;}
+  .tab-btn.active{color:var(--blue);border-bottom-color:var(--blue);}
+  .tab-panel{display:none;}
+  .tab-panel.active{display:block;}
+  .info-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px 18px;background:var(--blue-light);
+    border-radius:10px;padding:14px 16px;margin-bottom:18px;font-size:13px;}
+  .info-grid div b{display:block;color:var(--navy);font-size:13px;}
+  .info-grid div span{color:var(--gray);}
+  label{display:block;font-size:13px;font-weight:600;color:var(--navy);margin:14px 0 6px;}
+  input[type=text],input[type=password]{width:100%;padding:12px 14px;border:1.5px solid var(--border);
+    border-radius:8px;font-size:15px;}
+  input:focus{outline:none;border-color:var(--blue);}
+  select{width:100%;padding:12px 14px;border:1.5px solid var(--border);border-radius:8px;font-size:15px;
+    background:var(--card);color:#2b2300;appearance:none;
+    background-image:url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236a5a2e' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat:no-repeat;background-position:right 12px center;background-size:18px;}
+  select:focus{outline:none;border-color:var(--blue);}
+  select:disabled{background-color:#f6f0d4;color:var(--gray);cursor:not-allowed;}
+  .instr-list{font-size:13.5px;line-height:1.8;color:#4a3d12;padding-left:20px;margin:0 0 10px;}
+  .rules{font-size:12.5px;color:var(--gray);line-height:1.6;margin:18px 0;padding:12px 14px;
+    background:#fff8ea;border:1px solid #f1e0ad;border-radius:8px;}
+  .btn-primary{width:100%;padding:14px;background:var(--blue);color:#fff;border:none;border-radius:9px;
+    font-size:16px;font-weight:700;margin-top:12px;transition:.15s;}
+  .btn-primary:hover{background:var(--navy);}
+  .btn-primary:disabled{background:#b9ad82;cursor:not-allowed;}
+  .err-msg{color:var(--red);font-size:12.5px;margin-top:6px;min-height:16px;}
+
+  /* ===== EXAM LAYOUT ===== */
+  #screen-exam{display:none;min-height:100vh;flex-direction:column;}
+  #topbar{background:var(--navy);color:#fff;padding:10px 18px;display:flex;align-items:center;
+    justify-content:space-between;gap:12px;flex-wrap:wrap;position:sticky;top:0;z-index:50;}
+  #topbar .brand{display:flex;align-items:center;gap:10px;font-size:13px;font-weight:700;}
+  #topbar .brand img{width:28px;height:auto;border:none;border-radius:0;}
+  #topbar .brand .who{font-weight:400;opacity:.85;font-size:11.5px;display:block;}
+  #timerBox{background:rgba(255,255,255,.12);padding:8px 16px;border-radius:8px;font-weight:700;
+    font-size:18px;letter-spacing:1px;min-width:110px;text-align:center;}
+  #timerBox.low{background:#c0392b;animation:pulse 1s infinite;}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.6}}
+  #violationBadge{background:var(--red);padding:5px 10px;border-radius:20px;font-size:12px;font-weight:700;display:none;}
+  #panelToggle{background:rgba(255,255,255,.15);color:#fff;border:none;padding:8px 12px;border-radius:8px;font-size:13px;}
+
+  #examBody{display:flex;flex:1;overflow:hidden;}
+  #navPanel{width:280px;flex-shrink:0;background:var(--card);border-right:1px solid var(--border);padding:16px;overflow-y:auto;}
+  #navPanel h3{font-size:11.5px;text-transform:uppercase;letter-spacing:.4px;color:var(--gray);margin:14px 0 8px;}
+  #navPanel h3:first-child{margin-top:0;}
+  .navgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;}
+  .navbtn{aspect-ratio:1;border:1.5px solid var(--border);background:var(--card);border-radius:6px;font-size:12px;
+    font-weight:700;color:var(--navy);display:flex;align-items:center;justify-content:center;}
+  .navbtn.answered{background:var(--green);border-color:var(--green);color:#fff;}
+  .navbtn.current{outline:3px solid var(--amber);outline-offset:1px;}
+  .legend{display:flex;gap:14px;font-size:11px;color:var(--gray);margin:14px 0 4px;flex-wrap:wrap;}
+  .legend span{display:inline-flex;align-items:center;gap:5px;}
+  .dot{width:10px;height:10px;border-radius:3px;display:inline-block;}
+  #navSubmitBtn{width:100%;margin-top:18px;padding:12px;background:var(--red);color:#fff;border:none;
+    border-radius:8px;font-weight:700;font-size:14px;}
+  #navSubmitBtn.locked{background:#a89a6a;}
+  .idbox{background:var(--blue-light);border:1.5px solid var(--border);border-radius:10px;padding:12px 16px;margin-top:14px;font-size:14px;line-height:1.7;}
+  .idbox b{color:var(--navy);}
+
+  #questionArea{flex:1;overflow-y:auto;padding:26px 32px 100px;}
+  .qwrap{max-width:820px;margin:0 auto;}
+  .qsubject{display:inline-block;background:var(--blue-light);color:var(--blue);font-size:11.5px;font-weight:700;
+    padding:4px 12px;border-radius:20px;margin-bottom:10px;text-transform:uppercase;letter-spacing:.3px;}
+  .qnum{font-size:14px;color:var(--gray);margin-bottom:4px;}
+  .qtext{font-size:16px;line-height:1.7;white-space:pre-wrap;margin-bottom:16px;}
+  .qimg-wrap{margin:14px 0;display:flex;flex-wrap:wrap;gap:14px;}
+  .qimg-wrap .imgbox{position:relative;cursor:zoom-in;width:100%;max-width:760px;}
+  .qimg-wrap img{width:100%;max-width:760px;display:block;}
+  .qimg-wrap .zoomhint{position:absolute;bottom:8px;right:8px;background:rgba(60,44,0,.75);color:#fff;
+    font-size:11px;font-weight:700;padding:4px 9px;border-radius:20px;pointer-events:none;}
+  .qimg-wrap .imgph{width:100%;max-width:760px;height:200px;border:2px dashed var(--border);border-radius:8px;
+    display:flex;align-items:center;justify-content:center;color:var(--gray);font-size:12.5px;text-align:center;
+    background:#fffdf0;padding:10px;}
+  #lightbox{position:fixed;inset:0;background:rgba(30,22,0,.94);z-index:1200;display:none;
+    align-items:center;justify-content:center;padding:14px;}
+  #lightbox.open{display:flex;}
+  #lightbox img{max-width:100%;max-height:92vh;width:auto;border-radius:6px;box-shadow:0 10px 40px rgba(0,0,0,.5);}
+  #lightbox .lb-close{position:absolute;top:16px;right:18px;background:#fff;color:var(--navy);border:none;
+    width:38px;height:38px;border-radius:50%;font-size:18px;font-weight:700;}
+  .option{font-weight:400;color:#2b2300;}
+  .qtitle{font-size:13px;font-weight:700;color:var(--navy);margin-bottom:8px;}
+  .stimulus{background:#fffdf0;border:2px solid #e2c85a;border-left:6px solid #c99700;border-radius:10px;
+    padding:14px 16px;margin:0 0 16px;font-size:15.5px;line-height:1.7;}
+  .stimulus .st-label{display:block;font-size:11.5px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;color:#8a6400;margin-bottom:6px;}
+  .qtype-hint{font-size:12.5px;color:var(--amber);font-weight:700;margin-bottom:10px;}
+
+  .option{display:flex;align-items:flex-start;gap:12px;padding:13px 16px;border:1.5px solid var(--border);
+    border-radius:10px;margin-bottom:10px;background:var(--card);transition:.12s;}
+  .option:hover{border-color:var(--blue);}
+  .option.selected{border-color:var(--blue);background:var(--blue-light);}
+  .option input{margin-top:3px;flex-shrink:0;width:17px;height:17px;}
+  .option .otext{font-size:15px;line-height:1.5;}
+  .option .olabel{font-weight:700;color:var(--navy);margin-right:4px;}
+
+  table.matrix{width:100%;border-collapse:collapse;margin-top:8px;font-size:14px;}
+  table.matrix th,table.matrix td{border:1px solid var(--border);padding:10px;text-align:center;}
+  table.matrix th{background:var(--blue-light);color:var(--navy);}
+  table.matrix td.stmt{text-align:left;font-size:14px;}
+  table.matrix input{width:17px;height:17px;}
+
+  #navRow{max-width:820px;margin:24px auto 0;display:flex;justify-content:space-between;gap:10px;}
+  .btn-nav{padding:11px 22px;border-radius:8px;border:1.5px solid var(--border);background:var(--card);
+    font-weight:700;color:var(--navy);font-size:14px;}
+  .btn-nav:disabled{opacity:.4;}
+  .btn-nav.primary{background:var(--blue);color:#fff;border:none;}
+
+  #warnOverlay{position:fixed;inset:0;background:rgba(48,35,0,.95);z-index:999;display:none;
+    align-items:center;justify-content:center;padding:20px;color:#fff;text-align:center;}
+  #warnOverlay .box{max-width:420px;}
+  #warnOverlay h2{color:#ffd166;font-size:22px;}
+  #warnOverlay p{font-size:14.5px;line-height:1.6;opacity:.9;}
+  #warnOverlay button{margin-top:16px;padding:12px 28px;background:#ffd166;border:none;border-radius:8px;
+    font-weight:700;font-size:14.5px;color:#432;}
+
+  /* ===== RESULT ===== */
+  #screen-result{display:none;min-height:100vh;padding:30px 16px;background:var(--bg);}
+  .result-card{max-width:720px;margin:0 auto;background:var(--card);border-radius:16px;padding:32px;box-shadow:0 10px 40px rgba(0,0,0,.08);}
+  .result-card h1{color:var(--navy);margin-top:0;font-size:22px;}
+  .score-hero{text-align:center;padding:26px;background:linear-gradient(135deg,var(--navy),var(--blue));
+    border-radius:14px;color:#fff;margin:18px 0 24px;}
+  .score-hero .num{font-size:46px;font-weight:800;}
+  .score-hero .grade{font-size:15px;opacity:.9;margin-top:4px;}
+  .breakdown{width:100%;border-collapse:collapse;font-size:14px;margin-bottom:20px;}
+  .breakdown th,.breakdown td{padding:9px 10px;border-bottom:1px solid var(--border);text-align:left;}
+  .breakdown th{color:var(--gray);font-size:12px;text-transform:uppercase;}
+  .result-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px;}
+  .result-actions button{flex:1;min-width:180px;padding:13px;border-radius:9px;font-weight:700;font-size:14px;border:none;}
+  #btnExcel{background:var(--blue);color:#fff;}
+  #btnRetrySubmit{background:var(--amber);color:#432;}
+  .submit-status{display:flex;align-items:center;gap:10px;padding:12px 16px;border-radius:9px;font-size:13.5px;
+    font-weight:600;margin-bottom:18px;}
+  .submit-status.sending{background:#fff8ea;color:#8a6d00;border:1px solid #f1e0ad;}
+  .submit-status.ok{background:#e9f9f0;color:#0f7a45;border:1px solid #b7ecd0;}
+  .submit-status.fail{background:#fdecea;color:#a4271f;border:1px solid #f3c3bd;}
+  .dotpulse{width:9px;height:9px;border-radius:50%;background:currentColor;flex-shrink:0;animation:pulse 1s infinite;}
+  .submit-status.ok .dotpulse,.submit-status.fail .dotpulse{animation:none;}
+  .note-small{font-size:12px;color:var(--gray);margin-top:14px;line-height:1.6;}
+
+  @media (max-width:820px){
+    #navPanel{position:fixed;left:-300px;top:0;bottom:0;z-index:60;transition:.2s;box-shadow:4px 0 20px rgba(0,0,0,.15);}
+    #navPanel.open{left:0;}
+    #questionArea{padding:18px 16px 90px;}
+    .qimg-wrap img,.qimg-wrap .imgph{max-width:100%;width:100%;}
+  }
+</style>
 </head>
 <body>
-<div class="bg-deco" aria-hidden="true"><span class="orb o1"></span><span class="orb o2"></span><span class="orb o3"></span></div>
-<div class="page">
-<header class="kop">
-  <div class="kop-inner">
-    <a class="kembali reveal" href="../../kelas-8.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg> Kelas 8</a>
-    <div class="logo-wrap reveal"><img src="../../assets/img/logo-smpn1dlingo.png" alt="Logo SMP Negeri 1 Dlingo"></div>
-    <p class="sekolah reveal" style="--d:.08s">SMP NEGERI 1 DLINGO</p>
-    <h1 class="judul reveal" style="--d:.16s">Pendidikan Pancasila</h1>
-    <div class="ornamen reveal" style="--d:.24s"><i></i></div>
-    <div class="chips reveal" style="--d:.32s"><span class="chip">Kelas <strong>VIII</strong></span><span class="chip">Tahun Pelajaran <strong>2026/2027</strong></span></div>
+
+<!-- ============ START / INSTRUCTIONS SCREEN ============ -->
+<div id="screen-start">
+  <div class="start-card">
+    <a href="../../kelas-8.html" style="display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;color:var(--gray);margin-bottom:14px;">&larr; Menu Kelas 8</a>
+    <div class="school-header">
+      <img src="../../assets/img/logo-smpn1dlingo.png" alt="Logo Sekolah">
+      <div class="stxt"><b>SMP NEGERI 1 DLINGO</b><span>Asesmen Sumatif Akhir Semester · Pendidikan Pancasila · TP 2026/2027</span></div>
+    </div>
+    <h1>📝 Asesmen Sumatif Akhir Semester — Pendidikan Pancasila</h1>
+    <p class="sub">Jenjang SMP · Kelas 8 · Semester Ganjil · Materi: Pancasila, Nilai Pancasila &amp; UUD NRI Tahun 1945</p>
+
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="petunjuk">📋 Petunjuk</button>
+      <button class="tab-btn" data-tab="mulai">🚀 Mulai Ujian</button>
+    </div>
+
+    <div class="tab-panel active" id="tab-petunjuk">
+      <div class="info-grid">
+        <div><b id="infoJumlah">50 Soal</b><span>Pilihan Ganda, PG Kompleks, Benar/Salah &amp; Numerasi</span></div>
+        <div><b>90 Menit</b><span>Alokasi waktu · jawaban baru bisa dikirim setelah 40 menit</span></div>
+        <div><b>4 Materi</b><span>Dasar Negara &amp; Ideologi, Nilai &amp; Pengamalan Pancasila, Konstitusi &amp; UUD 1945, Numerasi</span></div>
+        <div><b>Acak Soal</b><span>Urutan soal &amp; opsi diacak</span></div>
+      </div>
+      <p style="font-size:13.5px;color:#4a3d12;margin:0 0 8px;font-weight:700;">Petunjuk Pengerjaan:</p>
+      <ol class="instr-list">
+        <li>Nama dan kelasmu terisi otomatis dari Menu Kelas 8. Masukkan token ujian pada tab "Mulai Ujian" lalu mulai.</li>
+        <li>Bacalah setiap butir soal dengan cermat sebelum menjawab.</li>
+        <li>Terdapat soal Pilihan Ganda (pilih satu jawaban), Pilihan Ganda Kompleks (pilih 2 jawaban yang benar), Benar/Salah (tentukan Benar atau Salah untuk setiap pernyataan), dan Numerasi. Soal PG Kompleks dan Benar/Salah dinilai per pernyataan (penilaian parsial).</li>
+        <li>Ujian akan tampil dalam mode layar penuh (fullscreen) sejak dimulai.</li>
+        <li>Jangan berpindah tab/aplikasi, keluar dari layar penuh, menyalin teks, mengambil tangkapan layar, atau memakai split screen — semuanya tercatat sebagai pelanggaran.</li>
+        <li>Waktu berjalan otomatis selama 90 menit dan tidak dapat dijeda. Jawaban baru dapat dikirim setelah 40 menit pengerjaan.</li>
+        <li>Gunakan panel navigasi soal untuk melompat ke nomor soal tertentu dan memantau soal yang sudah/belum dijawab.</li>
+        <li>Tekan "Kirim Jawaban" setelah selesai. Jika pengiriman gagal, gunakan tombol "Kirim Ulang" yang akan muncul otomatis.</li>
+      </ol>
+    </div>
+
+    <div class="tab-panel" id="tab-mulai">
+      <label>Token Ujian</label>
+      <input type="password" id="inputToken" placeholder="Masukkan token dari guru">
+      <div class="idbox hidden" id="idBox">👤 <b id="idNama"></b><br>🏫 Kelas <b id="idKelas"></b></div>
+      <div id="pickWrap">
+        <div class="note-small" style="margin-top:12px;color:#8a6d00;">Data nama &amp; kelas tidak terbaca dari Menu Kelas 8. Silakan buka ujian melalui menu kelas, atau pilih manual di bawah ini.</div>
+        <label>Kelas</label>
+        <select id="inputKelas"><option value="">— Pilih Kelas —</option></select>
+        <label>Nama Lengkap</label>
+        <select id="inputNama" disabled><option value="">— Pilih kelas terlebih dahulu —</option></select>
+      </div>
+      <div class="rules">
+        ⚠️ <b>Perhatian sebelum memulai:</b><br>
+        • Ujian akan tampil dalam mode <b>layar penuh (fullscreen)</b>.<br>
+        • Jangan membuka tab/aplikasi lain atau memakai <b>split screen</b> — sistem akan mencatat pelanggaran.<br>
+        • Waktu berjalan otomatis dan tidak dapat dijeda. Jawaban <b>baru dapat dikirim setelah 40 menit</b>; ujian terkirim otomatis saat waktu habis.<br>
+        • Pastikan koneksi internet stabil agar hasil dapat terkirim ke guru secara real-time.<br>
+        • Layar akan mengabur otomatis dan pelanggaran tercatat jika kamu mencoba keluar layar penuh, menyalin teks, mengambil tangkapan layar (screenshot), atau memakai split screen.
+      </div>
+      <div class="err-msg" id="startErr"></div>
+      <button class="btn-primary" id="btnStart">🚀 Mulai Ujian (Layar Penuh)</button>
+    </div>
   </div>
-</header>
-<main>
-  <div class="glass panel-segera reveal">
-    <div class="ikon-besar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg></div>
-    <span class="lencana">Segera hadir</span>
-    <h2>Soal belum tersedia</h2>
-    <p>Berkas soal <strong>Pendidikan Pancasila</strong> Kelas VIII sedang disiapkan dan akan diunggah menyusul.</p>
-    <p>Berkas ini akan digantikan pada alamat berikut, sehingga tautan menu tidak perlu diubah.</p>
-    <span class="berkas">soal/kelas-8/pendidikan-pancasila.html</span><br>
-    <a class="tombol" href="../../kelas-8.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg> Kembali ke Kelas VIII</a>
-  </div>
-</main>
-<footer>
-  <p><strong>SMP Negeri 1 Dlingo</strong> — Bantul, Daerah Istimewa Yogyakarta<br>
-  Portal Asesmen Sumatif Akhir Semester &middot; Tahun Pelajaran 2026/2027</p>
-</footer>
 </div>
-<script src="../../assets/js/main.js"></script>
+
+<!-- ============ EXAM SCREEN ============ -->
+<div id="screen-exam">
+  <div id="topbar">
+    <button id="panelToggle">☰ Soal</button>
+    <div class="brand"><img src="../../assets/img/logo-smpn1dlingo.png" alt="Logo"><span>ASAS PENDIDIKAN PANCASILA KELAS 8 · TP 2026/2027<small class="who" id="brandStudent"></small></span></div>
+    <div id="violationBadge">⚠ Pelanggaran: <span id="violCount">0</span></div>
+    <div id="timerBox">90:00</div>
+  </div>
+  <div id="examBody">
+    <div id="navPanel"></div>
+    <div id="questionArea">
+      <div class="qwrap" id="qwrap"></div>
+      <div id="navRow">
+        <button class="btn-nav" id="btnPrev">← Sebelumnya</button>
+        <button class="btn-nav primary" id="btnNext">Selanjutnya →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="lightbox">
+  <button class="lb-close" id="lightboxClose">✕</button>
+  <img id="lightboxImg" src="" alt="Gambar diperbesar">
+</div>
+
+<div id="warnOverlay">
+  <div class="box">
+    <h2 id="warnTitle">⚠ Peringatan</h2>
+    <p id="warnText"></p>
+    <button id="warnBtn">Kembali ke Ujian</button>
+  </div>
+</div>
+
+<!-- ============ RESULT SCREEN ============ -->
+<div id="screen-result">
+  <div class="result-card">
+    <div class="school-header">
+      <img src="../../assets/img/logo-smpn1dlingo.png" alt="Logo Sekolah">
+      <div class="stxt"><b>SMP NEGERI 1 DLINGO BANTUL</b><span>Asesmen Sumatif Akhir Semester · Pendidikan Pancasila · TP 2026/2027</span></div>
+    </div>
+    <h1>✅ Hasil Ujian</h1>
+    <div class="score-hero">
+      <div class="num" id="resScore">0 / 0</div>
+      <div class="grade" id="resGrade">Predikat —</div>
+    </div>
+    <div id="submitStatus" class="submit-status sending">
+      <span class="dotpulse"></span><span id="submitStatusText">Mengirim jawaban ke guru...</span>
+    </div>
+    <table class="breakdown" id="resTable"></table>
+    <div class="result-actions">
+      <button id="btnRetrySubmit" class="hidden">🔁 Kirim Ulang</button>
+      <button id="btnExcel">⬇️ Unduh Hasil (Excel)</button>
+    </div>
+    <p class="note-small">
+      Nama: <b id="rNama"></b> · Kelas: <b id="rKelas"></b> · Pelanggaran layar tercatat: <b id="rViol"></b> kali.<br>
+      Jawaban dikirim otomatis secara real-time ke Google Spreadsheet guru begitu halaman ini muncul. Jika status di atas menunjukkan gagal terkirim, gunakan tombol "Kirim Ulang", atau pastikan koneksi internet aktif lalu klik tombol tersebut. Tombol "Unduh Hasil (Excel)" tetap tersedia sebagai cadangan.
+    </p>
+  </div>
+</div>
+
+<script id="questions-data" type="application/json">[{"no": 1, "subject": "Dasar Negara, Ideologi & Pandangan Hidup", "type": "pg", "text": "Pancasila disebut sebagai dasar negara karena Pancasila menjadi...", "options": ["lambang organisasi masyarakat di Indonesia", "pedoman utama penyelenggaraan negara dan sumber dari segala sumber hukum", "kumpulan kebiasaan masyarakat yang berubah setiap waktu", "aturan teknis yang hanya berlaku di lingkungan sekolah"], "correct": "pedoman utama penyelenggaraan negara dan sumber dari segala sumber hukum", "img": null}, {"no": 2, "subject": "Dasar Negara, Ideologi & Pandangan Hidup", "type": "pg", "text": "Makna Pancasila sebagai pandangan hidup bangsa adalah...", "options": ["alat untuk mengganti seluruh peraturan daerah", "sistem ekonomi yang mengatur perdagangan nasional", "pedoman bersikap, berpikir, dan bertindak bagi bangsa Indonesia", "ketentuan yang hanya digunakan saat upacara kenegaraan"], "correct": "pedoman bersikap, berpikir, dan bertindak bagi bangsa Indonesia", "img": null}, {"no": 3, "subject": "Nilai & Pengamalan Pancasila", "type": "pg", "text": "Perilaku yang paling mencerminkan sila pertama Pancasila di lingkungan keluarga adalah...", "options": ["menghormati anggota keluarga yang menjalankan ibadah sesuai agamanya", "meminta semua anggota keluarga mengikuti agama yang sama", "mengabaikan kegiatan keagamaan anggota keluarga lain", "menilai orang lain berdasarkan perbedaan keyakinan"], "correct": "menghormati anggota keluarga yang menjalankan ibadah sesuai agamanya", "img": null}, {"no": 4, "subject": "Nilai & Pengamalan Pancasila", "type": "pg", "text": "Contoh penerapan sila kedua Pancasila di sekolah adalah...", "options": ["memilih teman berdasarkan asal daerah", "mendahulukan kelompok sendiri dalam kegiatan kelas", "menolak membantu teman karena berbeda pendapat", "menolong teman yang mengalami kesulitan tanpa membeda-bedakan"], "correct": "menolong teman yang mengalami kesulitan tanpa membeda-bedakan", "img": null}, {"no": 5, "subject": "Nilai & Pengamalan Pancasila", "type": "pg", "text": "Sila Persatuan Indonesia menuntun warga negara untuk...", "options": ["mengutamakan kepentingan pribadi di atas kepentingan bangsa", "menjaga keutuhan bangsa serta menghargai keberagaman", "menyeragamkan semua budaya daerah", "menolak perbedaan bahasa dan adat istiadat"], "correct": "menjaga keutuhan bangsa serta menghargai keberagaman", "img": null}, {"no": 6, "subject": "Nilai & Pengamalan Pancasila", "type": "pg", "text": "Sikap yang sesuai dengan sila Kerakyatan yang Dipimpin oleh Hikmat Kebijaksanaan dalam Permusyawaratan/Perwakilan adalah...", "options": ["menerima hasil musyawarah yang telah disepakati bersama", "memaksakan kehendak agar pendapat pribadi menang", "mengabaikan pendapat minoritas dalam rapat", "mengambil keputusan tanpa mendengar masukan"], "correct": "menerima hasil musyawarah yang telah disepakati bersama", "img": null}, {"no": 7, "subject": "Nilai & Pengamalan Pancasila", "type": "pg", "text": "Tindakan yang menunjukkan pengamalan sila Keadilan Sosial bagi Seluruh Rakyat Indonesia adalah...", "options": ["memberi tugas lebih ringan kepada teman dekat", "menggunakan fasilitas umum untuk kepentingan pribadi", "membagi tugas piket secara adil sesuai kesepakatan", "membiarkan sebagian anggota kelompok bekerja sendiri"], "correct": "membagi tugas piket secara adil sesuai kesepakatan", "img": null}, {"no": 8, "subject": "Dasar Negara, Ideologi & Pandangan Hidup", "type": "pg", "text": "Sebagai ideologi negara, Pancasila berfungsi sebagai...", "options": ["kumpulan cerita sejarah bangsa yang tidak mengikat", "dasar untuk menghapus nilai budaya daerah", "petunjuk kegiatan ekonomi keluarga saja", "cita-cita, nilai dasar, dan arah kehidupan berbangsa dan bernegara"], "correct": "cita-cita, nilai dasar, dan arah kehidupan berbangsa dan bernegara", "img": null}, {"no": 9, "subject": "Dasar Negara, Ideologi & Pandangan Hidup", "type": "pg", "text": "Pancasila sebagai ideologi terbuka berarti...", "options": ["nilai dasarnya dapat diganti sesuai perkembangan zaman", "nilai dasarnya tetap, tetapi penerapannya dapat menyesuaikan perkembangan masyarakat", "seluruh sila dapat diubah oleh pemerintah kapan saja", "Pancasila hanya berlaku pada masa tertentu"], "correct": "nilai dasarnya tetap, tetapi penerapannya dapat menyesuaikan perkembangan masyarakat", "img": null}, {"no": 10, "subject": "Dasar Negara, Ideologi & Pandangan Hidup", "type": "pg", "text": "Perbedaan utama antara Pancasila sebagai dasar negara dan Pancasila sebagai pandangan hidup adalah...", "options": ["dasar negara berlaku di keluarga, sedangkan pandangan hidup hanya berlaku di sekolah", "dasar negara tidak berkaitan dengan hukum, sedangkan pandangan hidup hanya berkaitan dengan undang-undang", "dasar negara menjadi landasan penyelenggaraan negara, sedangkan pandangan hidup menjadi pedoman perilaku bangsa", "dasar negara bersifat tidak mengikat, sedangkan pandangan hidup bersifat memaksa secara hukum"], "correct": "dasar negara menjadi landasan penyelenggaraan negara, sedangkan pandangan hidup menjadi pedoman perilaku bangsa", "img": null}, {"no": 11, "subject": "Nilai & Pengamalan Pancasila", "type": "pg", "text": "Nilai ketuhanan dalam Pancasila menuntut warga negara untuk...", "options": ["menghormati kebebasan beragama dan beribadah sesuai keyakinan", "menganggap keyakinan sendiri paling berhak dilindungi negara", "mencampuri cara ibadah orang lain", "menolak kerja sama dengan pemeluk agama berbeda"], "correct": "menghormati kebebasan beragama dan beribadah sesuai keyakinan", "img": null}, {"no": 12, "subject": "Nilai & Pengamalan Pancasila", "type": "pg", "text": "Gotong royong merupakan nilai penting dalam kehidupan masyarakat karena...", "options": ["menjadikan semua perbedaan hilang", "membuat keputusan selalu diambil oleh satu orang", "mengutamakan kepentingan kelompok tertentu", "meringankan pekerjaan serta memperkuat persatuan dan kepedulian"], "correct": "meringankan pekerjaan serta memperkuat persatuan dan kepedulian", "img": null}, {"no": 13, "subject": "Nilai & Pengamalan Pancasila", "type": "pg", "text": "Sikap toleransi dalam masyarakat majemuk paling tepat ditunjukkan melalui...", "options": ["menghindari semua warga yang berbeda suku", "menghargai perbedaan agama, budaya, pendapat, dan kebiasaan", "meminta semua warga menggunakan adat yang sama", "mengutamakan warga yang memiliki latar belakang serupa"], "correct": "menghargai perbedaan agama, budaya, pendapat, dan kebiasaan", "img": null}, {"no": 14, "subject": "Nilai & Pengamalan Pancasila", "type": "pg", "text": "Pengamalan Pancasila di lingkungan sekolah dapat dilakukan melalui kegiatan...", "options": ["pemilihan ketua kelas secara musyawarah dan menghargai hasilnya", "menolak kerja kelompok dengan siswa berbeda pendapat", "menentukan keputusan kelas berdasarkan kehendak ketua saja", "membiarkan lingkungan sekolah kotor karena bukan tanggung jawab pribadi"], "correct": "pemilihan ketua kelas secara musyawarah dan menghargai hasilnya", "img": null}, {"no": 15, "subject": "Nilai & Pengamalan Pancasila", "type": "pg", "text": "Kebinekaan bangsa Indonesia harus dipandang sebagai...", "options": ["penghalang terwujudnya persatuan bangsa", "alasan untuk membentuk kelompok tertutup", "kekayaan bangsa yang harus dihargai dan dirawat", "faktor yang membuat Pancasila tidak relevan"], "correct": "kekayaan bangsa yang harus dihargai dan dirawat", "img": null}, {"no": 16, "subject": "Nilai & Pengamalan Pancasila", "type": "pg", "text": "Cinta tanah air dalam kehidupan pelajar dapat diwujudkan dengan...", "options": ["menolak mempelajari budaya daerah lain", "merendahkan bahasa daerah yang berbeda", "mengabaikan aturan sekolah", "menjaga nama baik bangsa, mematuhi aturan, dan menghargai budaya Indonesia"], "correct": "menjaga nama baik bangsa, mematuhi aturan, dan menghargai budaya Indonesia", "img": null}, {"no": 17, "subject": "Konstitusi & UUD NRI Tahun 1945", "type": "pg", "text": "Konstitusi atau Undang-Undang Dasar dapat dipahami sebagai...", "options": ["hukum dasar tertulis yang mengatur penyelenggaraan negara", "peraturan tidak tertulis yang hanya berlaku di masyarakat adat", "kebiasaan sekolah yang dibuat oleh peserta didik", "dokumen organisasi yang tidak berhubungan dengan negara"], "correct": "hukum dasar tertulis yang mengatur penyelenggaraan negara", "img": null}, {"no": 18, "subject": "Konstitusi & UUD NRI Tahun 1945", "type": "pg", "text": "Tujuan utama konstitusi dalam negara adalah...", "options": ["memberi kekuasaan tanpa batas kepada pemerintah", "membatasi kekuasaan, menjamin hak warga negara, dan mengatur lembaga negara", "menghapus tanggung jawab warga negara", "mengatur kehidupan pribadi warga secara terperinci"], "correct": "membatasi kekuasaan, menjamin hak warga negara, dan mengatur lembaga negara", "img": null}, {"no": 19, "subject": "Konstitusi & UUD NRI Tahun 1945", "type": "pg", "text": "Kedudukan UUD Negara Republik Indonesia Tahun 1945 dalam sistem hukum Indonesia adalah...", "options": ["peraturan biasa yang berada di bawah peraturan sekolah", "pedoman tidak tertulis bagi pejabat negara", "aturan adat yang berlaku di daerah tertentu", "hukum dasar tertinggi dalam tata urutan peraturan perundang-undangan"], "correct": "hukum dasar tertinggi dalam tata urutan peraturan perundang-undangan", "img": null}, {"no": 20, "subject": "Konstitusi & UUD NRI Tahun 1945", "type": "pg", "text": "Badan yang berperan penting dalam merumuskan rancangan UUD sebelum Indonesia merdeka adalah...", "options": ["PPKI", "KNIP", "BPUPK", "MPR"], "correct": "BPUPK", "img": null}, {"no": 21, "subject": "Konstitusi & UUD NRI Tahun 1945", "type": "pg", "text": "Pengesahan UUD Negara Republik Indonesia Tahun 1945 dilakukan pada tanggal...", "options": ["18 Agustus 1945", "17 Agustus 1945", "1 Juni 1945", "29 Mei 1945"], "correct": "18 Agustus 1945", "img": null}, {"no": 22, "subject": "Konstitusi & UUD NRI Tahun 1945", "type": "pg", "text": "Salah satu hasil sidang PPKI pada 18 Agustus 1945 adalah...", "options": ["membentuk BPUPK", "mengesahkan UUD Negara Republik Indonesia Tahun 1945", "menetapkan hari lahir Pancasila sebagai hari libur nasional", "membubarkan pemerintahan Indonesia"], "correct": "mengesahkan UUD Negara Republik Indonesia Tahun 1945", "img": null}, {"no": 23, "subject": "Nilai & Pengamalan Pancasila", "type": "pg", "text": "Penerapan musyawarah dalam kehidupan masyarakat menunjukkan bahwa keputusan sebaiknya...", "options": ["ditetapkan oleh tokoh yang paling berpengaruh", "diserahkan sepenuhnya kepada kelompok mayoritas tanpa diskusi", "diambil melalui voting tertutup tanpa penjelasan", "dibahas bersama dengan mengutamakan kepentingan bersama"], "correct": "dibahas bersama dengan mengutamakan kepentingan bersama", "img": null}, {"no": 24, "subject": "Nilai & Pengamalan Pancasila", "type": "pg", "text": "Sikap yang bertentangan dengan nilai keadilan sosial adalah...", "options": ["menggunakan fasilitas umum secara bergiliran", "memberi kesempatan yang sama kepada semua anggota kelompok", "membagi bantuan hanya kepada kerabat meskipun ada warga lain yang lebih membutuhkan", "menyelesaikan tugas kelompok sesuai pembagian yang disepakati"], "correct": "membagi bantuan hanya kepada kerabat meskipun ada warga lain yang lebih membutuhkan", "img": null}, {"no": 25, "subject": "Dasar Negara, Ideologi & Pandangan Hidup", "type": "pg", "text": "Alasan Pancasila tetap relevan sebagai ideologi negara adalah...", "options": ["nilai-nilainya bersumber dari kepribadian bangsa dan dapat menjadi pedoman menghadapi perubahan zaman", "Pancasila hanya mengatur hubungan antaranggota keluarga", "Pancasila tidak berkaitan dengan penyelenggaraan negara", "nilai Pancasila dapat diganti seluruhnya sesuai kepentingan penguasa"], "correct": "nilai-nilainya bersumber dari kepribadian bangsa dan dapat menjadi pedoman menghadapi perubahan zaman", "img": null}, {"no": 26, "subject": "Dasar Negara, Ideologi & Pandangan Hidup", "type": "multi", "title": "Pancasila sebagai Dasar Negara dan Pandangan Hidup", "box": "Dalam rapat sekolah, kepala sekolah menjelaskan bahwa setiap tata tertib, program kesiswaan, dan penggunaan dana harus sesuai dengan nilai dasar negara. Pada saat yang sama, siswa diminta membiasakan sikap saling menghormati, bertanggung jawab, dan adil dalam kehidupan sehari-hari.", "text": "Analisis yang paling tepat terhadap dua penjelasan tersebut adalah ...", "options": ["Pancasila sebagai dasar negara menjadi acuan dalam penyusunan kebijakan dan penyelenggaraan kehidupan bernegara.", "Pancasila sebagai pandangan hidup hanya berlaku dalam urusan pribadi dan tidak berkaitan dengan perilaku bersama.", "Pancasila sebagai pandangan hidup membimbing sikap dan tindakan warga dalam menghadapi persoalan sehari-hari.", "Pancasila sebagai dasar negara hanya digunakan dalam upacara kenegaraan dan tidak berhubungan dengan aturan publik."], "correct": ["Pancasila sebagai dasar negara menjadi acuan dalam penyusunan kebijakan dan penyelenggaraan kehidupan bernegara.", "Pancasila sebagai pandangan hidup membimbing sikap dan tindakan warga dalam menghadapi persoalan sehari-hari."], "img": null}, {"no": 27, "subject": "Nilai & Pengamalan Pancasila", "type": "multi", "title": "Toleransi dan Pengamalan Sila Pertama", "box": "Di sebuah kelas, beberapa siswa akan menjalankan ibadah pada waktu yang berdekatan dengan kegiatan kelompok. Ketua kelas perlu mengatur jadwal agar kegiatan belajar tetap berjalan tanpa mengurangi kebebasan setiap siswa untuk beribadah sesuai agamanya.", "text": "Tindakan yang paling mencerminkan pengamalan sila pertama dan toleransi adalah ...", "options": ["Menetapkan satu cara beribadah yang dianggap paling sesuai agar semua siswa diperlakukan sama.", "Menyusun jadwal kegiatan dengan mempertimbangkan waktu ibadah tanpa memaksa siswa mengikuti keyakinan tertentu.", "Melarang semua pembicaraan tentang agama di sekolah agar tidak terjadi perbedaan pendapat.", "Menghormati pelaksanaan ibadah setiap siswa sekaligus membagi tugas kelompok secara adil dan bertanggung jawab."], "correct": ["Menyusun jadwal kegiatan dengan mempertimbangkan waktu ibadah tanpa memaksa siswa mengikuti keyakinan tertentu.", "Menghormati pelaksanaan ibadah setiap siswa sekaligus membagi tugas kelompok secara adil dan bertanggung jawab."], "img": null}, {"no": 28, "subject": "Nilai & Pengamalan Pancasila", "type": "multi", "title": "Persatuan dan Gotong Royong dalam Konflik Masyarakat", "box": "Warga sebuah kampung berbeda pendapat tentang penggunaan lahan kosong. Sebagian ingin menjadikannya tempat parkir, sedangkan sebagian lainnya mengusulkan ruang terbuka untuk kegiatan anak-anak. Kedua kelompok sama-sama memiliki alasan yang masuk akal.", "text": "Penyelesaian yang paling sesuai dengan persatuan dan gotong royong adalah ...", "options": ["Mengadakan musyawarah terbuka untuk mencari rancangan pemanfaatan lahan yang mengakomodasi kepentingan bersama.", "Memberikan keputusan kepada kelompok yang jumlah anggotanya lebih banyak karena suara terbanyak selalu paling adil.", "Membiarkan setiap kelompok menggunakan sebagian lahan tanpa aturan agar konflik tidak berlanjut.", "Menetapkan pembagian tanggung jawab dan sumber daya secara transparan untuk mewujudkan hasil yang bermanfaat bagi warga."], "correct": ["Mengadakan musyawarah terbuka untuk mencari rancangan pemanfaatan lahan yang mengakomodasi kepentingan bersama.", "Menetapkan pembagian tanggung jawab dan sumber daya secara transparan untuk mewujudkan hasil yang bermanfaat bagi warga."], "img": null}, {"no": 29, "subject": "Nilai & Pengamalan Pancasila", "type": "multi", "title": "Evaluasi Keputusan Organisasi Sekolah", "box": "Pengurus OSIS menetapkan kegiatan pentas seni tanpa mengundang perwakilan kelas dalam pembahasan. Dana kegiatan juga digunakan hampir seluruhnya untuk penampilan satu kelompok, sedangkan kelompok lain tidak memperoleh kesempatan yang sebanding.", "text": "Evaluasi dan perbaikan yang paling tepat adalah ...", "options": ["Keputusan harus dipertahankan karena pengurus OSIS telah dipilih dan boleh mengambil keputusan tanpa melibatkan siswa lain.", "Keputusan perlu ditinjau melalui musyawarah perwakilan dengan kriteria penggunaan dana dan kesempatan tampil yang transparan.", "Organisasi perlu memulihkan keadilan dengan membuka akses kegiatan secara proporsional serta melaporkan penggunaan dana.", "Siswa yang tidak setuju sebaiknya membatalkan kegiatan secara sepihak agar pengurus merasa mendapat tekanan."], "correct": ["Keputusan perlu ditinjau melalui musyawarah perwakilan dengan kriteria penggunaan dana dan kesempatan tampil yang transparan.", "Organisasi perlu memulihkan keadilan dengan membuka akses kegiatan secara proporsional serta melaporkan penggunaan dana."], "img": null}, {"no": 30, "subject": "Nilai & Pengamalan Pancasila", "type": "multi", "title": "Demokrasi yang Selaras dengan Nilai Pancasila", "box": "Dalam pemungutan suara kelas, mayoritas siswa memilih aturan yang memberi hukuman mempermalukan siswa yang terlambat. Sebelum pemungutan suara, siswa yang berbeda pendapat ditertawakan sehingga tidak berani menyampaikan alasan.", "text": "Penilaian yang paling tepat adalah ...", "options": ["Keputusan tersebut tidak sepenuhnya demokratis karena suara mayoritas digunakan untuk mengabaikan martabat dan hak kelompok yang lebih sedikit.", "Keputusan tersebut pasti benar karena telah ditentukan melalui pemungutan suara tanpa perlu menilai isi aturannya.", "Proses demokratis seharusnya memberi ruang bagi pendapat berbeda dan memilih sanksi yang mendidik serta manusiawi.", "Perilaku menertawakan pendapat minoritas dapat dibenarkan selama aturan yang dipilih berlaku untuk semua siswa."], "correct": ["Keputusan tersebut tidak sepenuhnya demokratis karena suara mayoritas digunakan untuk mengabaikan martabat dan hak kelompok yang lebih sedikit.", "Proses demokratis seharusnya memberi ruang bagi pendapat berbeda dan memilih sanksi yang mendidik serta manusiawi."], "img": null}, {"no": 31, "subject": "Dasar Negara, Ideologi & Pandangan Hidup", "type": "multi", "title": "Pancasila sebagai Ideologi Negara", "box": "Dalam forum pertukaran pelajar, seorang peserta menyatakan bahwa kebebasan individu harus selalu diutamakan, sedangkan peserta lain berpendapat bahwa kepentingan kelompok boleh menghapus hak pribadi.", "text": "Perbandingan yang paling tepat dengan ideologi Pancasila adalah ...", "options": ["Pancasila sama dengan ideologi individualistis karena kepentingan pribadi selalu menjadi ukuran tertinggi dalam kehidupan bersama.", "Pancasila menyeimbangkan penghormatan terhadap hak individu dengan tanggung jawab sosial dan kepentingan bersama.", "Pancasila mengharuskan kepentingan kelompok didahulukan meskipun mengorbankan kebebasan dan martabat setiap orang.", "Pancasila menolak penguasaan mutlak oleh individu maupun kelompok serta mendorong kehidupan yang berkeadilan dalam keberagaman."], "correct": ["Pancasila menyeimbangkan penghormatan terhadap hak individu dengan tanggung jawab sosial dan kepentingan bersama.", "Pancasila menolak penguasaan mutlak oleh individu maupun kelompok serta mendorong kehidupan yang berkeadilan dalam keberagaman."], "img": null}, {"no": 32, "subject": "Konstitusi & UUD NRI Tahun 1945", "type": "multi", "title": "Jenis dan Fungsi Konstitusi", "box": "Seorang pejabat daerah mengeluarkan perintah lisan yang membatasi pemberitaan tentang kebijakan pemerintah. Warga menggugat karena perintah itu tidak didasarkan pada aturan tertulis dan berpotensi melanggar hak. Negara tersebut memiliki konstitusi tertulis, tetapi juga mengenal kebiasaan ketatanegaraan yang tidak tertulis.", "text": "Analisis yang tepat adalah ...", "options": ["Konstitusi tertulis diperlukan untuk menetapkan batas kekuasaan dan menjadi dasar perlindungan hak warga negara.", "Kebiasaan ketatanegaraan yang tidak tertulis selalu lebih tinggi daripada konstitusi tertulis karena lebih mudah diterapkan.", "Fungsi konstitusi mencakup pedoman penyelenggaraan negara dan pencegahan tindakan penguasa yang sewenang-wenang.", "Konstitusi hanya mengatur hubungan antarlembaga negara sehingga tidak dapat digunakan untuk menilai pembatasan hak warga."], "correct": ["Konstitusi tertulis diperlukan untuk menetapkan batas kekuasaan dan menjadi dasar perlindungan hak warga negara.", "Fungsi konstitusi mencakup pedoman penyelenggaraan negara dan pencegahan tindakan penguasa yang sewenang-wenang."], "img": null}, {"no": 33, "subject": "Konstitusi & UUD NRI Tahun 1945", "type": "multi", "title": "Perubahan UUD NRI Tahun 1945", "box": "Perkembangan teknologi menimbulkan persoalan baru, seperti perlindungan data pribadi dan penyebaran informasi palsu. Sebagian siswa berpendapat bahwa konstitusi harus dapat menyesuaikan diri, sedangkan siswa lain ingin mengubah seluruh prinsip penyelenggaraan negara setiap kali muncul masalah baru.", "text": "Evaluasi yang paling tepat adalah ...", "options": ["Semua ketentuan konstitusi harus dibiarkan tanpa perubahan karena perubahan pasti melemahkan negara.", "Perubahan konstitusi dapat menyesuaikan kebutuhan masyarakat, tetapi harus tetap menjaga Pancasila dan prinsip dasar negara.", "Setiap perubahan dapat dilakukan segera oleh kelompok yang sedang memperoleh dukungan terbanyak tanpa prosedur khusus.", "Amandemen harus dilakukan melalui prosedur konstitusional, mempertimbangkan perlindungan hak, dan mencegah pemusatan kekuasaan."], "correct": ["Perubahan konstitusi dapat menyesuaikan kebutuhan masyarakat, tetapi harus tetap menjaga Pancasila dan prinsip dasar negara.", "Amandemen harus dilakukan melalui prosedur konstitusional, mempertimbangkan perlindungan hak, dan mencegah pemusatan kekuasaan."], "img": null}, {"no": 34, "subject": "Konstitusi & UUD NRI Tahun 1945", "type": "multi", "title": "Indonesia dan Perdamaian Dunia", "box": "Indonesia diminta membantu penyelesaian konflik antarnegara melalui forum internasional. Selain mengirim bantuan kemanusiaan, Indonesia mendorong perundingan damai dan menghormati kedaulatan negara yang terlibat.", "text": "Penilaian yang paling tepat terhadap tindakan tersebut adalah ...", "options": ["Tindakan itu sejalan dengan tujuan negara untuk ikut melaksanakan ketertiban dunia berdasarkan kemerdekaan, perdamaian abadi, dan keadilan sosial.", "Kerja sama internasional seharusnya dilaksanakan dengan menghormati kedaulatan, hukum kemanusiaan, dan kepentingan perdamaian, bukan untuk mendominasi negara lain.", "Indonesia sebaiknya tidak terlibat dalam urusan internasional karena Pancasila hanya mengatur hubungan antarwarga di dalam negeri.", "Bantuan kemanusiaan hanya layak diberikan jika Indonesia memperoleh keuntungan ekonomi langsung dari negara penerima."], "correct": ["Tindakan itu sejalan dengan tujuan negara untuk ikut melaksanakan ketertiban dunia berdasarkan kemerdekaan, perdamaian abadi, dan keadilan sosial.", "Kerja sama internasional seharusnya dilaksanakan dengan menghormati kedaulatan, hukum kemanusiaan, dan kepentingan perdamaian, bukan untuk mendominasi negara lain."], "img": null}, {"no": 35, "subject": "Nilai & Pengamalan Pancasila", "type": "multi", "title": "Merancang Program Sekolah yang Berlandaskan Pancasila", "box": "Sebuah sekolah menghadapi masalah perundungan, kesenjangan akses kegiatan, dan rendahnya kepedulian terhadap siswa yang berbeda latar belakang. Tim perancang program diminta membuat kebijakan yang sesuai dengan Pancasila dan prinsip konstitusional.", "text": "Rancangan yang paling tepat adalah ...", "options": ["Memberlakukan hukuman berat secara otomatis tanpa pemeriksaan agar siswa takut melakukan perundungan.", "Membentuk klub berdasarkan kelompok mayoritas dan membatasi keanggotaan agar kegiatan lebih mudah dikelola.", "Menyelenggarakan pencegahan perundungan, mediasi teman sebaya, kanal pelaporan aman, dan evaluasi perlindungan hak siswa.", "Menyusun anggaran kegiatan melalui musyawarah, memastikan akses yang setara, serta mengembangkan proyek gotong royong lintas keberagaman."], "correct": ["Menyelenggarakan pencegahan perundungan, mediasi teman sebaya, kanal pelaporan aman, dan evaluasi perlindungan hak siswa.", "Menyusun anggaran kegiatan melalui musyawarah, memastikan akses yang setara, serta mengembangkan proyek gotong royong lintas keberagaman."], "img": null}, {"no": 36, "subject": "Dasar Negara, Ideologi & Pandangan Hidup", "type": "matrix", "title": "Pancasila sebagai Dasar Negara", "text": "Tentukan Benar atau Salah untuk setiap pernyataan berikut!", "rows": [{"label": "I", "text": "Pancasila menjadi landasan utama dalam penyelenggaraan kehidupan bernegara.", "cols": ["Benar", "Salah"], "correct": "Benar"}, {"label": "II", "text": "Pancasila sebagai sumber dari segala sumber hukum berarti semua peraturan harus memiliki bunyi yang sama persis dengan rumusan sila-sila Pancasila.", "cols": ["Benar", "Salah"], "correct": "Salah"}, {"label": "III", "text": "Peraturan yang bertentangan dengan nilai-nilai Pancasila perlu dikaji, diperbaiki, atau dibatalkan sesuai mekanisme hukum yang berlaku.", "cols": ["Benar", "Salah"], "correct": "Benar"}, {"label": "IV", "text": "Pancasila hanya berfungsi sebagai pedoman moral pribadi dan tidak berkaitan dengan pembentukan peraturan negara.", "cols": ["Benar", "Salah"], "correct": "Salah"}], "img": null}, {"no": 37, "subject": "Nilai & Pengamalan Pancasila", "type": "matrix", "title": "Persatuan dalam Keberagaman", "text": "Tentukan Benar atau Salah untuk setiap pernyataan berikut!", "rows": [{"label": "I", "text": "Untuk mewujudkan persatuan, seluruh budaya daerah harus ditinggalkan dan digantikan dengan satu budaya nasional.", "cols": ["Benar", "Salah"], "correct": "Salah"}, {"label": "II", "text": "Keberagaman suku, agama, bahasa, dan budaya dapat menjadi kekuatan bangsa apabila disikapi dengan saling menghormati.", "cols": ["Benar", "Salah"], "correct": "Benar"}, {"label": "III", "text": "Perbedaan budaya secara otomatis menjadi ancaman bagi keutuhan Negara Kesatuan Republik Indonesia.", "cols": ["Benar", "Salah"], "correct": "Salah"}, {"label": "IV", "text": "Melestarikan budaya daerah dapat dilakukan bersamaan dengan membangun identitas sebagai bangsa Indonesia.", "cols": ["Benar", "Salah"], "correct": "Benar"}], "img": null}, {"no": 38, "subject": "Nilai & Pengamalan Pancasila", "type": "matrix", "title": "Musyawarah dan Pengambilan Keputusan", "text": "Tentukan Benar atau Salah untuk setiap pernyataan berikut!", "rows": [{"label": "I", "text": "Tujuan musyawarah adalah mencari keputusan yang mengutamakan kepentingan bersama, bukan sekadar memenangkan pendapat pribadi.", "cols": ["Benar", "Salah"], "correct": "Benar"}, {"label": "II", "text": "Keputusan yang disetujui oleh jumlah terbanyak selalu dapat dianggap benar meskipun mengabaikan hak kelompok minoritas.", "cols": ["Benar", "Salah"], "correct": "Salah"}, {"label": "III", "text": "Peserta musyawarah harus bersedia mendengarkan pendapat yang berbeda dan menyampaikan sanggahan secara santun.", "cols": ["Benar", "Salah"], "correct": "Benar"}, {"label": "IV", "text": "Seseorang boleh mengabaikan hasil musyawarah hanya karena pendapat pribadinya tidak diterima.", "cols": ["Benar", "Salah"], "correct": "Salah"}], "img": null}, {"no": 39, "subject": "Dasar Negara, Ideologi & Pandangan Hidup", "type": "matrix", "title": "Pancasila sebagai Ideologi Terbuka", "text": "Tentukan Benar atau Salah untuk setiap pernyataan berikut!", "rows": [{"label": "I", "text": "Pancasila sebagai ideologi terbuka memiliki nilai dasar yang tetap dan tidak boleh diubah secara sembarangan.", "cols": ["Benar", "Salah"], "correct": "Benar"}, {"label": "II", "text": "Penerapan nilai Pancasila dapat dikembangkan untuk menghadapi perubahan teknologi, ilmu pengetahuan, dan kehidupan sosial.", "cols": ["Benar", "Salah"], "correct": "Benar"}, {"label": "III", "text": "Setiap kelompok masyarakat berhak mengganti sila-sila Pancasila apabila menganggapnya tidak sesuai dengan kepentingan kelompok tersebut.", "cols": ["Benar", "Salah"], "correct": "Salah"}, {"label": "IV", "text": "Penyesuaian penerapan Pancasila terhadap perkembangan zaman harus tetap sesuai dengan nilai dasar Pancasila.", "cols": ["Benar", "Salah"], "correct": "Benar"}], "img": null}, {"no": 40, "subject": "Konstitusi & UUD NRI Tahun 1945", "type": "matrix", "title": "Fungsi Konstitusi", "text": "Tentukan Benar atau Salah untuk setiap pernyataan berikut!", "rows": [{"label": "I", "text": "Konstitusi berfungsi membatasi kekuasaan pemerintah agar tidak digunakan secara sewenang-wenang.", "cols": ["Benar", "Salah"], "correct": "Benar"}, {"label": "II", "text": "Pembatasan kekuasaan melalui konstitusi berarti pemerintah sama sekali tidak boleh membuat aturan untuk menjaga ketertiban umum.", "cols": ["Benar", "Salah"], "correct": "Salah"}, {"label": "III", "text": "Konstitusi mengatur hubungan antara negara dan warga negara, termasuk hak dan kewajiban masing-masing.", "cols": ["Benar", "Salah"], "correct": "Benar"}, {"label": "IV", "text": "Setiap kebijakan pemerintah harus sesuai dengan konstitusi dan peraturan perundang-undangan yang berlaku.", "cols": ["Benar", "Salah"], "correct": "Benar"}], "img": null}, {"no": 41, "subject": "Nilai & Pengamalan Pancasila", "type": "matrix", "title": "Toleransi dalam Kehidupan Bermasyarakat", "text": "Tentukan Benar atau Salah untuk setiap pernyataan berikut!", "rows": [{"label": "I", "text": "Toleransi berarti menghormati keyakinan, budaya, dan pendapat orang lain tanpa harus mengikuti atau menyetujui semuanya.", "cols": ["Benar", "Salah"], "correct": "Benar"}, {"label": "II", "text": "Seseorang baru dapat disebut toleran apabila membenarkan semua tindakan orang lain, termasuk tindakan yang merendahkan kelompok tertentu.", "cols": ["Benar", "Salah"], "correct": "Salah"}, {"label": "III", "text": "Menghormati teman yang sedang menjalankan ibadah merupakan salah satu contoh toleransi di lingkungan sekolah.", "cols": ["Benar", "Salah"], "correct": "Benar"}, {"label": "IV", "text": "Menyampaikan kritik terhadap suatu pendapat dengan bahasa yang santun selalu merupakan tindakan intoleran.", "cols": ["Benar", "Salah"], "correct": "Salah"}], "img": null}, {"no": 42, "subject": "Nilai & Pengamalan Pancasila", "type": "matrix", "title": "Keadilan Sosial", "text": "Tentukan Benar atau Salah untuk setiap pernyataan berikut!", "rows": [{"label": "I", "text": "Keadilan sosial tidak selalu berarti setiap orang memperoleh bagian yang sama, tetapi memperoleh hak dan perlakuan yang sesuai.", "cols": ["Benar", "Salah"], "correct": "Benar"}, {"label": "II", "text": "Pembagian bantuan dalam jumlah yang sama kepada semua orang selalu merupakan bentuk keadilan, tanpa perlu mempertimbangkan tingkat kebutuhan.", "cols": ["Benar", "Salah"], "correct": "Salah"}, {"label": "III", "text": "Dalam pembagian bantuan, mendahulukan warga yang lebih membutuhkan dapat mencerminkan keadilan sosial.", "cols": ["Benar", "Salah"], "correct": "Benar"}, {"label": "IV", "text": "Memberikan kesempatan hanya kepada kerabat dekat, meskipun orang lain lebih memenuhi syarat, merupakan tindakan yang sesuai dengan keadilan sosial.", "cols": ["Benar", "Salah"], "correct": "Salah"}], "img": null}, {"no": 43, "subject": "Konstitusi & UUD NRI Tahun 1945", "type": "matrix", "title": "Perumusan dan Pengesahan UUD 1945", "text": "Tentukan Benar atau Salah untuk setiap pernyataan berikut!", "rows": [{"label": "I", "text": "BPUPK berperan membahas dasar negara dan rancangan Undang-Undang Dasar sebelum Indonesia merdeka.", "cols": ["Benar", "Salah"], "correct": "Benar"}, {"label": "II", "text": "PPKI mengesahkan UUD Negara Republik Indonesia Tahun 1945 pada tanggal 18 Agustus 1945.", "cols": ["Benar", "Salah"], "correct": "Benar"}, {"label": "III", "text": "BPUPK merupakan badan yang mengesahkan UUD 1945 setelah Proklamasi Kemerdekaan.", "cols": ["Benar", "Salah"], "correct": "Salah"}, {"label": "IV", "text": "PPKI dibentuk lebih dahulu daripada BPUPK untuk menyusun dasar negara sebelum masa persidangan BPUPK.", "cols": ["Benar", "Salah"], "correct": "Salah"}], "img": null}, {"no": 44, "subject": "Nilai & Pengamalan Pancasila", "type": "matrix", "title": "Gotong Royong dan Tanggung Jawab", "text": "Tentukan Benar atau Salah untuk setiap pernyataan berikut!", "rows": [{"label": "I", "text": "Gotong royong merupakan bentuk kerja sama yang dilakukan untuk mencapai tujuan bersama.", "cols": ["Benar", "Salah"], "correct": "Benar"}, {"label": "II", "text": "Dalam gotong royong, setiap orang dapat memberikan kontribusi sesuai kemampuan dan tanggung jawabnya.", "cols": ["Benar", "Salah"], "correct": "Benar"}, {"label": "III", "text": "Gotong royong berarti seluruh pekerjaan harus dilakukan oleh orang yang paling kuat, sedangkan anggota lain tidak perlu berperan.", "cols": ["Benar", "Salah"], "correct": "Salah"}, {"label": "IV", "text": "Pembagian tugas yang berbeda dalam kegiatan gotong royong selalu bertentangan dengan prinsip keadilan sosial.", "cols": ["Benar", "Salah"], "correct": "Salah"}], "img": null}, {"no": 45, "subject": "Dasar Negara, Ideologi & Pandangan Hidup", "type": "matrix", "title": "Pancasila sebagai Pandangan Hidup", "text": "Tentukan Benar atau Salah untuk setiap pernyataan berikut!", "rows": [{"label": "I", "text": "Pancasila sebagai pandangan hidup dapat dijadikan pedoman dalam menentukan sikap dan mengambil keputusan sehari-hari.", "cols": ["Benar", "Salah"], "correct": "Benar"}, {"label": "II", "text": "Pancasila sebagai pandangan hidup hanya berlaku bagi lembaga negara dan tidak berkaitan dengan kehidupan keluarga atau sekolah.", "cols": ["Benar", "Salah"], "correct": "Salah"}, {"label": "III", "text": "Menghargai perbedaan, menyelesaikan masalah melalui musyawarah, dan berlaku adil merupakan contoh penerapan Pancasila dalam kehidupan sehari-hari.", "cols": ["Benar", "Salah"], "correct": "Benar"}, {"label": "IV", "text": "Seseorang telah dianggap mengamalkan Pancasila hanya dengan memahami teorinya, meskipun tidak menerapkannya dalam perilaku.", "cols": ["Benar", "Salah"], "correct": "Salah"}], "img": null}, {"no": 46, "subject": "Numerasi", "type": "pg", "text": "Dalam kegiatan gotong royong sekolah, terdapat 200 siswa. Sebanyak 65% siswa bertugas membersihkan kelas, sedangkan sisanya membersihkan halaman. Jumlah siswa yang membersihkan halaman adalah...", "options": ["130 siswa", "100 siswa", "80 siswa", "70 siswa"], "correct": "70 siswa", "img": null}, {"no": 47, "subject": "Numerasi", "type": "pg", "text": "Dalam musyawarah kelas, 40 siswa memilih kegiatan sosial. Sebanyak 30% memilih kunjungan panti asuhan, 45% memilih kerja bakti lingkungan, dan sisanya memilih penggalangan dana. Persentase siswa yang memilih penggalangan dana adalah...", "options": ["15%", "20%", "25%", "30%"], "correct": "25%", "img": null}, {"no": 48, "subject": "Numerasi", "type": "pg", "text": "Sebuah sekolah memiliki 360 siswa kelas VIII. Sebanyak 25% mengikuti kegiatan seni budaya daerah, 40% mengikuti olahraga, dan sisanya mengikuti kegiatan literasi kebangsaan. Jumlah siswa yang mengikuti literasi kebangsaan adalah...", "options": ["90 siswa", "126 siswa", "135 siswa", "144 siswa"], "correct": "126 siswa", "img": null}, {"no": 49, "subject": "Numerasi", "type": "pg", "text": "Dalam kegiatan bakti sosial, terkumpul 150 paket bantuan. Sebanyak 20% diberikan kepada warga lansia, 50% kepada keluarga kurang mampu, dan sisanya kepada korban bencana. Jumlah paket untuk korban bencana adalah...", "options": ["45 paket", "50 paket", "60 paket", "75 paket"], "correct": "45 paket", "img": null}, {"no": 50, "subject": "Numerasi", "type": "pg", "text": "Di kelas VIII, 80 siswa mengikuti pemilihan tema proyek Pancasila. Sebanyak 35% memilih tema kebinekaan, 25% memilih gotong royong, 15% memilih toleransi, dan sisanya memilih cinta tanah air. Jumlah siswa yang memilih tema cinta tanah air adalah...", "options": ["12 siswa", "16 siswa", "18 siswa", "20 siswa"], "correct": "20 siswa", "img": null}]</script>
+<!-- Data nama & rombel siswa (const DATA_SISWA) -->
+<script src="../../assets/js/data-siswa.js"></script>
+<script id="embedded-images-data" type="application/json">{}</script>
+<script>
+(function(){
+"use strict";
+
+/* ================= CONFIG ================= */
+const SUBJECT_ORDER = ["Dasar Negara, Ideologi & Pandangan Hidup","Nilai & Pengamalan Pancasila","Konstitusi & UUD NRI Tahun 1945","Numerasi"];
+const DURATION_SEC = 90*60;
+const MIN_SUBMIT_SEC = 40*60;   // batas minimal sebelum jawaban boleh dikirim (40 menit)
+const MAPEL = "Pendidikan Pancasila";
+const ASESMEN = "ASAS";
+const KELAS_TINGKAT = "VIII";
+const MATERI = "Pancasila, Nilai Pancasila & UUD NRI Tahun 1945";
+const JUDUL = "ASAS PENDIDIKAN PANCASILA KELAS 8";
+const VALID_TOKEN = "PPA8FBR";
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby5gNBQeSHWWQZ3pSyhPT_xUj2mkB-Frq3hG2M74gibs892yjv_kpb3IDrizfhsOMjY/exec";
+
+const RAW_QUESTIONS = JSON.parse(document.getElementById('questions-data').textContent);
+document.getElementById('infoJumlah').textContent = RAW_QUESTIONS.length + " Soal";
+/* Data siswa dibaca dari ../../assets/js/data-siswa.js (const DATA_SISWA). Hanya rombel kelas VIII yang dipakai. */
+const STUDENTS = {};
+if(typeof DATA_SISWA !== 'undefined'){
+  Object.keys(DATA_SISWA).forEach(k=>{ if(/^VIII\s/.test(k)) STUDENTS[k] = DATA_SISWA[k]; });
+}
+const EMBEDDED_IMAGES = JSON.parse(document.getElementById('embedded-images-data').textContent);
+
+/* ================= STATE ================= */
+let examQuestions = [];
+let answers = {};
+let current = 0;
+let violCount = 0;
+let timeLeft = DURATION_SEC;
+let timerHandle = null;
+let studentName = "", studentClass = "";
+let examStarted = false;
+let examFinished = false;
+
+/* ================= UTIL ================= */
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; }
+  return a;
+}
+function fmtTime(s){ const m=Math.floor(s/60), sec=s%60; return String(m).padStart(2,'0')+":"+String(sec).padStart(2,'0'); }
+function escapeHtml(str){ return String(str).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function renderText(t){ return String(t).replace(/\n/g,'<br>'); }
+function imgList(img){ if(!img) return []; return Array.isArray(img) ? img : [img]; }
+function imgSrc(name){ return EMBEDDED_IMAGES[name] || encodeURI(name); }
+function typesetMath(){ /* tidak ada notasi matematika pada soal ini */ }
+
+/* ================= LIGHTBOX (tap-to-zoom for question images) ================= */
+document.getElementById('lightboxClose').addEventListener('click',()=>{
+  document.getElementById('lightbox').classList.remove('open');
+});
+document.getElementById('lightbox').addEventListener('click',(e)=>{
+  if(e.target.id==='lightbox') document.getElementById('lightbox').classList.remove('open');
+});
+
+/* ================= TABS (start screen) ================= */
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-'+btn.dataset.tab).classList.add('active');
+  });
+});
+
+/* ================= STUDENT DROPDOWNS ================= */
+(function populateClassDropdown(){
+  const selKelas = document.getElementById('inputKelas');
+  Object.keys(STUDENTS).forEach(kelas=>{
+    const opt = document.createElement('option');
+    opt.value = kelas; opt.textContent = kelas;
+    selKelas.appendChild(opt);
+  });
+
+  selKelas.addEventListener('change',()=>{
+    const selNama = document.getElementById('inputNama');
+    const kelas = selKelas.value;
+    selNama.innerHTML = '';
+    if(!kelas){
+      const opt = document.createElement('option'); opt.value=''; opt.textContent='— Pilih kelas terlebih dahulu —';
+      selNama.appendChild(opt); selNama.disabled = true; return;
+    }
+    const opt0 = document.createElement('option'); opt0.value=''; opt0.textContent='— Pilih Nama —';
+    selNama.appendChild(opt0);
+    (STUDENTS[kelas]||[]).forEach(nm=>{
+      const opt = document.createElement('option'); opt.value = nm; opt.textContent = nm;
+      selNama.appendChild(opt);
+    });
+    selNama.disabled = false;
+  });
+
+  /* Prefill dari menu Kelas (kelas-8.html): ?kelas=VIII%20A&nama=NAMA%20SISWA */
+  const params = new URLSearchParams(window.location.search);
+  const pKelas = params.get('kelas');
+  const pNama = params.get('nama');
+  if(pKelas && STUDENTS[pKelas]){
+    selKelas.value = pKelas;
+    selKelas.dispatchEvent(new Event('change'));
+    const norm = s => String(s||'').replace(/\s+/g,' ').trim().toUpperCase();
+    const match = pNama ? STUDENTS[pKelas].find(n=>norm(n)===norm(pNama)) : null;
+    if(match){
+      document.getElementById('inputNama').value = match;
+      document.getElementById('idNama').textContent = match;
+      document.getElementById('idKelas').textContent = pKelas;
+      document.getElementById('idBox').classList.remove('hidden');
+      document.getElementById('pickWrap').classList.add('hidden');
+    }
+    document.querySelector('.tab-btn[data-tab="mulai"]').click();
+    document.getElementById('inputToken').focus();
+  }
+})();
+
+/* ================= BUILD EXAM (shuffle) ================= */
+function buildExam(){
+  const all = RAW_QUESTIONS.map((q,i)=>({q,i}));
+  const shuffledAll = shuffle(all);
+  examQuestions = shuffledAll.map(o=>{
+    const q = JSON.parse(JSON.stringify(o.q));
+    q._id = o.i;
+    if((q.type==='pg' || q.type==='multi') && Array.isArray(q.options)){
+      q.options = shuffle(q.options);
+    }
+    if(q.type==='matrix' && Array.isArray(q.rows)){
+      q.rows = shuffle(q.rows);   // acak urutan pernyataan; kunci tetap melekat pada r.label (I–IV)
+    }
+    return q;
+  });
+}
+
+/* ================= NAV PANEL ================= */
+function renderNavPanel(){
+  const panel = document.getElementById('navPanel');
+  let html = '<h3>Nomor Soal (1–'+examQuestions.length+')</h3>';
+  html += '<div class="legend"><span><i class="dot" style="background:var(--green)"></i>Terjawab</span><span><i class="dot" style="background:#fff;border:1.5px solid var(--border)"></i>Belum</span></div>';
+  let grid = '';
+  examQuestions.forEach((q,idx)=>{
+    const answered = isAnswered(q);
+    grid += '<button class="navbtn'+(answered?' answered':'')+(idx===current?' current':'')+'" data-idx="'+idx+'">'+(idx+1)+'</button>';
+  });
+  html += '<div class="navgrid">'+grid+'</div>';
+  html += '<button id="navSubmitBtn">✅ Kirim Jawaban</button>';
+  panel.innerHTML = html;
+  panel.querySelectorAll('.navbtn').forEach(b=>{
+    b.addEventListener('click',()=>{ current=parseInt(b.dataset.idx,10); renderQuestion(); closeMobilePanel(); });
+  });
+  document.getElementById('navSubmitBtn').addEventListener('click', confirmSubmit);
+  updateSubmitLock();
+}
+function closeMobilePanel(){ document.getElementById('navPanel').classList.remove('open'); }
+
+function isAnswered(q){
+  const v = answers[q._id];
+  if(q.type==='pg') return !!v;
+  if(q.type==='multi') return Array.isArray(v) && v.length>0;
+  if(q.type==='matrix'){ if(!v) return false; return q.rows.every(r=>v[r.label]); }
+  return false;
+}
+
+/* ================= RENDER QUESTION ================= */
+function renderQuestion(){
+  const q = examQuestions[current];
+  const wrap = document.getElementById('qwrap');
+  let html = '';
+  html += '<div class="qnum">Soal '+(current+1)+' dari '+examQuestions.length+'</div>';
+  if(q.title) html += '<div class="qtitle">'+escapeHtml(q.title)+'</div>';
+  if(q.box) html += '<div class="stimulus"><span class="st-label">📖 Bacalah teks berikut!</span>'+renderText(q.box)+'</div>';
+  html += '<div class="qtext">'+renderText(q.pre || q.text)+'</div>';
+  const imgs = imgList(q.img);
+  if(imgs.length){
+    html += '<div class="qimg-wrap">';
+    imgs.forEach(name=>{
+      const src = imgSrc(name);
+      html += '<div class="imgbox" data-full="'+src+'">'+
+        '<img src="'+src+'" alt="'+escapeHtml(name)+'" loading="lazy" '+
+        'onerror="this.parentElement.outerHTML=\'<div class=&quot;imgph&quot;>🖼️ '+escapeHtml(name)+'<br>(gambar menyusul dari guru)</div>\'">'+
+        '<span class="zoomhint">🔍 Ketuk untuk perbesar</span></div>';
+    });
+    html += '</div>';
+  }
+  if(q.pre) html += '<div class="qtext">'+renderText(q.text)+'</div>';
+  if(q.type==='multi') html += '<div class="qtype-hint">☑ Pilihan Ganda Kompleks — pilih '+q.correct.length+' jawaban yang benar</div>';
+  if(q.type==='matrix') html += '<div class="qtype-hint">☑ Benar/Salah — tentukan Benar atau Salah untuk setiap pernyataan</div>';
+
+  if(q.type==='pg') html += renderPG(q);
+  else if(q.type==='multi') html += renderMulti(q);
+  else if(q.type==='matrix') html += renderMatrix(q);
+
+  wrap.innerHTML = html;
+  typesetMath();
+  attachOptionEvents(q);
+  wrap.querySelectorAll('.imgbox').forEach(box=>{
+    box.addEventListener('click',()=>{
+      document.getElementById('lightboxImg').src = box.dataset.full;
+      document.getElementById('lightbox').classList.add('open');
+    });
+  });
+
+  document.getElementById('btnPrev').disabled = (current===0);
+  document.getElementById('btnNext').textContent = (current===examQuestions.length-1) ? 'Selesai →' : 'Selanjutnya →';
+  document.querySelectorAll('.navbtn').forEach(b=>b.classList.toggle('current', parseInt(b.dataset.idx,10)===current));
+  document.getElementById('questionArea').scrollTop = 0;
+}
+
+const LETTERS = ['A','B','C','D','E','F'];
+
+function renderPG(q){
+  const v = answers[q._id]; let html='';
+  q.options.forEach((opt,i)=>{
+    const selected = v===opt;
+    html += '<label class="option'+(selected?' selected':'')+'"><input type="radio" name="pg" value="'+i+'" '+(selected?'checked':'')+'>'+
+      '<span class="otext"><span class="olabel">'+LETTERS[i]+'.</span>'+opt+'</span></label>';
+  });
+  return html;
+}
+function renderMulti(q){
+  const v = answers[q._id] || []; let html='';
+  q.options.forEach((opt,i)=>{
+    const selected = v.includes(opt);
+    html += '<label class="option'+(selected?' selected':'')+'"><input type="checkbox" name="multi" value="'+i+'" '+(selected?'checked':'')+'>'+
+      '<span class="otext"><span class="olabel">'+LETTERS[i]+'.</span>'+opt+'</span></label>';
+  });
+  return html;
+}
+function renderMatrix(q){
+  const v = answers[q._id] || {};
+  let html = '<table class="matrix"><thead><tr><th style="text-align:left">Pernyataan</th>';
+  q.rows[0].cols.forEach(c=>{ html += '<th>'+escapeHtml(c)+'</th>'; });
+  html += '</tr></thead><tbody>';
+  q.rows.forEach((r,ri)=>{
+    html += '<tr><td class="stmt">'+LETTERS[ri]+'. '+r.text+'</td>';
+    r.cols.forEach(c=>{
+      const checked = v[r.label]===c;
+      html += '<td><input type="radio" name="row_'+r.label+'" value="'+escapeHtml(c)+'" data-row="'+escapeHtml(r.label)+'" '+(checked?'checked':'')+'></td>';
+    });
+    html += '</tr>';
+  });
+  html += '</tbody></table>';
+  return html;
+}
+function attachOptionEvents(q){
+  if(q.type==='pg'){
+    document.querySelectorAll('input[name=pg]').forEach(inp=>{
+      inp.addEventListener('change',()=>{ answers[q._id]=q.options[parseInt(inp.value,10)]; renderQuestion(); renderNavPanel(); });
+    });
+  } else if(q.type==='multi'){
+    document.querySelectorAll('input[name=multi]').forEach(inp=>{
+      inp.addEventListener('change',()=>{
+        let cur = answers[q._id] ? answers[q._id].slice() : [];
+        const val = q.options[parseInt(inp.value,10)];
+        if(inp.checked){ if(!cur.includes(val)) cur.push(val); } else { cur = cur.filter(x=>x!==val); }
+        answers[q._id]=cur; renderQuestion(); renderNavPanel();
+      });
+    });
+  } else if(q.type==='matrix'){
+    document.querySelectorAll('table.matrix input').forEach(inp=>{
+      inp.addEventListener('change',()=>{
+        const rowLabel = inp.dataset.row;
+        const cur = answers[q._id] ? Object.assign({},answers[q._id]) : {};
+        cur[rowLabel] = inp.value; answers[q._id]=cur; renderQuestion(); renderNavPanel();
+      });
+    });
+  }
+}
+
+/* ================= NAVIGATION ================= */
+document.getElementById('btnPrev').addEventListener('click',()=>{ if(current>0){ current--; renderQuestion(); } });
+document.getElementById('btnNext').addEventListener('click',()=>{
+  if(current<examQuestions.length-1){ current++; renderQuestion(); } else { confirmSubmit(); }
+});
+document.getElementById('panelToggle').addEventListener('click',()=>{ document.getElementById('navPanel').classList.toggle('open'); });
+
+/* ================= TIMER (berbasis jam sistem, tetap akurat walau tab di-throttle) ================= */
+let startTs = 0, endTs = 0;
+function elapsedSec(){ return Math.floor((Date.now()-startTs)/1000); }
+function canSubmitNow(){ return elapsedSec() >= MIN_SUBMIT_SEC; }
+function updateSubmitLock(){
+  const b = document.getElementById('navSubmitBtn');
+  if(!b || !examStarted) return;
+  const rem = MIN_SUBMIT_SEC - elapsedSec();
+  if(rem > 0){ b.textContent = '🔒 Kirim dibuka dalam '+fmtTime(rem); b.classList.add('locked'); }
+  else { b.textContent = '✅ Kirim Jawaban'; b.classList.remove('locked'); }
+}
+function tick(){
+  timeLeft = Math.max(0, Math.ceil((endTs-Date.now())/1000));
+  const box = document.getElementById('timerBox');
+  box.textContent = fmtTime(timeLeft);
+  if(timeLeft<=300) box.classList.add('low');
+  updateSubmitLock();
+  if(timeLeft<=0){ clearInterval(timerHandle); finishExam(true); }
+}
+function startTimer(){
+  startTs = Date.now(); endTs = startTs + DURATION_SEC*1000;
+  tick(); timerHandle = setInterval(tick,1000);
+}
+
+/* ================= LAYAR PENUH & PENCATATAN PELANGGARAN ================= */
+const logPelanggaran = [];
+let dialogOpen = false, lastViolAt = 0, splitActive = false, blurTimer = null;
+const areaMax = {portrait:0, landscape:0};
+
+function enterFullscreen(){
+  const el = document.documentElement;
+  const req = el.requestFullscreen||el.webkitRequestFullscreen||el.msRequestFullscreen;
+  if(req){ try{ const p = req.call(el); if(p && p.catch) p.catch(()=>{}); }catch(e){} }
+}
+function isFullscreen(){ return !!(document.fullscreenElement||document.webkitFullscreenElement||document.msFullscreenElement); }
+function showWarn(title,text,onOk){
+  const ov = document.getElementById('warnOverlay');
+  document.getElementById('warnTitle').textContent = title;
+  document.getElementById('warnText').textContent = text;
+  ov.style.display='flex';
+  document.getElementById('warnBtn').onclick = ()=>{ ov.style.display='none'; if(onOk) onOk(); };
+}
+function safeAlert(msg){ dialogOpen = true; try{ alert(msg); } finally { dialogOpen = false; } }
+function safeConfirm(msg){ dialogOpen = true; try{ return confirm(msg); } finally { dialogOpen = false; } }
+
+// Jenis: "Pindah tab", "Keluar fullscreen", "Salin teks", "Screenshot", "Split screen", "Kehilangan fokus jendela"
+function catatPelanggaran(jenis){
+  if(!examStarted || examFinished) return;
+  const last = logPelanggaran[logPelanggaran.length-1];
+  if(last && last.jenis===jenis && Date.now()-new Date(last.waktu).getTime() < 1500) return; // satu kejadian, satu catatan
+  logPelanggaran.push({ jenis: jenis, waktu: new Date().toISOString() });
+  violCount = logPelanggaran.length;
+  lastViolAt = Date.now();
+  const badge = document.getElementById('violationBadge');
+  badge.style.display='inline-block';
+  document.getElementById('violCount').textContent = violCount;
+  showWarn('⚠ Pelanggaran Terdeteksi ('+violCount+')',
+    'Sistem mendeteksi: '+jenis+'. Tindakan ini tercatat dan akan dilaporkan kepada guru bersama hasil ujianmu. Tetaplah pada halaman ujian hingga selesai.',
+    ()=>{ if(!isFullscreen()) enterFullscreen(); });
+}
+function ringkasPelanggaran(){
+  const c = {}; logPelanggaran.forEach(p=>{ c[p.jenis]=(c[p.jenis]||0)+1; });
+  return Object.keys(c).map(k=>k+' ×'+c[k]).join('; ') || '-';
+}
+
+// 1) pindah tab / minimize
+document.addEventListener('visibilitychange',()=>{
+  if(document.hidden && examStarted && !examFinished) catatPelanggaran('Pindah tab');
+});
+// 2) keluar layar penuh
+function onFsChange(){ if(!isFullscreen() && examStarted && !examFinished) catatPelanggaran('Keluar fullscreen'); }
+document.addEventListener('fullscreenchange', onFsChange);
+document.addEventListener('webkitfullscreenchange', onFsChange);
+// 3) menyalin teks
+['copy','cut'].forEach(ev=>document.addEventListener(ev,e=>{
+  if(examStarted && !examFinished){ e.preventDefault(); catatPelanggaran('Salin teks'); }
+}));
+document.addEventListener('contextmenu',e=>{ if(examStarted && !examFinished) e.preventDefault(); });
+document.addEventListener('selectstart',e=>{ if(examStarted && !examFinished) e.preventDefault(); });
+document.addEventListener('dragstart',e=>{ if(examStarted && !examFinished) e.preventDefault(); });
+// 4) screenshot & pintasan terlarang
+function clearClip(){ try{ navigator.clipboard && navigator.clipboard.writeText('').catch(()=>{}); }catch(e){} }
+document.addEventListener('keydown',e=>{
+  if(!examStarted || examFinished) return;
+  const k = (e.key||'').toLowerCase();
+  if(e.key==='F12' || (e.ctrlKey&&e.shiftKey&&['i','j','c'].includes(k)) || (e.altKey&&e.key==='Tab')) e.preventDefault();
+  if((e.ctrlKey||e.metaKey) && ['p','s','u'].includes(k)) e.preventDefault();
+  if((e.ctrlKey||e.metaKey) && ['c','x','a'].includes(k)){ e.preventDefault(); if(k!=='a') catatPelanggaran('Salin teks'); }
+  if(e.key==='PrintScreen' || (e.metaKey&&e.shiftKey&&k==='s') || (e.metaKey&&e.shiftKey&&['Digit3','Digit4','Digit5'].includes(e.code))){
+    catatPelanggaran('Screenshot'); clearClip();
+  }
+});
+document.addEventListener('keyup',e=>{
+  if(!examStarted || examFinished) return;
+  if(e.key==='PrintScreen'){ catatPelanggaran('Screenshot'); clearClip(); }
+});
+// 5) split screen: ukuran jendela (piksel perangkat, tahan terhadap zoom) turun tajam dibanding ukuran terbesar
+function cekSplitScreen(){
+  if(!examStarted || examFinished) return;
+  const dpr = window.devicePixelRatio || 1;
+  const o = window.innerWidth > window.innerHeight ? 'landscape' : 'portrait';
+  const a = (window.innerWidth*dpr)*(window.innerHeight*dpr);
+  if(a > areaMax[o]) areaMax[o] = a;
+  if(areaMax[o] > 0 && a < areaMax[o]*0.8){
+    if(!splitActive){ splitActive = true; catatPelanggaran('Split screen'); }
+  } else if(a > areaMax[o]*0.9){ splitActive = false; }
+}
+let resizeT = null;
+window.addEventListener('resize',()=>{ clearTimeout(resizeT); resizeT = setTimeout(cekSplitScreen,400); });
+setInterval(cekSplitScreen,3000);
+// 6) jendela kehilangan fokus (mis. membuka aplikasi lain berdampingan)
+window.addEventListener('blur',()=>{
+  if(!examStarted || examFinished) return;
+  document.getElementById('screen-exam').classList.add('blurred');
+  clearTimeout(blurTimer);
+  blurTimer = setTimeout(()=>{
+    if(dialogOpen || examFinished || document.hidden) return;
+    if(!document.hasFocus() && Date.now()-lastViolAt > 4000) catatPelanggaran('Kehilangan fokus jendela');
+  },1500);
+});
+window.addEventListener('focus',()=>{
+  clearTimeout(blurTimer);
+  document.getElementById('screen-exam').classList.remove('blurred');
+});
+window.addEventListener('beforeunload',(e)=>{ if(examStarted && !examFinished){ e.preventDefault(); e.returnValue=''; } });
+
+/* ================= START EXAM ================= */
+document.getElementById('btnStart').addEventListener('click',()=>{
+  const token = document.getElementById('inputToken').value.trim();
+  const nama = document.getElementById('inputNama').value.trim();
+  const kelas = document.getElementById('inputKelas').value.trim();
+  const err = document.getElementById('startErr');
+  if(!token){ err.textContent='Token ujian wajib diisi.'; return; }
+  if(token !== VALID_TOKEN){ err.textContent='Token salah. Tanyakan token yang benar kepada gurumu.'; return; }
+  if(!kelas || !nama){ err.textContent='Nama dan kelas belum terbaca. Buka ujian dari Menu Kelas 8 atau pilih nama & kelas pada kolom yang tersedia.'; return; }
+  err.textContent='';
+  studentName = nama; studentClass = kelas;
+  buildExam();
+  answers = {}; current=0; logPelanggaran.length=0; violCount=0; examStarted=true; examFinished=false;
+  areaMax.portrait = 0; areaMax.landscape = 0; splitActive = false;
+
+  document.getElementById('screen-start').style.display='none';
+  document.getElementById('screen-exam').style.display='flex';
+  document.getElementById('brandStudent').textContent = nama+' · Kelas '+kelas;
+  startTimer(); renderNavPanel(); renderQuestion(); enterFullscreen();
+  setTimeout(cekSplitScreen, 1800);
+});
+
+/* ================= SUBMIT / SCORING ================= */
+function confirmSubmit(){
+  if(!canSubmitNow()){
+    safeAlert('Jawaban baru dapat dikirim setelah 40 menit pengerjaan. Sisa waktu tunggu: '+fmtTime(MIN_SUBMIT_SEC-elapsedSec())+'. Silakan periksa kembali jawabanmu.');
+    return;
+  }
+  const unansweredIdx = examQuestions.findIndex(q=>!isAnswered(q));
+  if(unansweredIdx !== -1){
+    const unansweredCount = examQuestions.filter(q=>!isAnswered(q)).length;
+    safeAlert('Masih ada '+unansweredCount+' soal yang belum dijawab. Silakan lengkapi semua soal terlebih dahulu sebelum mengirim jawaban. Kamu akan diarahkan ke soal pertama yang belum dijawab.');
+    current = unansweredIdx;
+    renderQuestion(); renderNavPanel(); closeMobilePanel();
+    return;
+  }
+  if(safeConfirm('Semua soal telah dijawab. Kirim jawaban sekarang? Jawaban tidak dapat diubah setelah dikirim.')) finishExam(false);
+}
+/* ---- Penilaian PARSIAL ----
+   Soal PG: 1 (benar) atau 0 (salah).
+   Soal PG Kompleks / Matrix: dinilai per-opsi/per-pernyataan, bukan semua-atau-tidak.
+   scoreFrac = (jumlah opsi/pernyataan yang cocok dengan kunci) / (jumlah opsi/pernyataan).
+   Contoh: dari 4 opsi, siswa benar menandai 3 -> scoreFrac = 0.75 (bukan 0). */
+function scoreFrac(q){
+  const v = answers[q._id];
+  if(q.type==='pg'){
+    return (v===q.correct) ? 1 : 0;
+  }
+  if(q.type==='multi'){
+    const n = q.options.length;
+    let matches = 0;
+    for(let i=0;i<n;i++){
+      const opt = q.options[i];
+      const correctFlag = q.correct.includes(opt);
+      const studentFlag = Array.isArray(v) && v.includes(opt);
+      if(correctFlag === studentFlag) matches++;
+    }
+    return n ? matches/n : 0;
+  }
+  if(q.type==='matrix'){
+    if(!v) return 0;
+    let matches = 0;
+    q.rows.forEach(r=>{ if(v[r.label]===r.correct) matches++; });
+    return q.rows.length ? matches/q.rows.length : 0;
+  }
+  return 0;
+}
+// isCorrect: dipakai untuk pelaporan "benar/salah" per-soal (mis. sheet Excel) — soal dianggap
+// "benar penuh" hanya jika scoreFrac mencapai 1 (semua opsi/pernyataan tepat).
+function isCorrect(q){ return scoreFrac(q) >= 0.999; }
+
+function finishExam(autoSubmit){
+  examFinished = true;
+  clearInterval(timerHandle);
+  if(isFullscreen()){ (document.exitFullscreen||document.webkitExitFullscreen||function(){}).call(document); }
+  document.getElementById('screen-exam').style.display='none';
+  document.getElementById('warnOverlay').style.display='none';
+
+  const totalMaks = examQuestions.length;
+  const weight = totalMaks ? 100/totalMaks : 0;
+  const perSubject = {};
+  SUBJECT_ORDER.forEach(s=>perSubject[s]={score:0,max:0,total:0,penuh:0});
+  let totalScore = 0, fullCount = 0;
+  const perQuestion = [];
+  examQuestions.forEach(q=>{
+    if(!perSubject[q.subject]){ perSubject[q.subject]={score:0,max:0,total:0,penuh:0}; if(!SUBJECT_ORDER.includes(q.subject)) SUBJECT_ORDER.push(q.subject); }
+    const frac = scoreFrac(q);
+    const qScore = frac*weight;
+    totalScore += qScore;
+    if(frac>=0.999) fullCount++;
+    perSubject[q.subject].total++;
+    perSubject[q.subject].score += qScore;
+    perSubject[q.subject].max += weight;
+    if(frac>=0.999) perSubject[q.subject].penuh++;
+    perQuestion.push({q, frac, qScore});
+  });
+  totalScore = Math.round(totalScore*100)/100;
+  let grade='D', gradeLabel='Perlu Bimbingan';
+  if(totalScore>=90){grade='A';gradeLabel='Sangat Baik';}
+  else if(totalScore>=75){grade='B';gradeLabel='Baik';}
+  else if(totalScore>=60){grade='C';gradeLabel='Cukup';}
+
+  document.getElementById('resScore').textContent = totalScore.toFixed(2)+' / 100';
+  document.getElementById('resGrade').textContent = 'Predikat '+grade+' — '+gradeLabel+' · '+fullCount+' dari '+totalMaks+' soal terjawab sempurna (penilaian bersifat parsial per opsi)' + (autoSubmit?' · waktu habis, jawaban terkirim otomatis':'');
+  document.getElementById('rNama').textContent = studentName;
+  document.getElementById('rKelas').textContent = studentClass;
+  document.getElementById('rViol').textContent = violCount;
+
+  let tbl = '<tr><th>Materi</th><th>Skor</th><th>Maks</th></tr>';
+  const detailParts = [];
+  SUBJECT_ORDER.forEach(s=>{
+    const sc = Math.round(perSubject[s].score*100)/100, mx = Math.round(perSubject[s].max*100)/100;
+    tbl += '<tr><td>'+escapeHtml(s)+'</td><td>'+sc+'</td><td>'+mx+'</td></tr>';
+    detailParts.push(s+' '+sc+'/'+mx);
+  });
+  document.getElementById('resTable').innerHTML = tbl;
+
+  window._examResult = {
+    nama: studentName, kelas: studentClass, skor: totalScore, skorMaks: 100, pct: totalScore,
+    grade: grade+' ('+gradeLabel+')', detail: detailParts.join(' | ') + ' | Pelanggaran: '+violCount+'x',
+    perSubject: perSubject, violasi: logPelanggaran.length, jenisPelanggaran: logPelanggaran.slice(), ringkasanPelanggaran: ringkasPelanggaran(), durasiDetik: Math.min(elapsedSec(),DURATION_SEC),
+    skorPerSoal: perQuestion.map(p=>Math.round(p.qScore*100)/100)
+  };
+
+  document.getElementById('screen-result').style.display='block';
+  autoSubmitToSheet();
+}
+
+/* ================= GOOGLE APPS SCRIPT AUTO-SUBMIT (real-time to Google Sheets) ================= */
+function setSubmitStatus(state, text){
+  const el = document.getElementById('submitStatus');
+  el.className = 'submit-status '+state;
+  document.getElementById('submitStatusText').textContent = text;
+  document.getElementById('btnRetrySubmit').classList.toggle('hidden', state==='sending');
+}
+function buildAnswerDetail(){
+  return examQuestions.map((q,idx)=>{
+    const v = answers[q._id];
+    let jawaban = '(kosong)';
+    if(q.type==='pg'){ jawaban = v || '(kosong)'; }
+    else if(q.type==='multi'){ jawaban = (v&&v.length) ? v.join(' ; ') : '(kosong)'; }
+    else if(q.type==='matrix'){ jawaban = v ? q.rows.map(r=>r.label+':'+(v[r.label]||'-')).join(' ; ') : '(kosong)'; }
+    return { no: idx+1, subject: q.subject, jawaban: jawaban, benar: Math.round(scoreFrac(q)*100)/100 };
+  });
+}
+function autoSubmitToSheet(){
+  if(!navigator.onLine){
+    setSubmitStatus('fail','❌ Gagal terkirim — perangkat sedang offline. Sambungkan internet lalu klik "Kirim Ulang".');
+    return;
+  }
+  if(!APPS_SCRIPT_URL || APPS_SCRIPT_URL.indexOf('PASTE_YOUR_DEPLOYMENT_ID_HERE')>-1){
+    setSubmitStatus('fail','⚠ URL Google Apps Script belum dipasang oleh guru. Gunakan "Unduh Hasil (Excel)" sebagai cadangan.');
+    return;
+  }
+  setSubmitStatus('sending','Mengirim jawaban ke guru...');
+  const r = window._examResult;
+  const payload = {
+    timestamp: new Date().toISOString(),
+    mapel: MAPEL, jenisAsesmen: ASESMEN, judul: JUDUL, materi: MATERI, tingkat: KELAS_TINGKAT,
+    nama: r.nama, kelas: r.kelas, skor: r.skor, skorMaks: r.skorMaks, persentase: r.pct,
+    grade: r.grade, pelanggaran: logPelanggaran.length, jenisPelanggaran: logPelanggaran, ringkasanPelanggaran: r.ringkasanPelanggaran, durasiDetik: r.durasiDetik, detailPerMapel: r.detail,
+    jawaban: buildAnswerDetail()
+  };
+  fetch(APPS_SCRIPT_URL, {
+    method: 'POST', mode: 'no-cors',
+    headers: {'Content-Type':'text/plain;charset=utf-8'},
+    body: JSON.stringify(payload)
+  }).then(()=>{
+    setSubmitStatus('ok','✅ Jawaban berhasil terkirim ke Google Spreadsheet guru.');
+  }).catch(()=>{
+    setSubmitStatus('fail','❌ Gagal terkirim (masalah jaringan). Klik "Kirim Ulang" untuk mencoba lagi.');
+  });
+}
+document.getElementById('btnRetrySubmit').addEventListener('click', autoSubmitToSheet);
+
+/* ================= EXCEL EXPORT (backup) ================= */
+document.getElementById('btnExcel').addEventListener('click',()=>{
+  const r = window._examResult;
+  const rows = [];
+  rows.push(['Nama','Kelas','No','Materi','Soal','Jawaban Siswa','Kunci Jawaban','Skor Soal (0-1, parsial)']);
+  function answerLabel(q){
+    if(q.type==='pg') return q.correct;
+    if(q.type==='multi') return q.correct.join(' ; ');
+    if(q.type==='matrix') return q.rows.map(row=>row.label+':'+row.correct).join(' ; ');
+    return '';
+  }
+  examQuestions.forEach((q,idx)=>{
+    let jawabanSiswa='';
+    const v = answers[q._id];
+    if(q.type==='pg'){ jawabanSiswa = v || '(kosong)'; }
+    else if(q.type==='multi'){ jawabanSiswa = (v&&v.length)? v.join(' ; ') : '(kosong)'; }
+    else if(q.type==='matrix'){ jawabanSiswa = v ? q.rows.map(row=>row.label+':'+(v[row.label]||'-')).join(' ; ') : '(kosong)'; }
+    const shortText = q.text.replace(/\s+/g,' ').slice(0,80)+'...';
+    rows.push([r.nama, r.kelas, idx+1, q.subject, shortText, jawabanSiswa, answerLabel(q), Math.round(scoreFrac(q)*100)/100]);
+  });
+  rows.push([]);
+  rows.push(['RINGKASAN']);
+  rows.push(['Nama','Kelas','Skor Akhir (0-100)','Grade','Pelanggaran','Jenis Pelanggaran']);
+  rows.push([r.nama, r.kelas, r.skor, r.grade, r.violasi, r.ringkasanPelanggaran]);
+
+  const ws = XLSX.utils.aoa_to_sheet(rows);
+  ws['!cols'] = [{wch:18},{wch:8},{wch:5},{wch:22},{wch:60},{wch:30},{wch:30},{wch:10}];
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Hasil ASAS PPKn K8');
+  const fname = 'Hasil_ASAS_PendPancasila_Kelas8_'+r.nama.replace(/[^a-zA-Z0-9]/g,'_')+'.xlsx';
+  XLSX.writeFile(wb, fname);
+});
+
+})();
+</script>
 </body>
 </html>
