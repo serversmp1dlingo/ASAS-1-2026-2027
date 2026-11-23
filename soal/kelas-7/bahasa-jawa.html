@@ -2,46 +2,946 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Bahasa Jawa — Kelas 7 — ASAS SMP Negeri 1 Dlingo</title>
-<meta name="description" content="Soal Bahasa Jawa Kelas 7">
-<meta name="robots" content="noindex">
-<link rel="icon" href="../../assets/img/logo-smpn1dlingo.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../../assets/css/style.css">
-<script>document.documentElement.classList.add('js');</script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Asesmen Sumatif Akhir Semester — Bahasa Jawa — SMP N 1 Dlingo</title>
+<link rel="icon" type="image/png" href="../../assets/img/logo-smpn1dlingo.png">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+  :root{
+    --navy:#6b4a2f; --blue:#9a7352; --blue-light:#f6ece0; --green:#5f8f6d;
+    --red:#b04a4a; --amber:#d9a23a; --gray:#6a5d52; --bg:#f8f0e6; --border:#e7d6c3; --radius:10px;
+    --card:#ffffff;
+  }
+  *{box-sizing:border-box;}
+  html,body{height:100%;}
+  body{margin:0;font-family:'Segoe UI',Roboto,Arial,sans-serif;background:var(--bg);color:#1b2430;-webkit-tap-highlight-color:transparent;}
+  /* anti-screenshot / anti-copy deterrents (best-effort; see note in app) */
+  #screen-exam, #screen-exam *{
+    -webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;
+    -webkit-touch-callout:none;
+  }
+  #screen-exam img{-webkit-user-drag:none;user-drag:none;pointer-events:none;}
+  #screen-exam.blurred{filter:blur(18px);transition:filter .15s;}
+  @media print{
+    #screen-exam, #screen-start, #screen-result{display:none !important;}
+    body::before{content:"Konten ujian tidak dapat dicetak.";display:block;text-align:center;padding:40px;font-size:18px;}
+  }
+  img{max-width:100%;height:auto;border-radius:6px;border:1px solid var(--border);}
+  button{font-family:inherit;cursor:pointer;}
+  .hidden{display:none !important;}
+
+  /* ===== START / INSTRUCTIONS ===== */
+  #screen-start{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;
+    background:linear-gradient(135deg,#faf3ea,#ead9c4);}
+  .start-card{background:var(--card);border-radius:16px;max-width:640px;width:100%;padding:34px 32px;box-shadow:0 20px 60px rgba(0,0,0,.25);}
+  .school-header{display:flex;align-items:center;gap:14px;margin-bottom:18px;}
+  .school-header img{width:56px;height:auto;border:none;border-radius:0;flex-shrink:0;}
+  .school-header .stxt{line-height:1.35;}
+  .school-header .stxt b{display:block;color:var(--navy);font-size:15px;}
+  .school-header .stxt span{color:var(--gray);font-size:12px;}
+  .start-card h1{margin:0 0 4px;font-size:21px;color:var(--navy);}
+  .start-card .sub{color:var(--gray);margin:0 0 20px;font-size:14px;}
+  .tabs{display:flex;gap:8px;margin-bottom:18px;border-bottom:1.5px solid var(--border);}
+  .tab-btn{padding:9px 16px;border:none;background:none;font-weight:700;font-size:13.5px;color:var(--gray);
+    border-bottom:3px solid transparent;margin-bottom:-2px;}
+  .tab-btn.active{color:var(--blue);border-bottom-color:var(--blue);}
+  .tab-panel{display:none;}
+  .tab-panel.active{display:block;}
+  .info-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px 18px;background:var(--blue-light);
+    border-radius:10px;padding:14px 16px;margin-bottom:18px;font-size:13px;}
+  .info-grid div b{display:block;color:var(--navy);font-size:13px;}
+  .info-grid div span{color:var(--gray);}
+  label{display:block;font-size:13px;font-weight:600;color:var(--navy);margin:14px 0 6px;}
+  input[type=text],input[type=password]{width:100%;padding:12px 14px;border:1.5px solid var(--border);
+    border-radius:8px;font-size:15px;}
+  input:focus{outline:none;border-color:var(--blue);}
+  select{width:100%;padding:12px 14px;border:1.5px solid var(--border);border-radius:8px;font-size:15px;
+    background:var(--card);color:#1b2430;appearance:none;
+    background-image:url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235b6472' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat:no-repeat;background-position:right 12px center;background-size:18px;}
+  select:focus{outline:none;border-color:var(--blue);}
+  select:disabled{background-color:#f4f6f9;color:var(--gray);cursor:not-allowed;}
+  .instr-list{font-size:13.5px;line-height:1.8;color:#33404f;padding-left:20px;margin:0 0 10px;}
+  .rules{font-size:12.5px;color:var(--gray);line-height:1.6;margin:18px 0;padding:12px 14px;
+    background:#fff8ea;border:1px solid #f1e0ad;border-radius:8px;}
+  .btn-primary{width:100%;padding:14px;background:var(--blue);color:#fff;border:none;border-radius:9px;
+    font-size:16px;font-weight:700;margin-top:12px;transition:.15s;}
+  .btn-primary:hover{background:var(--navy);}
+  .btn-primary:disabled{background:#aab6c8;cursor:not-allowed;}
+  .err-msg{color:var(--red);font-size:12.5px;margin-top:6px;min-height:16px;}
+
+  /* ===== EXAM LAYOUT ===== */
+  #screen-exam{display:none;min-height:100vh;flex-direction:column;}
+  #topbar{background:var(--navy);color:#fff;padding:10px 18px;display:flex;align-items:center;
+    justify-content:space-between;gap:12px;flex-wrap:wrap;position:sticky;top:0;z-index:50;}
+  #topbar .brand{display:flex;align-items:center;gap:10px;font-size:13px;font-weight:700;}
+  #topbar .brand img{width:28px;height:auto;border:none;border-radius:0;}
+  #topbar .brand .who{font-weight:400;opacity:.85;font-size:11.5px;display:block;}
+  #timerBox{background:rgba(255,255,255,.12);padding:8px 16px;border-radius:8px;font-weight:700;
+    font-size:18px;letter-spacing:1px;min-width:110px;text-align:center;}
+  #timerBox.low{background:#c0392b;animation:pulse 1s infinite;}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.6}}
+  #violationBadge{background:var(--red);padding:5px 10px;border-radius:20px;font-size:12px;font-weight:700;display:none;}
+  #panelToggle{background:rgba(255,255,255,.15);color:#fff;border:none;padding:8px 12px;border-radius:8px;font-size:13px;}
+
+  #examBody{display:flex;flex:1;overflow:hidden;}
+  #navPanel{width:280px;flex-shrink:0;background:var(--card);border-right:1px solid var(--border);padding:16px;overflow-y:auto;}
+  #navPanel h3{font-size:11.5px;text-transform:uppercase;letter-spacing:.4px;color:var(--gray);margin:14px 0 8px;}
+  #navPanel h3:first-child{margin-top:0;}
+  .navgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;}
+  .navbtn{aspect-ratio:1;border:1.5px solid var(--border);background:var(--card);border-radius:6px;font-size:12px;
+    font-weight:700;color:var(--navy);display:flex;align-items:center;justify-content:center;}
+  .navbtn.answered{background:var(--green);border-color:var(--green);color:#fff;}
+  .navbtn.current{outline:3px solid var(--amber);outline-offset:1px;}
+  .legend{display:flex;gap:14px;font-size:11px;color:var(--gray);margin:14px 0 4px;flex-wrap:wrap;}
+  .legend span{display:inline-flex;align-items:center;gap:5px;}
+  .dot{width:10px;height:10px;border-radius:3px;display:inline-block;}
+  #navSubmitBtn{width:100%;margin-top:18px;padding:12px;background:var(--red);color:#fff;border:none;
+    border-radius:8px;font-weight:700;font-size:14px;}
+  #navSubmitBtn.locked{background:#b3a596;}
+  .idbox{background:var(--blue-light);border:1.5px solid var(--border);border-radius:10px;padding:12px 16px;margin-top:14px;font-size:14px;line-height:1.7;}
+  .idbox b{color:var(--navy);}
+
+  #questionArea{flex:1;overflow-y:auto;padding:26px 32px 100px;}
+  .qwrap{max-width:820px;margin:0 auto;}
+  .qsubject{display:inline-block;background:var(--blue-light);color:var(--blue);font-size:11.5px;font-weight:700;
+    padding:4px 12px;border-radius:20px;margin-bottom:10px;text-transform:uppercase;letter-spacing:.3px;}
+  .qnum{font-size:14px;color:var(--gray);margin-bottom:4px;}
+  .qtext{font-size:16px;line-height:1.7;white-space:pre-wrap;margin-bottom:16px;}
+  .qimg-wrap{margin:14px 0;display:flex;flex-wrap:wrap;gap:14px;}
+  .qimg-wrap .imgbox{position:relative;cursor:zoom-in;width:100%;max-width:760px;}
+  .qimg-wrap img{width:100%;max-width:760px;display:block;background:#fff;}
+  .qimg-wrap .zoomhint{position:absolute;bottom:8px;right:8px;background:rgba(88,60,36,.78);color:#fff;
+    font-size:11px;font-weight:700;padding:4px 9px;border-radius:20px;pointer-events:none;}
+  .qimg-wrap .imgph{width:100%;max-width:760px;height:200px;border:2px dashed var(--border);border-radius:8px;
+    display:flex;align-items:center;justify-content:center;color:var(--gray);font-size:12.5px;text-align:center;
+    background:#fafbfc;padding:10px;}
+  .codebox{background:#fbf5ec;border:1px solid var(--border);border-left:4px solid var(--blue);border-radius:8px;
+    padding:12px 14px;margin:12px 0;font-family:Consolas,'Courier New',monospace;font-size:14.5px;line-height:1.7;
+    white-space:pre-wrap;overflow-x:auto;color:#3a2a1c;}
+  .stepsbox{margin:10px 0 14px 4px;padding:10px 14px;background:#fffaf3;border:1px dashed var(--border);border-radius:8px;
+    line-height:1.8;white-space:pre-wrap;font-size:15.5px;}
+  .tblwrap{overflow-x:auto;margin:12px 0;}
+  table.datatbl{border-collapse:collapse;font-size:14.5px;min-width:240px;max-width:100%;background:#fff;}
+  table.datatbl th,table.datatbl td{border:1px solid #d9c3a8;padding:8px 16px;text-align:left;}
+  table.datatbl th{background:var(--blue-light);color:var(--navy);}
+  table.datatbl td.rh{background:var(--blue-light);color:var(--navy);font-weight:700;text-align:center;}
+  table.datatbl tr.tot td{font-weight:700;background:#fffaf3;}
+  .wacana{background:#fffaf3;border:2px solid var(--blue);border-radius:12px;padding:14px 16px;margin:12px 0 16px;}
+  .wacana .wlabel{font-size:12px;font-weight:700;color:var(--blue);text-transform:uppercase;letter-spacing:.3px;margin-bottom:4px;}
+  .wacana .wtitle{font-size:16.5px;font-weight:700;color:var(--navy);margin-bottom:8px;}
+  .wacana p{margin:0 0 10px;font-size:15.5px;line-height:1.75;text-align:justify;}
+  .wacana p:last-child{margin-bottom:0;}
+  .qbox{background:#fffaf3;border:2px solid var(--border);border-left:5px solid var(--blue);border-radius:10px;padding:12px 16px;margin:10px 0 14px;font-size:16px;line-height:1.8;}
+  .stmtbox{background:var(--blue-light);border:1.5px solid var(--border);border-radius:10px;padding:12px 16px;margin:8px 0 14px;font-size:16px;line-height:1.7;font-weight:600;color:var(--navy);}
+  #lightbox{position:fixed;inset:0;background:rgba(10,20,35,.94);z-index:1200;display:none;
+    align-items:center;justify-content:center;padding:14px;}
+  #lightbox.open{display:flex;}
+  #lightbox img{max-width:100%;max-height:92vh;width:auto;border-radius:6px;box-shadow:0 10px 40px rgba(0,0,0,.5);}
+  #lightbox .lb-close{position:absolute;top:16px;right:18px;background:#fff;color:var(--navy);border:none;
+    width:38px;height:38px;border-radius:50%;font-size:18px;font-weight:700;}
+  .qtype-hint{font-size:12.5px;color:var(--amber);font-weight:700;margin-bottom:10px;}
+
+  .option{display:flex;align-items:flex-start;gap:12px;padding:13px 16px;border:1.5px solid var(--border);
+    border-radius:10px;margin-bottom:10px;background:var(--card);transition:.12s;}
+  .option:hover{border-color:var(--blue);}
+  .option.selected{border-color:var(--blue);background:var(--blue-light);}
+  .option input{margin-top:3px;flex-shrink:0;width:17px;height:17px;}
+  .option .otext{font-size:15px;line-height:1.5;}
+  .option .olabel{font-weight:700;color:var(--navy);margin-right:4px;}
+
+  table.matrix{width:100%;border-collapse:collapse;margin-top:8px;font-size:14px;}
+  table.matrix th,table.matrix td{border:1px solid var(--border);padding:10px;text-align:center;}
+  table.matrix th{background:var(--blue-light);color:var(--navy);}
+  table.matrix td.stmt{text-align:left;font-size:14px;}
+  table.matrix input{width:17px;height:17px;}
+
+  #navRow{max-width:820px;margin:24px auto 0;display:flex;justify-content:space-between;gap:10px;}
+  .btn-nav{padding:11px 22px;border-radius:8px;border:1.5px solid var(--border);background:var(--card);
+    font-weight:700;color:var(--navy);font-size:14px;}
+  .btn-nav:disabled{opacity:.4;}
+  .btn-nav.primary{background:var(--blue);color:#fff;border:none;}
+
+  #warnOverlay{position:fixed;inset:0;background:rgba(72,48,28,.96);z-index:999;display:none;
+    align-items:center;justify-content:center;padding:20px;color:#fff;text-align:center;}
+  #warnOverlay .box{max-width:420px;}
+  #warnOverlay h2{color:#ffd166;font-size:22px;}
+  #warnOverlay p{font-size:14.5px;line-height:1.6;opacity:.9;}
+  #warnOverlay button{margin-top:16px;padding:12px 28px;background:#ffd166;border:none;border-radius:8px;
+    font-weight:700;font-size:14.5px;color:#432;}
+
+  /* ===== RESULT ===== */
+  #screen-result{display:none;min-height:100vh;padding:30px 16px;background:var(--bg);}
+  .result-card{max-width:720px;margin:0 auto;background:var(--card);border-radius:16px;padding:32px;box-shadow:0 10px 40px rgba(0,0,0,.08);}
+  .result-card h1{color:var(--navy);margin-top:0;font-size:22px;}
+  .score-hero{text-align:center;padding:26px;background:linear-gradient(135deg,var(--navy),var(--blue));
+    border-radius:14px;color:#fff;margin:18px 0 24px;}
+  .score-hero .num{font-size:46px;font-weight:800;}
+  .score-hero .grade{font-size:15px;opacity:.9;margin-top:4px;}
+  .breakdown{width:100%;border-collapse:collapse;font-size:14px;margin-bottom:20px;}
+  .breakdown th,.breakdown td{padding:9px 10px;border-bottom:1px solid var(--border);text-align:left;}
+  .breakdown th{color:var(--gray);font-size:12px;text-transform:uppercase;}
+  .result-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px;}
+  .result-actions button{flex:1;min-width:180px;padding:13px;border-radius:9px;font-weight:700;font-size:14px;border:none;}
+  #btnExcel{background:var(--blue);color:#fff;}
+  #btnRetrySubmit{background:var(--amber);color:#432;}
+  .submit-status{display:flex;align-items:center;gap:10px;padding:12px 16px;border-radius:9px;font-size:13.5px;
+    font-weight:600;margin-bottom:18px;}
+  .submit-status.sending{background:#fff8ea;color:#8a6d00;border:1px solid #f1e0ad;}
+  .submit-status.ok{background:#e9f9f0;color:#0f7a45;border:1px solid #b7ecd0;}
+  .submit-status.fail{background:#fdecea;color:#a4271f;border:1px solid #f3c3bd;}
+  .dotpulse{width:9px;height:9px;border-radius:50%;background:currentColor;flex-shrink:0;animation:pulse 1s infinite;}
+  .submit-status.ok .dotpulse,.submit-status.fail .dotpulse{animation:none;}
+  .note-small{font-size:12px;color:var(--gray);margin-top:14px;line-height:1.6;}
+
+  @media (max-width:820px){
+    #navPanel{position:fixed;left:-300px;top:0;bottom:0;z-index:60;transition:.2s;box-shadow:4px 0 20px rgba(0,0,0,.15);}
+    #navPanel.open{left:0;}
+    #questionArea{padding:18px 16px 90px;}
+    .qimg-wrap img,.qimg-wrap .imgph{max-width:100%;width:100%;}
+  }
+</style>
 </head>
 <body>
-<div class="bg-deco" aria-hidden="true"><span class="orb o1"></span><span class="orb o2"></span><span class="orb o3"></span></div>
-<div class="page">
-<header class="kop">
-  <div class="kop-inner">
-    <a class="kembali reveal" href="../../kelas-7.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg> Kelas 7</a>
-    <div class="logo-wrap reveal"><img src="../../assets/img/logo-smpn1dlingo.png" alt="Logo SMP Negeri 1 Dlingo"></div>
-    <p class="sekolah reveal" style="--d:.08s">SMP NEGERI 1 DLINGO</p>
-    <h1 class="judul reveal" style="--d:.16s">Bahasa Jawa</h1>
-    <div class="ornamen reveal" style="--d:.24s"><i></i></div>
-    <div class="chips reveal" style="--d:.32s"><span class="chip">Kelas <strong>VII</strong></span><span class="chip">Tahun Pelajaran <strong>2026/2027</strong></span></div>
+
+<!-- ============ START / INSTRUCTIONS SCREEN ============ -->
+<div id="screen-start">
+  <div class="start-card">
+    <a href="../../kelas-7.html" style="display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;color:var(--gray);margin-bottom:14px;">&larr; Menu Kelas 7</a>
+    <div class="school-header">
+      <img src="../../assets/img/logo-smpn1dlingo.png" alt="Logo Sekolah">
+      <div class="stxt"><b>SMP NEGERI 1 DLINGO</b><span>Asesmen Sumatif Akhir Semester · Bahasa Jawa · TP 2026/2027</span></div>
+    </div>
+    <h1>📝 Asesmen Sumatif Akhir Semester — Bahasa Jawa</h1>
+    <p class="sub">Jenjang SMP · Kelas 7 · Fase D · Semester Ganjil · Mata Pelajaran Bahasa Jawa</p>
+
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="petunjuk">📋 Petunjuk</button>
+      <button class="tab-btn" data-tab="mulai">🚀 Mulai Ujian</button>
+    </div>
+
+    <div class="tab-panel active" id="tab-petunjuk">
+      <div class="info-grid">
+        <div><b id="infoJumlah">50 Soal</b><span>Pilihan Ganda, PG Kompleks &amp; Benar/Salah</span></div>
+        <div><b>90 Menit</b><span>Alokasi waktu · jawaban baru bisa dikirim setelah 40 menit</span></div>
+        <div><b>4 Materi</b><span>Crita Pengalaman, Maca Wacan, Tembung Pangiket, Aksara Jawa</span></div>
+        <div><b>Acak Soal</b><span>Urutan soal &amp; opsi diacak</span></div>
+      </div>
+      <p style="font-size:13.5px;color:#33404f;margin:0 0 8px;font-weight:700;">Petunjuk Pengerjaan:</p>
+      <ol class="instr-list">
+        <li>Nama dan kelasmu terisi otomatis dari Menu Kelas 7 (tidak perlu mengetik lagi). Masukkan token ujian pada tab "Mulai Ujian" lalu mulai.</li>
+        <li>Bacalah setiap butir soal dengan cermat sebelum menjawab.</li>
+        <li>Terdapat tiga bentuk soal: Pilihan Ganda (pilih satu jawaban), Pilihan Ganda Kompleks (pilih semua jawaban yang benar, bisa lebih dari satu; nilai diberikan secara parsial per opsi), dan Benar/Salah (pilih Benar atau Salah). Soal berbasis wacan menampilkan wacannya pada setiap soal.</li>
+        <li>Ujian akan tampil dalam mode layar penuh (fullscreen) sejak dimulai.</li>
+        <li>Jangan berpindah tab/aplikasi, keluar dari layar penuh, menyalin teks, mengambil tangkapan layar, atau memakai split screen — semuanya tercatat sebagai pelanggaran.</li>
+        <li>Waktu berjalan otomatis selama 90 menit dan tidak dapat dijeda. Jawaban baru dapat dikirim setelah 40 menit pengerjaan.</li>
+        <li>Gunakan panel navigasi soal untuk melompat ke nomor soal tertentu dan memantau soal yang sudah/belum dijawab.</li>
+        <li>Tekan "Kirim Jawaban" setelah selesai. Jika pengiriman gagal, gunakan tombol "Kirim Ulang" yang akan muncul otomatis.</li>
+      </ol>
+    </div>
+
+    <div class="tab-panel" id="tab-mulai">
+      <label>Token Ujian</label>
+      <input type="password" id="inputToken" placeholder="Masukkan token dari guru">
+      <div class="idbox hidden" id="idBox">👤 <b id="idNama"></b><br>🏫 Kelas <b id="idKelas"></b></div>
+      <div id="pickWrap">
+        <div class="note-small" style="margin-top:12px;color:#8a6d00;">Data nama &amp; kelas tidak terbaca dari Menu Kelas 7. Silakan buka ujian melalui menu kelas, atau pilih manual di bawah ini.</div>
+        <label>Kelas</label>
+        <select id="inputKelas"><option value="">— Pilih Kelas —</option></select>
+        <label>Nama Lengkap</label>
+        <select id="inputNama" disabled><option value="">— Pilih kelas terlebih dahulu —</option></select>
+      </div>
+      <div class="rules">
+        ⚠️ <b>Perhatian sebelum memulai:</b><br>
+        • Ujian akan tampil dalam mode <b>layar penuh (fullscreen)</b>.<br>
+        • Jangan membuka tab/aplikasi lain atau memakai <b>split screen</b> — sistem akan mencatat pelanggaran.<br>
+        • Waktu berjalan otomatis dan tidak dapat dijeda. Jawaban <b>baru dapat dikirim setelah 40 menit</b>; ujian terkirim otomatis saat waktu habis.<br>
+        • Pastikan koneksi internet stabil agar hasil dapat terkirim ke guru secara real-time.<br>
+        • Layar akan mengabur otomatis dan pelanggaran tercatat jika kamu mencoba keluar layar penuh, menyalin teks, mengambil tangkapan layar (screenshot), atau memakai split screen.
+      </div>
+      <div class="err-msg" id="startErr"></div>
+      <button class="btn-primary" id="btnStart">🚀 Mulai Ujian (Layar Penuh)</button>
+    </div>
   </div>
-</header>
-<main>
-  <div class="glass panel-segera reveal">
-    <div class="ikon-besar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg></div>
-    <span class="lencana">Segera hadir</span>
-    <h2>Soal belum tersedia</h2>
-    <p>Berkas soal <strong>Bahasa Jawa</strong> Kelas VII sedang disiapkan dan akan diunggah menyusul.</p>
-    <p>Berkas ini akan digantikan pada alamat berikut, sehingga tautan menu tidak perlu diubah.</p>
-    <span class="berkas">soal/kelas-7/bahasa-jawa.html</span><br>
-    <a class="tombol" href="../../kelas-7.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg> Kembali ke Kelas VII</a>
-  </div>
-</main>
-<footer>
-  <p><strong>SMP Negeri 1 Dlingo</strong> — Bantul, Daerah Istimewa Yogyakarta<br>
-  Portal Asesmen Sumatif Akhir Semester &middot; Tahun Pelajaran 2026/2027</p>
-</footer>
 </div>
-<script src="../../assets/js/main.js"></script>
+
+<!-- ============ EXAM SCREEN ============ -->
+<div id="screen-exam">
+  <div id="topbar">
+    <button id="panelToggle">☰ Soal</button>
+    <div class="brand"><img src="../../assets/img/logo-smpn1dlingo.png" alt="Logo"><span>ASAS BAHASA JAWA KELAS 7 · TP 2026/2027<small class="who" id="brandStudent"></small></span></div>
+    <div id="violationBadge">⚠ Pelanggaran: <span id="violCount">0</span></div>
+    <div id="timerBox">90:00</div>
+  </div>
+  <div id="examBody">
+    <div id="navPanel"></div>
+    <div id="questionArea">
+      <div class="qwrap" id="qwrap"></div>
+      <div id="navRow">
+        <button class="btn-nav" id="btnPrev">← Sebelumnya</button>
+        <button class="btn-nav primary" id="btnNext">Selanjutnya →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="lightbox">
+  <button class="lb-close" id="lightboxClose">✕</button>
+  <img id="lightboxImg" src="" alt="Gambar diperbesar">
+</div>
+
+<div id="warnOverlay">
+  <div class="box">
+    <h2 id="warnTitle">⚠ Peringatan</h2>
+    <p id="warnText"></p>
+    <button id="warnBtn">Kembali ke Ujian</button>
+  </div>
+</div>
+
+<!-- ============ RESULT SCREEN ============ -->
+<div id="screen-result">
+  <div class="result-card">
+    <div class="school-header">
+      <img src="../../assets/img/logo-smpn1dlingo.png" alt="Logo Sekolah">
+      <div class="stxt"><b>SMP NEGERI 1 DLINGO BANTUL</b><span>Asesmen Sumatif Akhir Semester · Bahasa Jawa · TP 2026/2027</span></div>
+    </div>
+    <h1>✅ Hasil Ujian</h1>
+    <div class="score-hero">
+      <div class="num" id="resScore">0 / 0</div>
+      <div class="grade" id="resGrade">Predikat —</div>
+    </div>
+    <div id="submitStatus" class="submit-status sending">
+      <span class="dotpulse"></span><span id="submitStatusText">Mengirim jawaban ke guru...</span>
+    </div>
+    <table class="breakdown" id="resTable"></table>
+    <div class="result-actions">
+      <button id="btnRetrySubmit" class="hidden">🔁 Kirim Ulang</button>
+      <button id="btnExcel">⬇️ Unduh Hasil (Excel)</button>
+    </div>
+    <p class="note-small">
+      Nama: <b id="rNama"></b> · Kelas: <b id="rKelas"></b> · Pelanggaran layar tercatat: <b id="rViol"></b> kali.<br>
+      Jawaban dikirim otomatis secara real-time ke Google Spreadsheet guru begitu halaman ini muncul. Jika status di atas menunjukkan gagal terkirim, gunakan tombol "Kirim Ulang", atau pastikan koneksi internet aktif lalu klik tombol tersebut. Tombol "Unduh Hasil (Excel)" tetap tersedia sebagai cadangan.
+    </p>
+  </div>
+</div>
+
+<script id="questions-data" type="application/json">[{"no": 1, "type": "pg", "blocks": [{"t": "p", "v": "Crita pengalaman yaiku crita kang nyritakake .…"}], "options": ["Kedadeyan sing durung tau dialami", "Kedadeyan sing wis tau dialami dhewe", "Dongeng saka jaman biyen", "Crita kewan ing alas"], "correct": "Kedadeyan sing wis tau dialami dhewe", "subject": "Crita Pengalaman", "text": "Crita pengalaman yaiku crita kang nyritakake .…", "img": null}, {"no": 2, "type": "pg", "blocks": [{"t": "p", "v": "Tujuwan nulis crita pengalaman yaiku .…"}], "options": ["Nyritakake pengalaman sing wis dialami", "Ngajak wong tuku barang", "Menehi pawarta babagan politik", "Nggambarake barang"], "correct": "Nyritakake pengalaman sing wis dialami", "subject": "Crita Pengalaman", "text": "Tujuwan nulis crita pengalaman yaiku .…", "img": null}, {"no": 3, "type": "pg", "blocks": [{"t": "p", "v": "Crita pengalaman biasane nggunakake tembung ganti wong kapisan yaiku …"}], "options": ["Dheweke", "Kowe", "Aku", "Panjenengane"], "correct": "Aku", "subject": "Crita Pengalaman", "text": "Crita pengalaman biasane nggunakake tembung ganti wong kapisan yaiku …", "img": null}, {"no": 4, "type": "pg", "blocks": [{"t": "p", "v": "Ukara kang nuduhake wektu yaiku .…"}], "options": ["Aku manggon ing Bantul.", "Bapakku guru.", "Dina Minggu aku lunga menyang kebon binatang.", "Kancaku jenenge Rina."], "correct": "Dina Minggu aku lunga menyang kebon binatang.", "subject": "Crita Pengalaman", "text": "Ukara kang nuduhake wektu yaiku .…", "img": null}, {"no": 5, "type": "pg", "blocks": [{"t": "p", "v": "Ing ngisor iki kang kalebu pengalaman sing nyenengake yaiku .…"}], "options": ["Kesandhung watu nganti tiba", "Kélangan dhuwit", "Ditinggal kanca", "Piknik menyang pantai karo kulawarga"], "correct": "Piknik menyang pantai karo kulawarga", "subject": "Crita Pengalaman", "text": "Ing ngisor iki kang kalebu pengalaman sing nyenengake yaiku .…", "img": null}, {"no": 6, "type": "pg", "blocks": [{"t": "p", "v": "Ing pungkasan crita pengalaman biasane ana .…"}], "options": ["Pambuka", "Pangenalan paraga", "Katrangan papan", "Piwulang utawa kesan saka pengalaman"], "correct": "Piwulang utawa kesan saka pengalaman", "subject": "Crita Pengalaman", "text": "Ing pungkasan crita pengalaman biasane ana .…", "img": null}, {"no": 7, "type": "pg", "blocks": [{"t": "p", "v": "Bab kang ana ing sajrone crita pengalaman yaiku....."}], "options": ["Paraga, kedadeyane, papan lan wektu kedadeyan", "Kahanan, wektu, panggonan lan cacahe kedadeyan", "Pacelathon, wektu, papan sarta kedadeyane crita", "Papan, wektu, basa kang digunakake dening penulis"], "correct": "Paraga, kedadeyane, papan lan wektu kedadeyan", "subject": "Crita Pengalaman", "text": "Bab kang ana ing sajrone crita pengalaman yaiku.....", "img": null}, {"no": 8, "type": "pg", "blocks": [{"t": "p", "v": "Gatekna pranyatan iki!"}, {"t": "steps", "v": "1) Minangka sarana ngudhar reruweting pikir\n2) Minangka piwulang/guru kang utama\n3) Minangka panglipur\n4) Minangka srawung"}, {"t": "p", "v": "Kang kalebu pigunane crita pengalaman adhedhasar pratelan ing dhuwur yaiku...."}], "options": ["1, 2, 3", "2, 3, 4", "3, 4, 1", "4, 1, 2"], "correct": "1, 2, 3", "subject": "Crita Pengalaman", "text": "Gatekna pranyatan iki! 1) Minangka sarana ngudhar reruweting pikir\n2) Minangka piwulang/guru kang utama\n3) Minangka panglipur\n4) Minangka srawung Kang kalebu pigunane crita pengalaman adhedhasar pratelan ing dhuwur yaiku....", "img": null}, {"no": 9, "type": "pg", "blocks": [{"t": "p", "v": "Tuladha bakuning crita kang nggambarake pengalaman kang nyenengake yaiku...."}], "options": ["Diparingi handpone anyar nalika juwara kelas", "Ora bisa melu Penilaian Tengah Semester", "Nandhang kacilakan numpak montor anyar", "Ditinggal seda eyang putri amarga gerah"], "correct": "Diparingi handpone anyar nalika juwara kelas", "subject": "Crita Pengalaman", "text": "Tuladha bakuning crita kang nggambarake pengalaman kang nyenengake yaiku....", "img": null}, {"no": 10, "type": "pg", "blocks": [{"t": "p", "v": "Pengalaman kang nggambarake lelakon sedhih yaiku...."}], "options": ["Dadi juwara lomba macapat", "Dadi juwara lomba sesorah", "Oleh undian saka acara jalan sehat", "Kelangan sedulur kang ditresnani"], "correct": "Kelangan sedulur kang ditresnani", "subject": "Crita Pengalaman", "text": "Pengalaman kang nggambarake lelakon sedhih yaiku....", "img": null}, {"no": 11, "type": "multi", "blocks": [{"t": "wacana", "label": "Wacana 1 kanggo soal nomer 11–15", "title": "Pengalaman Dolan menyang Pantai Parangtritis", "paras": ["Nalika dina Minggu kepungkur, aku lan kulawargaku dolan menyang Pantai Parangtritis. Aku mangkat saka omah jam enem esuk. Ing dalan, aku weruh pemandangan sawah sing ijo royo-royo. Sawise tekan pantai, aku lan adhikku dolanan pasir lan banyu segara ing pinggir pantai. Bapakku njupuk foto, dene ibuku nyiapake panganan kanggo sarapan.", "Nalika awan, angin segara krasa saya banter. Aku lan adhikku banjur diajak bapak supaya ora dolanan adoh saka pinggir pantai amarga ombak gedhe. Sawise mangan lan ngaso, aku lan kulawargaku bali menyang omah. Aku seneng banget amarga bisa ngentekake wektu bebarengan karo kulawarga."]}, {"t": "p", "v": "Adhedhasar wacana kasebut, pratelan sing bener yaiku ...."}], "options": ["Aku dolan menyang Pantai Parangtritis nalika dina Minggu.", "Aku mangkat saka omah nalika awan.", "Aku dolan menyang pantai bebarengan karo kulawarga.", "Aku lan adhikku dolanan ing tengah segara."], "correct": ["Aku dolan menyang Pantai Parangtritis nalika dina Minggu.", "Aku dolan menyang pantai bebarengan karo kulawarga."], "subject": "Maca Wacan Crita Pengalaman", "text": "Adhedhasar wacana kasebut, pratelan sing bener yaiku ....", "img": null}, {"no": 12, "type": "multi", "blocks": [{"t": "wacana", "label": "Wacana 1 kanggo soal nomer 11–15", "title": "Pengalaman Dolan menyang Pantai Parangtritis", "paras": ["Nalika dina Minggu kepungkur, aku lan kulawargaku dolan menyang Pantai Parangtritis. Aku mangkat saka omah jam enem esuk. Ing dalan, aku weruh pemandangan sawah sing ijo royo-royo. Sawise tekan pantai, aku lan adhikku dolanan pasir lan banyu segara ing pinggir pantai. Bapakku njupuk foto, dene ibuku nyiapake panganan kanggo sarapan.", "Nalika awan, angin segara krasa saya banter. Aku lan adhikku banjur diajak bapak supaya ora dolanan adoh saka pinggir pantai amarga ombak gedhe. Sawise mangan lan ngaso, aku lan kulawargaku bali menyang omah. Aku seneng banget amarga bisa ngentekake wektu bebarengan karo kulawarga."]}, {"t": "p", "v": "Kegiatan sing ditindakake nalika ana ing pantai yaiku ...."}], "options": ["Dolanan pasir.", "Njupuk foto.", "Nyiyapake panganan.", "Nandur wit klapa."], "correct": ["Dolanan pasir.", "Njupuk foto.", "Nyiyapake panganan."], "subject": "Maca Wacan Crita Pengalaman", "text": "Kegiatan sing ditindakake nalika ana ing pantai yaiku ....", "img": null}, {"no": 13, "type": "multi", "blocks": [{"t": "wacana", "label": "Wacana 1 kanggo soal nomer 11–15", "title": "Pengalaman Dolan menyang Pantai Parangtritis", "paras": ["Nalika dina Minggu kepungkur, aku lan kulawargaku dolan menyang Pantai Parangtritis. Aku mangkat saka omah jam enem esuk. Ing dalan, aku weruh pemandangan sawah sing ijo royo-royo. Sawise tekan pantai, aku lan adhikku dolanan pasir lan banyu segara ing pinggir pantai. Bapakku njupuk foto, dene ibuku nyiapake panganan kanggo sarapan.", "Nalika awan, angin segara krasa saya banter. Aku lan adhikku banjur diajak bapak supaya ora dolanan adoh saka pinggir pantai amarga ombak gedhe. Sawise mangan lan ngaso, aku lan kulawargaku bali menyang omah. Aku seneng banget amarga bisa ngentekake wektu bebarengan karo kulawarga."]}, {"t": "p", "v": "Unsur informasi sing bisa ditemokake ing wacana kasebut yaiku ...."}], "options": ["Paraga yaiku aku lan kulawargaku.", "Panggonan kedadeyan yaiku Pantai Parangtritis.", "Wektu kedadeyan yaiku dina Minggu.", "Masalah utama yaiku kelangan barang."], "correct": ["Paraga yaiku aku lan kulawargaku.", "Panggonan kedadeyan yaiku Pantai Parangtritis.", "Wektu kedadeyan yaiku dina Minggu."], "subject": "Maca Wacan Crita Pengalaman", "text": "Unsur informasi sing bisa ditemokake ing wacana kasebut yaiku ....", "img": null}, {"no": 14, "type": "multi", "blocks": [{"t": "wacana", "label": "Wacana 1 kanggo soal nomer 11–15", "title": "Pengalaman Dolan menyang Pantai Parangtritis", "paras": ["Nalika dina Minggu kepungkur, aku lan kulawargaku dolan menyang Pantai Parangtritis. Aku mangkat saka omah jam enem esuk. Ing dalan, aku weruh pemandangan sawah sing ijo royo-royo. Sawise tekan pantai, aku lan adhikku dolanan pasir lan banyu segara ing pinggir pantai. Bapakku njupuk foto, dene ibuku nyiapake panganan kanggo sarapan.", "Nalika awan, angin segara krasa saya banter. Aku lan adhikku banjur diajak bapak supaya ora dolanan adoh saka pinggir pantai amarga ombak gedhe. Sawise mangan lan ngaso, aku lan kulawargaku bali menyang omah. Aku seneng banget amarga bisa ngentekake wektu bebarengan karo kulawarga."]}, {"t": "p", "v": "Piwulang utawa amanat saka crita kasebut yaiku ...."}], "options": ["Kudu manut marang pituture wong tuwa.", "Kudu ngati-ati nalika dolanan ing pantai.", "Bebas dolanan ing tengah segara.", "Kulawarga kudu bisa ngentekake wektu bebarengan."], "correct": ["Kudu manut marang pituture wong tuwa.", "Kudu ngati-ati nalika dolanan ing pantai.", "Kulawarga kudu bisa ngentekake wektu bebarengan."], "subject": "Maca Wacan Crita Pengalaman", "text": "Piwulang utawa amanat saka crita kasebut yaiku ....", "img": null}, {"no": 15, "type": "multi", "blocks": [{"t": "wacana", "label": "Wacana 1 kanggo soal nomer 11–15", "title": "Pengalaman Dolan menyang Pantai Parangtritis", "paras": ["Nalika dina Minggu kepungkur, aku lan kulawargaku dolan menyang Pantai Parangtritis. Aku mangkat saka omah jam enem esuk. Ing dalan, aku weruh pemandangan sawah sing ijo royo-royo. Sawise tekan pantai, aku lan adhikku dolanan pasir lan banyu segara ing pinggir pantai. Bapakku njupuk foto, dene ibuku nyiapake panganan kanggo sarapan.", "Nalika awan, angin segara krasa saya banter. Aku lan adhikku banjur diajak bapak supaya ora dolanan adoh saka pinggir pantai amarga ombak gedhe. Sawise mangan lan ngaso, aku lan kulawargaku bali menyang omah. Aku seneng banget amarga bisa ngentekake wektu bebarengan karo kulawarga."]}, {"t": "p", "v": "Tembung sing nuduhake katrangan wektu ing wacana kasebut yaiku ...."}], "options": ["Dina Minggu kepungkur.", "Jam enem esuk.", "Ing pinggir pantai.", "Nalika awan."], "correct": ["Dina Minggu kepungkur.", "Jam enem esuk.", "Nalika awan."], "subject": "Maca Wacan Crita Pengalaman", "text": "Tembung sing nuduhake katrangan wektu ing wacana kasebut yaiku ....", "img": null}, {"no": 16, "type": "multi", "blocks": [{"t": "wacana", "label": "Wacan kanggo soal nomer 16–20", "title": "Pengalaman Rekreasi menyang Kaliurang", "paras": ["Nalika dina Minggu, aku lan kulawargaku lunga rekreasi menyang Kaliurang. Aku mangkat saka omah jam enem esuk numpak mobil. Ing dalan, aku weruh pemandangan gunung lan wit-witan sing ijo royo-royo. Hawane adhem lan seger.", "Sawise tekan Kaliurang, aku lan adhikku dolanan ing taman. Bapakku njupuk foto, dene ibuku nyiapake panganan. Sawise dolanan, aku lan kulawarga mangan bebarengan. Sadurunge mulih, aku tuku oleh-oleh kanggo kanca-kancaku.", "Aku seneng banget amarga bisa ngentekake wektu bebarengan karo kulawarga. Saka pengalaman kasebut, aku ngerti yen wektu bebarengan karo kulawarga iku penting banget."]}, {"t": "p", "v": "Adhedhasar wacan kasebut, pratelan endi sing cocog karo isi crita?"}], "options": ["Penulis lunga menyang Kaliurang dina Minggu.", "Penulis mangkat saka omah jam wolu esuk.", "Penulis lunga numpak mobil.", "Penulis lunga rekreasi karo kulawargane."], "correct": ["Penulis lunga menyang Kaliurang dina Minggu.", "Penulis lunga numpak mobil.", "Penulis lunga rekreasi karo kulawargane."], "subject": "Maca Wacan Crita Pengalaman", "text": "Adhedhasar wacan kasebut, pratelan endi sing cocog karo isi crita?", "img": null}, {"no": 17, "type": "multi", "blocks": [{"t": "wacana", "label": "Wacan kanggo soal nomer 16–20", "title": "Pengalaman Rekreasi menyang Kaliurang", "paras": ["Nalika dina Minggu, aku lan kulawargaku lunga rekreasi menyang Kaliurang. Aku mangkat saka omah jam enem esuk numpak mobil. Ing dalan, aku weruh pemandangan gunung lan wit-witan sing ijo royo-royo. Hawane adhem lan seger.", "Sawise tekan Kaliurang, aku lan adhikku dolanan ing taman. Bapakku njupuk foto, dene ibuku nyiapake panganan. Sawise dolanan, aku lan kulawarga mangan bebarengan. Sadurunge mulih, aku tuku oleh-oleh kanggo kanca-kancaku.", "Aku seneng banget amarga bisa ngentekake wektu bebarengan karo kulawarga. Saka pengalaman kasebut, aku ngerti yen wektu bebarengan karo kulawarga iku penting banget."]}, {"t": "p", "v": "Kegiatan apa wae sing ditindakake penulis nalika ana ing Kaliurang?"}], "options": ["Dolanan ing taman.", "Mangan bebarengan karo kulawarga.", "Tuku oleh-oleh kanggo kanca-kancane.", "Sinau ing perpustakaan."], "correct": ["Dolanan ing taman.", "Mangan bebarengan karo kulawarga.", "Tuku oleh-oleh kanggo kanca-kancane."], "subject": "Maca Wacan Crita Pengalaman", "text": "Kegiatan apa wae sing ditindakake penulis nalika ana ing Kaliurang?", "img": null}, {"no": 18, "type": "multi", "blocks": [{"t": "wacana", "label": "Wacan kanggo soal nomer 16–20", "title": "Pengalaman Rekreasi menyang Kaliurang", "paras": ["Nalika dina Minggu, aku lan kulawargaku lunga rekreasi menyang Kaliurang. Aku mangkat saka omah jam enem esuk numpak mobil. Ing dalan, aku weruh pemandangan gunung lan wit-witan sing ijo royo-royo. Hawane adhem lan seger.", "Sawise tekan Kaliurang, aku lan adhikku dolanan ing taman. Bapakku njupuk foto, dene ibuku nyiapake panganan. Sawise dolanan, aku lan kulawarga mangan bebarengan. Sadurunge mulih, aku tuku oleh-oleh kanggo kanca-kancaku.", "Aku seneng banget amarga bisa ngentekake wektu bebarengan karo kulawarga. Saka pengalaman kasebut, aku ngerti yen wektu bebarengan karo kulawarga iku penting banget."]}, {"t": "p", "v": "Tumindak apa wae sing nuduhake rasa tresna lan kebersamaan kulawarga?"}], "options": ["Rekreasi bebarengan.", "Mangan bebarengan.", "Ngentekake wektu karo kulawarga.", "Dolanan dhewe tanpa kulawarga."], "correct": ["Rekreasi bebarengan.", "Mangan bebarengan.", "Ngentekake wektu karo kulawarga."], "subject": "Maca Wacan Crita Pengalaman", "text": "Tumindak apa wae sing nuduhake rasa tresna lan kebersamaan kulawarga?", "img": null}, {"no": 19, "type": "multi", "blocks": [{"t": "wacana", "label": "Wacan kanggo soal nomer 16–20", "title": "Pengalaman Rekreasi menyang Kaliurang", "paras": ["Nalika dina Minggu, aku lan kulawargaku lunga rekreasi menyang Kaliurang. Aku mangkat saka omah jam enem esuk numpak mobil. Ing dalan, aku weruh pemandangan gunung lan wit-witan sing ijo royo-royo. Hawane adhem lan seger.", "Sawise tekan Kaliurang, aku lan adhikku dolanan ing taman. Bapakku njupuk foto, dene ibuku nyiapake panganan. Sawise dolanan, aku lan kulawarga mangan bebarengan. Sadurunge mulih, aku tuku oleh-oleh kanggo kanca-kancaku.", "Aku seneng banget amarga bisa ngentekake wektu bebarengan karo kulawarga. Saka pengalaman kasebut, aku ngerti yen wektu bebarengan karo kulawarga iku penting banget."]}, {"t": "p", "v": "Piwulang apa sing bisa dijupuk saka crita kasebut?"}], "options": ["Kulawarga kudu dijaga kerukunane.", "Wektu bebarengan karo kulawarga iku penting.", "Kudu seneng ngentekake wektu karo kulawarga.", "Dolan luwih penting tinimbang sinau."], "correct": ["Kulawarga kudu dijaga kerukunane.", "Wektu bebarengan karo kulawarga iku penting.", "Kudu seneng ngentekake wektu karo kulawarga."], "subject": "Maca Wacan Crita Pengalaman", "text": "Piwulang apa sing bisa dijupuk saka crita kasebut?", "img": null}, {"no": 20, "type": "multi", "blocks": [{"t": "wacana", "label": "Wacan kanggo soal nomer 16–20", "title": "Pengalaman Rekreasi menyang Kaliurang", "paras": ["Nalika dina Minggu, aku lan kulawargaku lunga rekreasi menyang Kaliurang. Aku mangkat saka omah jam enem esuk numpak mobil. Ing dalan, aku weruh pemandangan gunung lan wit-witan sing ijo royo-royo. Hawane adhem lan seger.", "Sawise tekan Kaliurang, aku lan adhikku dolanan ing taman. Bapakku njupuk foto, dene ibuku nyiapake panganan. Sawise dolanan, aku lan kulawarga mangan bebarengan. Sadurunge mulih, aku tuku oleh-oleh kanggo kanca-kancaku.", "Aku seneng banget amarga bisa ngentekake wektu bebarengan karo kulawarga. Saka pengalaman kasebut, aku ngerti yen wektu bebarengan karo kulawarga iku penting banget."]}, {"t": "p", "v": "Ukara endi sing kalebu informasi adhedhasar wacan?"}], "options": ["Bapak njupuk foto.", "Ibu nyiapake panganan.", "Penulis tuku oleh-oleh kanggo guru.", "Penulis dolanan karo adhine."], "correct": ["Bapak njupuk foto.", "Ibu nyiapake panganan.", "Penulis dolanan karo adhine."], "subject": "Maca Wacan Crita Pengalaman", "text": "Ukara endi sing kalebu informasi adhedhasar wacan?", "img": null}, {"no": 21, "type": "tf", "blocks": [{"t": "p", "v": "Petunjuk: Wacanen teks ing ngisor iki! Pilih ing kolom Bener utawa Salah adhedhasar isi wacan!"}, {"t": "wacana", "label": "Wacan kanggo soal nomer 21–25", "title": "Pengalaman Melu Lomba Maca Geguritan", "paras": ["Dina Setu kepungkur, sekolahku nganakake lomba maca geguritan kanggo mengeti dina basa. Aku melu lomba kasebut amarga seneng maca geguritan. Sadurunge lomba diwiwiti, aku latihan kanthi sregep karo guruku.", "Nalika jenengku disebut, aku maju menyang panggung kanthi rasa grogi. Nanging, aku nyoba tetep percaya diri lan maca geguritan kanthi swara cetha. Sawise kabeh peserta tampil, juri ngumumake asil lomba. Aku entuk juara loro.", "Aku seneng banget lan matur nuwun marang guru sing wis mbimbing aku. Saka pengalaman kasebut, aku sinau yen supaya bisa sukses kudu gelem latihan, sregep, lan ora gampang nyerah."]}, {"t": "p", "v": "Tentukan bener utawa salah pratelan ing ngisor iki!"}, {"t": "stmt", "v": "Lomba maca geguritan dianakake dina Setu."}], "options": ["Benar", "Salah"], "correct": "Benar", "subject": "Maca Wacan Crita Pengalaman", "text": "Petunjuk: Wacanen teks ing ngisor iki! Pilih ing kolom Bener utawa Salah adhedhasar isi wacan! Tentukan bener utawa salah pratelan ing ngisor iki! Lomba maca geguritan dianakake dina Setu.", "img": null}, {"no": 22, "type": "tf", "blocks": [{"t": "p", "v": "Petunjuk: Wacanen teks ing ngisor iki! Pilih ing kolom Bener utawa Salah adhedhasar isi wacan!"}, {"t": "wacana", "label": "Wacan kanggo soal nomer 21–25", "title": "Pengalaman Melu Lomba Maca Geguritan", "paras": ["Dina Setu kepungkur, sekolahku nganakake lomba maca geguritan kanggo mengeti dina basa. Aku melu lomba kasebut amarga seneng maca geguritan. Sadurunge lomba diwiwiti, aku latihan kanthi sregep karo guruku.", "Nalika jenengku disebut, aku maju menyang panggung kanthi rasa grogi. Nanging, aku nyoba tetep percaya diri lan maca geguritan kanthi swara cetha. Sawise kabeh peserta tampil, juri ngumumake asil lomba. Aku entuk juara loro.", "Aku seneng banget lan matur nuwun marang guru sing wis mbimbing aku. Saka pengalaman kasebut, aku sinau yen supaya bisa sukses kudu gelem latihan, sregep, lan ora gampang nyerah."]}, {"t": "p", "v": "Tentukan bener utawa salah pratelan ing ngisor iki!"}, {"t": "stmt", "v": "Penulis melu lomba amarga dipaksa dening guru."}], "options": ["Benar", "Salah"], "correct": "Salah", "subject": "Maca Wacan Crita Pengalaman", "text": "Petunjuk: Wacanen teks ing ngisor iki! Pilih ing kolom Bener utawa Salah adhedhasar isi wacan! Tentukan bener utawa salah pratelan ing ngisor iki! Penulis melu lomba amarga dipaksa dening guru.", "img": null}, {"no": 23, "type": "tf", "blocks": [{"t": "p", "v": "Petunjuk: Wacanen teks ing ngisor iki! Pilih ing kolom Bener utawa Salah adhedhasar isi wacan!"}, {"t": "wacana", "label": "Wacan kanggo soal nomer 21–25", "title": "Pengalaman Melu Lomba Maca Geguritan", "paras": ["Dina Setu kepungkur, sekolahku nganakake lomba maca geguritan kanggo mengeti dina basa. Aku melu lomba kasebut amarga seneng maca geguritan. Sadurunge lomba diwiwiti, aku latihan kanthi sregep karo guruku.", "Nalika jenengku disebut, aku maju menyang panggung kanthi rasa grogi. Nanging, aku nyoba tetep percaya diri lan maca geguritan kanthi swara cetha. Sawise kabeh peserta tampil, juri ngumumake asil lomba. Aku entuk juara loro.", "Aku seneng banget lan matur nuwun marang guru sing wis mbimbing aku. Saka pengalaman kasebut, aku sinau yen supaya bisa sukses kudu gelem latihan, sregep, lan ora gampang nyerah."]}, {"t": "p", "v": "Tentukan bener utawa salah pratelan ing ngisor iki!"}, {"t": "stmt", "v": "Penulis rumangsa grogi nalika maju menyang panggung."}], "options": ["Benar", "Salah"], "correct": "Benar", "subject": "Maca Wacan Crita Pengalaman", "text": "Petunjuk: Wacanen teks ing ngisor iki! Pilih ing kolom Bener utawa Salah adhedhasar isi wacan! Tentukan bener utawa salah pratelan ing ngisor iki! Penulis rumangsa grogi nalika maju menyang panggung.", "img": null}, {"no": 24, "type": "tf", "blocks": [{"t": "p", "v": "Petunjuk: Wacanen teks ing ngisor iki! Pilih ing kolom Bener utawa Salah adhedhasar isi wacan!"}, {"t": "wacana", "label": "Wacan kanggo soal nomer 21–25", "title": "Pengalaman Melu Lomba Maca Geguritan", "paras": ["Dina Setu kepungkur, sekolahku nganakake lomba maca geguritan kanggo mengeti dina basa. Aku melu lomba kasebut amarga seneng maca geguritan. Sadurunge lomba diwiwiti, aku latihan kanthi sregep karo guruku.", "Nalika jenengku disebut, aku maju menyang panggung kanthi rasa grogi. Nanging, aku nyoba tetep percaya diri lan maca geguritan kanthi swara cetha. Sawise kabeh peserta tampil, juri ngumumake asil lomba. Aku entuk juara loro.", "Aku seneng banget lan matur nuwun marang guru sing wis mbimbing aku. Saka pengalaman kasebut, aku sinau yen supaya bisa sukses kudu gelem latihan, sregep, lan ora gampang nyerah."]}, {"t": "p", "v": "Tentukan bener utawa salah pratelan ing ngisor iki!"}, {"t": "stmt", "v": "Penulis entuk juara siji ing lomba maca geguritan."}], "options": ["Benar", "Salah"], "correct": "Salah", "subject": "Maca Wacan Crita Pengalaman", "text": "Petunjuk: Wacanen teks ing ngisor iki! Pilih ing kolom Bener utawa Salah adhedhasar isi wacan! Tentukan bener utawa salah pratelan ing ngisor iki! Penulis entuk juara siji ing lomba maca geguritan.", "img": null}, {"no": 25, "type": "tf", "blocks": [{"t": "p", "v": "Petunjuk: Wacanen teks ing ngisor iki! Pilih ing kolom Bener utawa Salah adhedhasar isi wacan!"}, {"t": "wacana", "label": "Wacan kanggo soal nomer 21–25", "title": "Pengalaman Melu Lomba Maca Geguritan", "paras": ["Dina Setu kepungkur, sekolahku nganakake lomba maca geguritan kanggo mengeti dina basa. Aku melu lomba kasebut amarga seneng maca geguritan. Sadurunge lomba diwiwiti, aku latihan kanthi sregep karo guruku.", "Nalika jenengku disebut, aku maju menyang panggung kanthi rasa grogi. Nanging, aku nyoba tetep percaya diri lan maca geguritan kanthi swara cetha. Sawise kabeh peserta tampil, juri ngumumake asil lomba. Aku entuk juara loro.", "Aku seneng banget lan matur nuwun marang guru sing wis mbimbing aku. Saka pengalaman kasebut, aku sinau yen supaya bisa sukses kudu gelem latihan, sregep, lan ora gampang nyerah."]}, {"t": "p", "v": "Tentukan bener utawa salah pratelan ing ngisor iki!"}, {"t": "stmt", "v": "Supaya sukses, kudu sregep latihan lan ora gampang nyerah."}], "options": ["Benar", "Salah"], "correct": "Benar", "subject": "Maca Wacan Crita Pengalaman", "text": "Petunjuk: Wacanen teks ing ngisor iki! Pilih ing kolom Bener utawa Salah adhedhasar isi wacan! Tentukan bener utawa salah pratelan ing ngisor iki! Supaya sukses, kudu sregep latihan lan ora gampang nyerah.", "img": null}, {"no": 26, "type": "pg", "blocks": [{"t": "p", "v": "Tembung pangiket yaiku tembung sing digunakake kanggo .…"}], "options": ["Nyebut jeneng wong", "Ngubungake tembung, frasa, utawa ukara", "Nerangake papan", "Nyebutake tumindak"], "correct": "Ngubungake tembung, frasa, utawa ukara", "subject": "Tembung Pangiket", "text": "Tembung pangiket yaiku tembung sing digunakake kanggo .…", "img": null}, {"no": 27, "type": "pg", "blocks": [{"t": "p", "v": "Gatekna ukara ing ngisor iki!"}, {"t": "box", "v": "Aku seneng banget bisa oleh kalodhangan kanggo melu kegiyatan pramuka ing kwarcab………. kesel nanging atiku bungah………… aku bisa oleh pengalaman kang mumpangati."}, {"t": "p", "v": "Tembung pangiket kang trep kanggo ngganepi ukara ing dhuwur kasebut yaiku….."}], "options": ["Senajan, supaya", "Nanging, amarga", "senajan, amarga", "amarga, menawa"], "correct": "senajan, amarga", "subject": "Tembung Pangiket", "text": "Gatekna ukara ing ngisor iki! Aku seneng banget bisa oleh kalodhangan kanggo melu kegiyatan pramuka ing kwarcab………. kesel nanging atiku bungah………… aku bisa oleh pengalaman kang mumpangati. Tembung pangiket kang trep kanggo ngganepi ukara ing dhuwur kasebut yaiku…..", "img": null}, {"no": 28, "type": "pg", "blocks": [{"t": "p", "v": "Gatekna ukara ing ngisor iki!"}, {"t": "box", "v": "Aku kudu …….. sinau supaya besuk bijiku ….. saengga bisa gawe……. atine wong tuwa sakloron."}, {"t": "p", "v": "Tembung kaanan kang trep kanggo ngganepi ukara ing dhuwur kasebut yaiku…."}], "options": ["Seneng, akeh, beja", "Sregep, apik, bungah", "Pinter, marem, nrima", "Mempeng, cukup, resik"], "correct": "Sregep, apik, bungah", "subject": "Tembung Pangiket", "text": "Gatekna ukara ing ngisor iki! Aku kudu …….. sinau supaya besuk bijiku ….. saengga bisa gawe……. atine wong tuwa sakloron. Tembung kaanan kang trep kanggo ngganepi ukara ing dhuwur kasebut yaiku….", "img": null}, {"no": 29, "type": "pg", "blocks": [{"t": "box", "v": "Dino ora mlebu sekolah……. lara."}, {"t": "p", "v": "Tembung pangiket kang kanggo ngganepi ukara ing dhuwur kasebut yaiku…."}], "options": ["Lan", "Karo", "Tuwin", "Jalaran"], "correct": "Jalaran", "subject": "Tembung Pangiket", "text": "Dino ora mlebu sekolah……. lara. Tembung pangiket kang kanggo ngganepi ukara ing dhuwur kasebut yaiku….", "img": null}, {"no": 30, "type": "pg", "blocks": [{"t": "box", "v": "Ibu ngendika………benjang enjang badhe tindak Solo."}, {"t": "p", "v": "Tembung pangiket kang kanggo ngganepi ukara ing dhuwur kasebut yaiku…."}], "options": ["Jalaran", "Amargi", "Kaliyan", "Menawi"], "correct": "Menawi", "subject": "Tembung Pangiket", "text": "Ibu ngendika………benjang enjang badhe tindak Solo. Tembung pangiket kang kanggo ngganepi ukara ing dhuwur kasebut yaiku….", "img": null}, {"no": 31, "type": "pg", "blocks": [{"t": "p", "v": "Pranyatan kang nggambarake papan kedadeyan crita pengalaman yaiku….."}], "options": ["Jam enem esuk aku wis tangi", "Wayahe wulangan basa Jawa", "Amarga krasa ngelak aku tuku es degan dhisik", "Tekan ing prapatan Klodran, aku mandheg"], "correct": "Tekan ing prapatan Klodran, aku mandheg", "subject": "Crita Pengalaman", "text": "Pranyatan kang nggambarake papan kedadeyan crita pengalaman yaiku…..", "img": null}, {"no": 32, "type": "pg", "blocks": [{"t": "box", "v": "Budhe mundhut tigan…….. gendhis sekilo."}, {"t": "p", "v": "Tembung pangiket kang kanggo ngganepi ukara ing dhuwur kasebut yaiku…."}], "options": ["Karo", "Ugi", "Dene", "Kaliyan"], "correct": "Kaliyan", "subject": "Tembung Pangiket", "text": "Budhe mundhut tigan…….. gendhis sekilo. Tembung pangiket kang kanggo ngganepi ukara ing dhuwur kasebut yaiku….", "img": null}, {"no": 33, "type": "pg", "blocks": [{"t": "box", "v": "Aku ora dolan ... udan deres."}, {"t": "p", "v": "Tembung pangiket kang kanggo ngganepi ukara ing dhuwur kasebut yaiku…."}], "options": ["Utawa", "Amarga", "Lan", "Nanging"], "correct": "Amarga", "subject": "Tembung Pangiket", "text": "Aku ora dolan ... udan deres. Tembung pangiket kang kanggo ngganepi ukara ing dhuwur kasebut yaiku….", "img": null}, {"no": 34, "type": "pg", "blocks": [{"t": "p", "v": "Ing ngisor iki sing kalebu tembung pangiket yaiku .…"}], "options": ["Mangan", "Mlaku", "Lan", "Turu"], "correct": "Lan", "subject": "Tembung Pangiket", "text": "Ing ngisor iki sing kalebu tembung pangiket yaiku .…", "img": null}, {"no": 35, "type": "pg", "blocks": [{"t": "box", "v": "Budi ora mlebu sekolah ... lagi lara."}], "options": ["Amarga", "Nanging", "Utawa", "Lan"], "correct": "Amarga", "subject": "Tembung Pangiket", "text": "Budi ora mlebu sekolah ... lagi lara.", "img": null}, {"no": 36, "type": "pg", "blocks": [{"t": "p", "v": "Urutan aksara Jawa sing bener yaiku .…"}], "options": ["Ha, na, ca, ra, ka", "Na, ha, ra, ca, ka", "Ca, ra, ha, na, ka", "Ka, ra, ca, na, ha"], "correct": "Ha, na, ca, ra, ka", "subject": "Aksara Jawa", "text": "Urutan aksara Jawa sing bener yaiku .…", "img": null}, {"no": 37, "type": "pg", "blocks": [{"t": "p", "v": "Gatekna ukara aksara jawa ing ngisor iki!"}, {"t": "img", "src": "B.Jawa_7_37.png"}, {"t": "p", "v": "Tulisan jawa kasebut menawa diwaca unine….."}], "options": ["Roti bola rasane enak", "Roti bolu rasane enak", "Rohti bolu rasane enek", "Rohti bolu rasane enek​"], "correct": "Roti bolu rasane enak", "subject": "Aksara Jawa", "text": "Gatekna ukara aksara jawa ing ngisor iki! Tulisan jawa kasebut menawa diwaca unine…..", "img": null}, {"no": 38, "type": "pg", "blocks": [{"t": "p", "v": "Tulisan jawa kasebut menawa diwaca unine….."}, {"t": "img", "src": "B.Jawa_7_38.png"}], "options": ["Kata mata", "Mata kata", "Kaca mata", "Kaca kaca"], "correct": "Kaca mata", "subject": "Aksara Jawa", "text": "Tulisan jawa kasebut menawa diwaca unine…..", "img": null}, {"no": 39, "type": "pg", "blocks": [{"t": "p", "v": "Gatekna ukara aksara jawa ing ngisor iki!"}, {"t": "img", "src": "B.Jawa_7_39.png"}], "options": ["Ani Kadarwati seneng nembang", "Kanida Prihantini seneng nembang Macapat Gambuh", "Nanik priyanti wasis banget nembang Gambuh", "Ganik priyanti pinter banget nembanake nembang Gambuh."], "correct": "Nanik priyanti wasis banget nembang Gambuh", "subject": "Aksara Jawa", "text": "Gatekna ukara aksara jawa ing ngisor iki!", "img": null}, {"no": 40, "type": "pg", "blocks": [{"t": "p", "v": "Tembung \"Ora\" yen ditulis nganggo aksara Jawa nggunakake sandhangan swara…"}], "options": ["Wulu lan suku", "Taling lan taling tarung", "Pepet lan layar", "Suku lan cecak"], "correct": "Taling lan taling tarung", "subject": "Aksara Jawa", "text": "Tembung \"Ora\" yen ditulis nganggo aksara Jawa nggunakake sandhangan swara…", "img": null}, {"no": 41, "type": "pg", "blocks": [{"t": "p", "v": "Cacahe aksara legena (carakan) utawa aksara Jawa ana..."}], "options": ["15", "18", "20", "25"], "correct": "20", "subject": "Aksara Jawa", "text": "Cacahe aksara legena (carakan) utawa aksara Jawa ana...", "img": null}, {"no": 42, "type": "pg", "blocks": [{"t": "p", "v": "Sandhangan wyanjana sing nyakup seselan -ra-, -la-, lan -wa- yaiku..."}], "options": ["Cakra, keret, lan pengkal", "Wulu, suku, lan pepet", "Layar, cecak, lan wigyan", "Taling lan taling tarung"], "correct": "Cakra, keret, lan pengkal", "subject": "Aksara Jawa", "text": "Sandhangan wyanjana sing nyakup seselan -ra-, -la-, lan -wa- yaiku...", "img": null}, {"no": 43, "type": "pg", "blocks": [{"t": "p", "v": "Sandhangan panyigeg wanda sing digunakake kanggo mateni utawa ngetokake unine huruf -ng ing pungkasan wanda yaiku..."}], "options": ["Layar", "Cecak", "Wigyan", "Pangkon"], "correct": "Cecak", "subject": "Aksara Jawa", "text": "Sandhangan panyigeg wanda sing digunakake kanggo mateni utawa ngetokake unine huruf -ng ing pungkasan wanda yaiku...", "img": null}, {"no": 44, "type": "pg", "blocks": [{"t": "p", "v": "Sandhangan “pepet” digunakake kanggo ngetokake unine swara..."}], "options": ["e (kaya ing tembung \"sega\")", "e (kaya ing tembung \"lele\")", "o", "u"], "correct": "e (kaya ing tembung \"sega\")", "subject": "Aksara Jawa", "text": "Sandhangan “pepet” digunakake kanggo ngetokake unine swara...", "img": null}, {"no": 45, "type": "pg", "blocks": [{"t": "p", "v": "Aksara Jawa cacahe ana 20 kang asring diarani…"}], "options": ["Carakan", "Wanda swara", "Aksara rekan", "Aksara murda"], "correct": "Carakan", "subject": "Aksara Jawa", "text": "Aksara Jawa cacahe ana 20 kang asring diarani…", "img": null}, {"no": 46, "type": "pg", "blocks": [{"t": "p", "v": "Sandhangan suku digunakake kanggo menehi swara .…"}], "options": ["i", "u", "e", "o"], "correct": "u", "subject": "Aksara Jawa", "text": "Sandhangan suku digunakake kanggo menehi swara .…", "img": null}, {"no": 47, "type": "pg", "blocks": [{"t": "p", "v": "Apa gunane sinau aksara Jawa?"}], "options": ["Supaya bisa dolanan", "Supaya bisa maca lan nulis aksara Jawa", "Supaya bisa turu", "Supaya ora sekolah"], "correct": "Supaya bisa maca lan nulis aksara Jawa", "subject": "Aksara Jawa", "text": "Apa gunane sinau aksara Jawa?", "img": null}, {"no": 48, "type": "pg", "blocks": [{"t": "p", "v": "Sandhangan taling nduweni swara .…"}], "options": ["é", "i", "u", "a"], "correct": "é", "subject": "Aksara Jawa", "text": "Sandhangan taling nduweni swara .…", "img": null}, {"no": 49, "type": "pg", "blocks": [{"t": "p", "v": "Tandha pangkon ing aksara Jawa gunane kanggo .…"}], "options": ["Nambah swara i", "Mateni swara aksara", "Nambah swara u", "Nambah swara o"], "correct": "Mateni swara aksara", "subject": "Aksara Jawa", "text": "Tandha pangkon ing aksara Jawa gunane kanggo .…", "img": null}, {"no": 50, "type": "pg", "blocks": [{"t": "p", "v": "Pasangan ing aksara Jawa gunane kanggo .…"}], "options": ["Nambah swara vokal", "Nyambungake ukara", "Mateni swara aksara sadurunge lan nyambungake aksara sabanjure", "Nulis angka"], "correct": "Mateni swara aksara sadurunge lan nyambungake aksara sabanjure", "subject": "Aksara Jawa", "text": "Pasangan ing aksara Jawa gunane kanggo .…", "img": null}]</script>
+<script src="../../assets/js/data-siswa.js"></script>
+<script>
+(function(){
+"use strict";
+
+/* ================= CONFIG ================= */
+const SUBJECT_ORDER = ["Crita Pengalaman", "Maca Wacan Crita Pengalaman", "Tembung Pangiket", "Aksara Jawa"];
+const DURATION_SEC = 90*60;
+const MIN_SUBMIT_SEC = 40*60;   // batas minimal sebelum jawaban boleh dikirim (40 menit)
+const MAPEL = "Bahasa Jawa";
+const ASESMEN = "ASAS";
+const KELAS_TINGKAT = "VII";
+const MATERI = "Crita Pengalaman, Maca Wacan Crita Pengalaman, Tembung Pangiket, Aksara Jawa";
+const JUDUL = "ASAS BAHASA JAWA KELAS 7";
+const VALID_TOKEN = "BJW7AYN";
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyhHqCbCDAeDcNX75nlVASekjzw_YcTcVXMPBcpSn9F1ErD6dEMBNRYQgfD79aWUmlj/exec";
+
+const RAW_QUESTIONS = JSON.parse(document.getElementById('questions-data').textContent);
+document.getElementById('infoJumlah').textContent = RAW_QUESTIONS.length + " Soal";
+const STUDENTS = (function(){
+  const o = {};
+  if(typeof DATA_SISWA !== 'undefined'){ Object.keys(DATA_SISWA).filter(k=>/^VII\b/.test(k)).forEach(k=>{ o[k] = DATA_SISWA[k]; }); }
+  return o;
+})();
+
+/* ================= STATE ================= */
+let examQuestions = [];
+let answers = {};
+let current = 0;
+let violCount = 0;
+let timeLeft = DURATION_SEC;
+let timerHandle = null;
+let studentName = "", studentClass = "";
+let examStarted = false;
+let examFinished = false;
+
+/* ================= UTIL ================= */
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; }
+  return a;
+}
+function fmtTime(s){ const m=Math.floor(s/60), sec=s%60; return String(m).padStart(2,'0')+":"+String(sec).padStart(2,'0'); }
+function escapeHtml(str){ return String(str).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function renderText(t){ return escapeHtml(t).replace(/\n/g,'<br>'); }
+function imgList(img){ if(!img) return []; return Array.isArray(img) ? img : [img]; }
+function imgSrc(name){ return '../../assets/img/' + encodeURI(name); }
+
+/* ================= LIGHTBOX (tap-to-zoom for question images) ================= */
+document.getElementById('lightboxClose').addEventListener('click',()=>{
+  document.getElementById('lightbox').classList.remove('open');
+});
+document.getElementById('lightbox').addEventListener('click',(e)=>{
+  if(e.target.id==='lightbox') document.getElementById('lightbox').classList.remove('open');
+});
+
+/* ================= TABS (start screen) ================= */
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-'+btn.dataset.tab).classList.add('active');
+  });
+});
+
+/* ================= STUDENT DROPDOWNS ================= */
+(function populateClassDropdown(){
+  const selKelas = document.getElementById('inputKelas');
+  Object.keys(STUDENTS).forEach(kelas=>{
+    const opt = document.createElement('option');
+    opt.value = kelas; opt.textContent = kelas;
+    selKelas.appendChild(opt);
+  });
+
+  selKelas.addEventListener('change',()=>{
+    const selNama = document.getElementById('inputNama');
+    const kelas = selKelas.value;
+    selNama.innerHTML = '';
+    if(!kelas){
+      const opt = document.createElement('option'); opt.value=''; opt.textContent='— Pilih kelas terlebih dahulu —';
+      selNama.appendChild(opt); selNama.disabled = true; return;
+    }
+    const opt0 = document.createElement('option'); opt0.value=''; opt0.textContent='— Pilih Nama —';
+    selNama.appendChild(opt0);
+    (STUDENTS[kelas]||[]).forEach(nm=>{
+      const opt = document.createElement('option'); opt.value = nm; opt.textContent = nm;
+      selNama.appendChild(opt);
+    });
+    selNama.disabled = false;
+  });
+
+  /* Prefill dari menu Kelas (kelas-7.html): ?kelas=IX%20A&nama=NAMA%20SISWA */
+  const params = new URLSearchParams(window.location.search);
+  const pKelas = params.get('kelas');
+  const pNama = params.get('nama');
+  if(pKelas && STUDENTS[pKelas]){
+    selKelas.value = pKelas;
+    selKelas.dispatchEvent(new Event('change'));
+    const norm = s => String(s||'').replace(/\s+/g,' ').trim().toUpperCase();
+    const match = pNama ? STUDENTS[pKelas].find(n=>norm(n)===norm(pNama)) : null;
+    if(match){
+      document.getElementById('inputNama').value = match;
+      document.getElementById('idNama').textContent = match;
+      document.getElementById('idKelas').textContent = pKelas;
+      document.getElementById('idBox').classList.remove('hidden');
+      document.getElementById('pickWrap').classList.add('hidden');
+    }
+    document.querySelector('.tab-btn[data-tab="mulai"]').click();
+    document.getElementById('inputToken').focus();
+  }
+})();
+
+/* ================= BUILD EXAM (shuffle) ================= */
+function buildExam(){
+  const all = RAW_QUESTIONS.map((q,i)=>({q,i}));
+  const shuffledAll = shuffle(all);
+  examQuestions = shuffledAll.map(o=>{
+    const q = JSON.parse(JSON.stringify(o.q));
+    q._id = o.i;
+    if((q.type==='pg' || q.type==='multi') && Array.isArray(q.options)){
+      q.options = shuffle(q.options);
+    }
+    return q;
+  });
+}
+
+/* ================= NAV PANEL ================= */
+function renderNavPanel(){
+  const panel = document.getElementById('navPanel');
+  let html = '<h3>Nomor Soal (1–'+examQuestions.length+')</h3>';
+  html += '<div class="legend"><span><i class="dot" style="background:#5f8f6d"></i>Terjawab</span><span><i class="dot" style="background:#fff;border:1.5px solid #dde3ec"></i>Belum</span></div>';
+  let grid = '';
+  examQuestions.forEach((q,idx)=>{
+    const answered = isAnswered(q);
+    grid += '<button class="navbtn'+(answered?' answered':'')+(idx===current?' current':'')+'" data-idx="'+idx+'">'+(idx+1)+'</button>';
+  });
+  html += '<div class="navgrid">'+grid+'</div>';
+  html += '<button id="navSubmitBtn">✅ Kirim Jawaban</button>';
+  panel.innerHTML = html;
+  panel.querySelectorAll('.navbtn').forEach(b=>{
+    b.addEventListener('click',()=>{ current=parseInt(b.dataset.idx,10); renderQuestion(); closeMobilePanel(); });
+  });
+  document.getElementById('navSubmitBtn').addEventListener('click', confirmSubmit);
+  updateSubmitLock();
+}
+function closeMobilePanel(){ document.getElementById('navPanel').classList.remove('open'); }
+
+function isAnswered(q){
+  const v = answers[q._id];
+  if(q.type==='pg') return !!v;
+  if(q.type==='multi') return Array.isArray(v) && v.length>0;
+  if(q.type==='tf') return !!v;
+  return false;
+}
+
+/* ================= RENDER QUESTION ================= */
+function renderBlocks(q){
+  let html = '';
+  (q.blocks||[]).forEach(bk=>{
+    if(bk.t==='p') html += '<div class="qtext">'+renderText(bk.v)+'</div>';
+    else if(bk.t==='code') html += '<pre class="codebox">'+escapeHtml(bk.v)+'</pre>';
+    else if(bk.t==='steps') html += '<div class="stepsbox">'+escapeHtml(bk.v)+'</div>';
+    else if(bk.t==='box') html += '<div class="qbox">'+renderText(bk.v)+'</div>';
+    else if(bk.t==='stmt') html += '<div class="stmtbox">'+renderText(bk.v)+'</div>';
+    else if(bk.t==='wacana'){
+      html += '<div class="wacana"><div class="wlabel">'+escapeHtml(bk.label)+'</div><div class="wtitle">'+escapeHtml(bk.title)+'</div>'+
+        bk.paras.map(p=>'<p>'+escapeHtml(p)+'</p>').join('')+'</div>';
+    }
+    else if(bk.t==='img'){
+      const src = imgSrc(bk.src);
+      html += '<div class="qimg-wrap"><div class="imgbox" data-full="'+src+'"><img src="'+src+'" alt="Gambar soal" loading="eager"><span class="zoomhint">🔍 Ketuk untuk perbesar</span></div></div>';
+    }
+    else if(bk.t==='table'){
+      html += '<div class="tblwrap"><table class="datatbl"><thead><tr>'+bk.head.map(h=>'<th>'+escapeHtml(h)+'</th>').join('')+'</tr></thead><tbody>';
+      bk.rows.forEach((r,ri)=>{
+        const isTot = bk.boldLast && ri===bk.rows.length-1;
+        html += '<tr'+(isTot?' class="tot"':'')+'>'+r.map((c,ci)=>{
+          const rh = (bk.head[0]==='' && ci===0);
+          return '<td'+(rh?' class="rh"':'')+'>'+escapeHtml(c)+'</td>';
+        }).join('')+'</tr>';
+      });
+      html += '</tbody></table></div>';
+    }
+  });
+  return html;
+}
+function renderQuestion(){
+  const q = examQuestions[current];
+  const wrap = document.getElementById('qwrap');
+  let html = '';
+  html += '<div class="qnum">Soal '+(current+1)+' dari '+examQuestions.length+'</div>';
+  html += renderBlocks(q);
+  const imgs = imgList(q.img);
+  if(imgs.length){
+    html += '<div class="qimg-wrap">';
+    imgs.forEach(name=>{
+      const src = imgSrc(name);
+      html += '<div class="imgbox" data-full="'+src+'">'+
+        '<img src="'+src+'" alt="Gambar soal" loading="lazy">'+
+        '<span class="zoomhint">🔍 Ketuk untuk perbesar</span></div>';
+    });
+    html += '</div>';
+  }
+  if(q.type==='multi') html += '<div class="qtype-hint">☑ Pilihan Ganda Kompleks — pilih semua jawaban yang benar (bisa lebih dari satu)</div>';
+  if(q.type==='tf') html += '<div class="qtype-hint">☑ Benar/Salah — tentukan apakah pernyataan di atas Benar atau Salah</div>';
+
+  if(q.type==='pg') html += renderPG(q);
+  else if(q.type==='multi') html += renderMulti(q);
+  else if(q.type==='tf') html += renderTF(q);
+
+  wrap.innerHTML = html;
+  attachOptionEvents(q);
+  wrap.querySelectorAll('.imgbox').forEach(box=>{
+    box.addEventListener('click',()=>{
+      document.getElementById('lightboxImg').src = box.dataset.full;
+      document.getElementById('lightbox').classList.add('open');
+    });
+  });
+
+  document.getElementById('btnPrev').disabled = (current===0);
+  document.getElementById('btnNext').textContent = (current===examQuestions.length-1) ? 'Selesai →' : 'Selanjutnya →';
+  document.querySelectorAll('.navbtn').forEach(b=>b.classList.toggle('current', parseInt(b.dataset.idx,10)===current));
+  document.getElementById('questionArea').scrollTop = 0;
+}
+
+const LETTERS = ['A','B','C','D','E','F'];
+
+function renderPG(q){
+  const v = answers[q._id]; let html='';
+  q.options.forEach((opt,i)=>{
+    const selected = v===opt;
+    html += '<label class="option'+(selected?' selected':'')+'"><input type="radio" name="pg" value="'+i+'" '+(selected?'checked':'')+'>'+
+      '<span class="otext"><span class="olabel">'+LETTERS[i]+'.</span>'+escapeHtml(opt)+'</span></label>';
+  });
+  return html;
+}
+function renderMulti(q){
+  const v = answers[q._id] || []; let html='';
+  q.options.forEach((opt,i)=>{
+    const selected = v.includes(opt);
+    html += '<label class="option'+(selected?' selected':'')+'"><input type="checkbox" name="multi" value="'+i+'" '+(selected?'checked':'')+'>'+
+      '<span class="otext"><span class="olabel">'+LETTERS[i]+'.</span>'+escapeHtml(opt)+'</span></label>';
+  });
+  return html;
+}
+function renderTF(q){
+  const v = answers[q._id]; let html='';
+  ['Benar','Salah'].forEach((opt,i)=>{
+    const selected = v===opt;
+    html += '<label class="option'+(selected?' selected':'')+'"><input type="radio" name="tf" value="'+opt+'" '+(selected?'checked':'')+'>'+
+      '<span class="otext"><span class="olabel">'+opt+'</span></span></label>';
+  });
+  return html;
+}
+function attachOptionEvents(q){
+  if(q.type==='pg'){
+    document.querySelectorAll('input[name=pg]').forEach(inp=>{
+      inp.addEventListener('change',()=>{ answers[q._id]=q.options[parseInt(inp.value,10)]; renderQuestion(); renderNavPanel(); });
+    });
+  } else if(q.type==='multi'){
+    document.querySelectorAll('input[name=multi]').forEach(inp=>{
+      inp.addEventListener('change',()=>{
+        let cur = answers[q._id] ? answers[q._id].slice() : [];
+        const val = q.options[parseInt(inp.value,10)];
+        if(inp.checked){ if(!cur.includes(val)) cur.push(val); } else { cur = cur.filter(x=>x!==val); }
+        answers[q._id]=cur; renderQuestion(); renderNavPanel();
+      });
+    });
+  } else if(q.type==='tf'){
+    document.querySelectorAll('input[name=tf]').forEach(inp=>{
+      inp.addEventListener('change',()=>{ answers[q._id]=inp.value; renderQuestion(); renderNavPanel(); });
+    });
+  }
+}
+
+/* ================= NAVIGATION ================= */
+document.getElementById('btnPrev').addEventListener('click',()=>{ if(current>0){ current--; renderQuestion(); } });
+document.getElementById('btnNext').addEventListener('click',()=>{
+  if(current<examQuestions.length-1){ current++; renderQuestion(); } else { confirmSubmit(); }
+});
+document.getElementById('panelToggle').addEventListener('click',()=>{ document.getElementById('navPanel').classList.toggle('open'); });
+
+/* ================= TIMER (berbasis jam sistem, tetap akurat walau tab di-throttle) ================= */
+let startTs = 0, endTs = 0;
+function elapsedSec(){ return Math.floor((Date.now()-startTs)/1000); }
+function canSubmitNow(){ return elapsedSec() >= MIN_SUBMIT_SEC; }
+function updateSubmitLock(){
+  const b = document.getElementById('navSubmitBtn');
+  if(!b || !examStarted) return;
+  const rem = MIN_SUBMIT_SEC - elapsedSec();
+  if(rem > 0){ b.textContent = '🔒 Kirim dibuka dalam '+fmtTime(rem); b.classList.add('locked'); }
+  else { b.textContent = '✅ Kirim Jawaban'; b.classList.remove('locked'); }
+}
+function tick(){
+  timeLeft = Math.max(0, Math.ceil((endTs-Date.now())/1000));
+  const box = document.getElementById('timerBox');
+  box.textContent = fmtTime(timeLeft);
+  if(timeLeft<=300) box.classList.add('low');
+  updateSubmitLock();
+  if(timeLeft<=0){ clearInterval(timerHandle); finishExam(true); }
+}
+function startTimer(){
+  startTs = Date.now(); endTs = startTs + DURATION_SEC*1000;
+  tick(); timerHandle = setInterval(tick,1000);
+}
+
+/* ================= LAYAR PENUH & PENCATATAN PELANGGARAN ================= */
+const logPelanggaran = [];
+let dialogOpen = false, lastViolAt = 0, splitActive = false, blurTimer = null;
+const areaMax = {portrait:0, landscape:0};
+
+function enterFullscreen(){
+  const el = document.documentElement;
+  const req = el.requestFullscreen||el.webkitRequestFullscreen||el.msRequestFullscreen;
+  if(req){ try{ const p = req.call(el); if(p && p.catch) p.catch(()=>{}); }catch(e){} }
+}
+function isFullscreen(){ return !!(document.fullscreenElement||document.webkitFullscreenElement||document.msFullscreenElement); }
+function showWarn(title,text,onOk){
+  const ov = document.getElementById('warnOverlay');
+  document.getElementById('warnTitle').textContent = title;
+  document.getElementById('warnText').textContent = text;
+  ov.style.display='flex';
+  document.getElementById('warnBtn').onclick = ()=>{ ov.style.display='none'; if(onOk) onOk(); };
+}
+function safeAlert(msg){ dialogOpen = true; try{ alert(msg); } finally { dialogOpen = false; } }
+function safeConfirm(msg){ dialogOpen = true; try{ return confirm(msg); } finally { dialogOpen = false; } }
+
+// Jenis: "Pindah tab", "Keluar fullscreen", "Salin teks", "Screenshot", "Split screen", "Kehilangan fokus jendela"
+function catatPelanggaran(jenis){
+  if(!examStarted || examFinished) return;
+  const last = logPelanggaran[logPelanggaran.length-1];
+  if(last && last.jenis===jenis && Date.now()-new Date(last.waktu).getTime() < 1500) return; // satu kejadian, satu catatan
+  logPelanggaran.push({ jenis: jenis, waktu: new Date().toISOString() });
+  violCount = logPelanggaran.length;
+  lastViolAt = Date.now();
+  const badge = document.getElementById('violationBadge');
+  badge.style.display='inline-block';
+  document.getElementById('violCount').textContent = violCount;
+  showWarn('⚠ Pelanggaran Terdeteksi ('+violCount+')',
+    'Sistem mendeteksi: '+jenis+'. Tindakan ini tercatat dan akan dilaporkan kepada guru bersama hasil ujianmu. Tetaplah pada halaman ujian hingga selesai.',
+    ()=>{ if(!isFullscreen()) enterFullscreen(); });
+}
+function ringkasPelanggaran(){
+  const c = {}; logPelanggaran.forEach(p=>{ c[p.jenis]=(c[p.jenis]||0)+1; });
+  return Object.keys(c).map(k=>k+' ×'+c[k]).join('; ') || '-';
+}
+
+// 1) pindah tab / minimize
+document.addEventListener('visibilitychange',()=>{
+  if(document.hidden && examStarted && !examFinished) catatPelanggaran('Pindah tab');
+});
+// 2) keluar layar penuh
+function onFsChange(){ if(!isFullscreen() && examStarted && !examFinished) catatPelanggaran('Keluar fullscreen'); }
+document.addEventListener('fullscreenchange', onFsChange);
+document.addEventListener('webkitfullscreenchange', onFsChange);
+// 3) menyalin teks
+['copy','cut'].forEach(ev=>document.addEventListener(ev,e=>{
+  if(examStarted && !examFinished){ e.preventDefault(); catatPelanggaran('Salin teks'); }
+}));
+document.addEventListener('contextmenu',e=>{ if(examStarted && !examFinished) e.preventDefault(); });
+document.addEventListener('selectstart',e=>{ if(examStarted && !examFinished) e.preventDefault(); });
+document.addEventListener('dragstart',e=>{ if(examStarted && !examFinished) e.preventDefault(); });
+// 4) screenshot & pintasan terlarang
+function clearClip(){ try{ navigator.clipboard && navigator.clipboard.writeText('').catch(()=>{}); }catch(e){} }
+document.addEventListener('keydown',e=>{
+  if(!examStarted || examFinished) return;
+  const k = (e.key||'').toLowerCase();
+  if(e.key==='F12' || (e.ctrlKey&&e.shiftKey&&['i','j','c'].includes(k)) || (e.altKey&&e.key==='Tab')) e.preventDefault();
+  if((e.ctrlKey||e.metaKey) && ['p','s','u'].includes(k)) e.preventDefault();
+  if((e.ctrlKey||e.metaKey) && ['c','x','a'].includes(k)){ e.preventDefault(); if(k!=='a') catatPelanggaran('Salin teks'); }
+  if(e.key==='PrintScreen' || (e.metaKey&&e.shiftKey&&k==='s') || (e.metaKey&&e.shiftKey&&['Digit3','Digit4','Digit5'].includes(e.code))){
+    catatPelanggaran('Screenshot'); clearClip();
+  }
+});
+document.addEventListener('keyup',e=>{
+  if(!examStarted || examFinished) return;
+  if(e.key==='PrintScreen'){ catatPelanggaran('Screenshot'); clearClip(); }
+});
+// 5) split screen: ukuran jendela (piksel perangkat, tahan terhadap zoom) turun tajam dibanding ukuran terbesar
+function cekSplitScreen(){
+  if(!examStarted || examFinished) return;
+  const dpr = window.devicePixelRatio || 1;
+  const o = window.innerWidth > window.innerHeight ? 'landscape' : 'portrait';
+  const a = (window.innerWidth*dpr)*(window.innerHeight*dpr);
+  if(a > areaMax[o]) areaMax[o] = a;
+  if(areaMax[o] > 0 && a < areaMax[o]*0.8){
+    if(!splitActive){ splitActive = true; catatPelanggaran('Split screen'); }
+  } else if(a > areaMax[o]*0.9){ splitActive = false; }
+}
+let resizeT = null;
+window.addEventListener('resize',()=>{ clearTimeout(resizeT); resizeT = setTimeout(cekSplitScreen,400); });
+setInterval(cekSplitScreen,3000);
+// 6) jendela kehilangan fokus (mis. membuka aplikasi lain berdampingan)
+window.addEventListener('blur',()=>{
+  if(!examStarted || examFinished) return;
+  document.getElementById('screen-exam').classList.add('blurred');
+  clearTimeout(blurTimer);
+  blurTimer = setTimeout(()=>{
+    if(dialogOpen || examFinished || document.hidden) return;
+    if(!document.hasFocus() && Date.now()-lastViolAt > 4000) catatPelanggaran('Kehilangan fokus jendela');
+  },1500);
+});
+window.addEventListener('focus',()=>{
+  clearTimeout(blurTimer);
+  document.getElementById('screen-exam').classList.remove('blurred');
+});
+window.addEventListener('beforeunload',(e)=>{ if(examStarted && !examFinished){ e.preventDefault(); e.returnValue=''; } });
+
+/* ================= START EXAM ================= */
+document.getElementById('btnStart').addEventListener('click',()=>{
+  const token = document.getElementById('inputToken').value.trim();
+  const nama = document.getElementById('inputNama').value.trim();
+  const kelas = document.getElementById('inputKelas').value.trim();
+  const err = document.getElementById('startErr');
+  if(!token){ err.textContent='Token ujian wajib diisi.'; return; }
+  if(token !== VALID_TOKEN){ err.textContent='Token salah. Tanyakan token yang benar kepada gurumu.'; return; }
+  if(!kelas || !nama){ err.textContent='Nama dan kelas belum terbaca. Buka ujian dari Menu Kelas 7 atau pilih nama & kelas pada kolom yang tersedia.'; return; }
+  err.textContent='';
+  studentName = nama; studentClass = kelas;
+  buildExam();
+  answers = {}; current=0; logPelanggaran.length=0; violCount=0; examStarted=true; examFinished=false;
+  areaMax.portrait = 0; areaMax.landscape = 0; splitActive = false;
+
+  document.getElementById('screen-start').style.display='none';
+  document.getElementById('screen-exam').style.display='flex';
+  document.getElementById('brandStudent').textContent = nama+' · Kelas '+kelas;
+  startTimer(); renderNavPanel(); renderQuestion(); enterFullscreen();
+  setTimeout(cekSplitScreen, 1800);
+});
+
+/* ================= SUBMIT / SCORING ================= */
+function confirmSubmit(){
+  if(!canSubmitNow()){
+    safeAlert('Jawaban baru dapat dikirim setelah 40 menit pengerjaan. Sisa waktu tunggu: '+fmtTime(MIN_SUBMIT_SEC-elapsedSec())+'. Silakan periksa kembali jawabanmu.');
+    return;
+  }
+  const unansweredIdx = examQuestions.findIndex(q=>!isAnswered(q));
+  if(unansweredIdx !== -1){
+    const unansweredCount = examQuestions.filter(q=>!isAnswered(q)).length;
+    safeAlert('Masih ada '+unansweredCount+' soal yang belum dijawab. Silakan lengkapi semua soal terlebih dahulu sebelum mengirim jawaban. Kamu akan diarahkan ke soal pertama yang belum dijawab.');
+    current = unansweredIdx;
+    renderQuestion(); renderNavPanel(); closeMobilePanel();
+    return;
+  }
+  if(safeConfirm('Semua soal telah dijawab. Kirim jawaban sekarang? Jawaban tidak dapat diubah setelah dikirim.')) finishExam(false);
+}
+/* ---- Penilaian PARSIAL ----
+   Bobot tiap soal = 100 / jumlah soal (50 soal -> 2 poin). Nilai akhir langsung skala 0-100.
+   Soal PG & Benar/Salah (1 pernyataan per nomor): benar = 1, salah = 0.
+   Soal PG Kompleks: dinilai per-opsi (4 opsi), bukan semua-atau-tidak.
+   scoreFrac = (jumlah opsi/pernyataan yang cocok dengan kunci) / (jumlah opsi/pernyataan).
+   Contoh: dari 4 opsi, siswa benar menandai 3 -> scoreFrac = 0.75 (bukan 0). */
+function scoreFrac(q){
+  const v = answers[q._id];
+  if(q.type==='pg'){
+    return (v===q.correct) ? 1 : 0;
+  }
+  if(q.type==='multi'){
+    const n = q.options.length;
+    let matches = 0;
+    for(let i=0;i<n;i++){
+      const opt = q.options[i];
+      const correctFlag = q.correct.includes(opt);
+      const studentFlag = Array.isArray(v) && v.includes(opt);
+      if(correctFlag === studentFlag) matches++;
+    }
+    return n ? matches/n : 0;
+  }
+  if(q.type==='tf'){
+    return (v===q.correct) ? 1 : 0;
+  }
+  return 0;
+}
+// isCorrect: dipakai untuk pelaporan "benar/salah" per-soal (mis. sheet Excel) — soal dianggap
+// "benar penuh" hanya jika scoreFrac mencapai 1 (semua opsi/pernyataan tepat).
+function isCorrect(q){ return scoreFrac(q) >= 0.999; }
+
+function finishExam(autoSubmit){
+  examFinished = true;
+  clearInterval(timerHandle);
+  if(isFullscreen()){ (document.exitFullscreen||document.webkitExitFullscreen||function(){}).call(document); }
+  document.getElementById('screen-exam').style.display='none';
+  document.getElementById('warnOverlay').style.display='none';
+
+  const totalMaks = examQuestions.length;
+  const weight = totalMaks ? 100/totalMaks : 0;
+  const perSubject = {};
+  SUBJECT_ORDER.forEach(s=>perSubject[s]={score:0,max:0,total:0,penuh:0});
+  let totalScore = 0, fullCount = 0;
+  const perQuestion = [];
+  examQuestions.forEach(q=>{
+    if(!perSubject[q.subject]){ perSubject[q.subject]={score:0,max:0,total:0,penuh:0}; if(!SUBJECT_ORDER.includes(q.subject)) SUBJECT_ORDER.push(q.subject); }
+    const frac = scoreFrac(q);
+    const qScore = frac*weight;
+    totalScore += qScore;
+    if(frac>=0.999) fullCount++;
+    perSubject[q.subject].total++;
+    perSubject[q.subject].score += qScore;
+    perSubject[q.subject].max += weight;
+    if(frac>=0.999) perSubject[q.subject].penuh++;
+    perQuestion.push({q, frac, qScore});
+  });
+  totalScore = Math.round(totalScore*100)/100;
+  let grade='D', gradeLabel='Perlu Bimbingan';
+  if(totalScore>=90){grade='A';gradeLabel='Sangat Baik';}
+  else if(totalScore>=75){grade='B';gradeLabel='Baik';}
+  else if(totalScore>=60){grade='C';gradeLabel='Cukup';}
+
+  document.getElementById('resScore').textContent = totalScore.toFixed(2)+' / 100';
+  document.getElementById('resGrade').textContent = 'Predikat '+grade+' — '+gradeLabel+' · '+fullCount+' dari '+totalMaks+' soal terjawab sempurna (penilaian bersifat parsial per opsi)' + (autoSubmit?' · waktu habis, jawaban terkirim otomatis':'');
+  document.getElementById('rNama').textContent = studentName;
+  document.getElementById('rKelas').textContent = studentClass;
+  document.getElementById('rViol').textContent = violCount;
+
+  let tbl = '<tr><th>Materi</th><th>Skor</th><th>Maks</th></tr>';
+  const detailParts = [];
+  SUBJECT_ORDER.forEach(s=>{
+    const sc = Math.round(perSubject[s].score*100)/100, mx = Math.round(perSubject[s].max*100)/100;
+    tbl += '<tr><td>'+escapeHtml(s)+'</td><td>'+sc+'</td><td>'+mx+'</td></tr>';
+    detailParts.push(s+' '+sc+'/'+mx);
+  });
+  document.getElementById('resTable').innerHTML = tbl;
+
+  window._examResult = {
+    nama: studentName, kelas: studentClass, skor: totalScore, skorMaks: 100, pct: totalScore,
+    grade: grade+' ('+gradeLabel+')', detail: detailParts.join(' | ') + ' | Pelanggaran: '+violCount+'x',
+    perSubject: perSubject, violasi: logPelanggaran.length, jenisPelanggaran: logPelanggaran.slice(), ringkasanPelanggaran: ringkasPelanggaran(), durasiDetik: Math.min(elapsedSec(),DURATION_SEC),
+    skorPerSoal: perQuestion.map(p=>Math.round(p.qScore*100)/100)
+  };
+
+  document.getElementById('screen-result').style.display='block';
+  autoSubmitToSheet();
+}
+
+/* ================= GOOGLE APPS SCRIPT AUTO-SUBMIT (real-time to Google Sheets) ================= */
+function setSubmitStatus(state, text){
+  const el = document.getElementById('submitStatus');
+  el.className = 'submit-status '+state;
+  document.getElementById('submitStatusText').textContent = text;
+  document.getElementById('btnRetrySubmit').classList.toggle('hidden', state==='sending');
+}
+function buildAnswerDetail(){
+  return examQuestions.map((q,idx)=>{
+    const v = answers[q._id];
+    let jawaban = '(kosong)';
+    if(q.type==='pg'){ jawaban = v || '(kosong)'; }
+    else if(q.type==='multi'){ jawaban = (v&&v.length) ? v.join(' ; ') : '(kosong)'; }
+    else if(q.type==='tf'){ jawaban = v || '(kosong)'; }
+    return { no: idx+1, noAsli: q._id+1, subject: q.subject, bentuk: q.type==='pg'?'PG':(q.type==='multi'?'PGK':'B/S'), jawaban: jawaban, kunci: (q.type==='multi'? q.correct.join(' ; ') : q.correct), benar: Math.round(scoreFrac(q)*100)/100 };
+  });
+}
+function autoSubmitToSheet(){
+  if(!navigator.onLine){
+    setSubmitStatus('fail','❌ Gagal terkirim — perangkat sedang offline. Sambungkan internet lalu klik "Kirim Ulang".');
+    return;
+  }
+  if(!APPS_SCRIPT_URL || APPS_SCRIPT_URL.indexOf('PASTE_YOUR_DEPLOYMENT_ID_HERE')>-1){
+    setSubmitStatus('fail','⚠ URL Google Apps Script belum dipasang oleh guru. Gunakan "Unduh Hasil (Excel)" sebagai cadangan.');
+    return;
+  }
+  setSubmitStatus('sending','Mengirim jawaban ke guru...');
+  const r = window._examResult;
+  const payload = {
+    timestamp: new Date().toISOString(),
+    mapel: MAPEL, jenisAsesmen: ASESMEN, judul: JUDUL, materi: MATERI, tingkat: KELAS_TINGKAT,
+    nama: r.nama, kelas: r.kelas, skor: r.skor, skorMaks: r.skorMaks, persentase: r.pct,
+    grade: r.grade, pelanggaran: logPelanggaran.length, jenisPelanggaran: logPelanggaran, ringkasanPelanggaran: r.ringkasanPelanggaran, durasiDetik: r.durasiDetik, detailPerMapel: r.detail,
+    jawaban: buildAnswerDetail()
+  };
+  fetch(APPS_SCRIPT_URL, {
+    method: 'POST', mode: 'no-cors',
+    headers: {'Content-Type':'text/plain;charset=utf-8'},
+    body: JSON.stringify(payload)
+  }).then(()=>{
+    setSubmitStatus('ok','✅ Jawaban berhasil terkirim ke Google Spreadsheet guru.');
+  }).catch(()=>{
+    setSubmitStatus('fail','❌ Gagal terkirim (masalah jaringan). Klik "Kirim Ulang" untuk mencoba lagi.');
+  });
+}
+document.getElementById('btnRetrySubmit').addEventListener('click', autoSubmitToSheet);
+
+/* ================= EXCEL EXPORT (backup) ================= */
+document.getElementById('btnExcel').addEventListener('click',()=>{
+  const r = window._examResult;
+  const rows = [];
+  rows.push(['Nama','Kelas','No','Materi','Soal','Jawaban Siswa','Kunci Jawaban','Skor Soal (0-1, parsial)']);
+  function answerLabel(q){
+    if(q.type==='pg') return q.correct;
+    if(q.type==='multi') return q.correct.join(' ; ');
+    if(q.type==='tf') return q.correct;
+    return '';
+  }
+  examQuestions.forEach((q,idx)=>{
+    let jawabanSiswa='';
+    const v = answers[q._id];
+    if(q.type==='pg'){ jawabanSiswa = v || '(kosong)'; }
+    else if(q.type==='multi'){ jawabanSiswa = (v&&v.length)? v.join(' ; ') : '(kosong)'; }
+    else if(q.type==='tf'){ jawabanSiswa = v || '(kosong)'; }
+    const shortText = '[No. asli '+(q._id+1)+'] '+q.text.replace(/\s+/g,' ').slice(0,80)+'...';
+    rows.push([r.nama, r.kelas, idx+1, q.subject, shortText, jawabanSiswa, answerLabel(q), Math.round(scoreFrac(q)*100)/100]);
+  });
+  rows.push([]);
+  rows.push(['RINGKASAN']);
+  rows.push(['Nama','Kelas','Skor Akhir (0-100)','Grade','Pelanggaran','Jenis Pelanggaran']);
+  rows.push([r.nama, r.kelas, r.skor, r.grade, r.violasi, r.ringkasanPelanggaran]);
+
+  const ws = XLSX.utils.aoa_to_sheet(rows);
+  ws['!cols'] = [{wch:18},{wch:8},{wch:5},{wch:22},{wch:70},{wch:30},{wch:30},{wch:10}];
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Hasil ASAS Bahasa Jawa K9');
+  const fname = 'Hasil_ASAS_IPS_Kelas7_'+r.nama.replace(/[^a-zA-Z0-9]/g,'_')+'.xlsx';
+  XLSX.writeFile(wb, fname);
+});
+
+})();
+</script>
 </body>
 </html>
