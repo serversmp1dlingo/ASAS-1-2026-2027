@@ -2,46 +2,949 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Seni Budaya — Kelas 9 — ASAS SMP Negeri 1 Dlingo</title>
-<meta name="description" content="Soal Seni Budaya Kelas 9">
-<meta name="robots" content="noindex">
-<link rel="icon" href="../../assets/img/logo-smpn1dlingo.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../../assets/css/style.css">
-<script>document.documentElement.classList.add('js');</script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Asesmen Sumatif Akhir Semester — Seni Budaya — SMP N 1 Dlingo</title>
+<link rel="icon" type="image/png" href="../../assets/img/logo-smpn1dlingo.png">
+<!-- Data nama & rombel siswa (dipakai sebagai cadangan jika halaman dibuka tanpa parameter dari Menu Kelas 9) -->
+<script src="../../assets/js/data-siswa.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+  :root{
+    --navy:#7d2f55; --blue:#bf4476; --blue-light:#fde6ee; --green:#2e8b57;
+    --red:#b8383f; --amber:#e8a02c; --gray:#6b4a58; --bg:#fdeef4; --border:#f2cadb; --radius:10px;
+    --card:#ffffff;
+  }
+  *{box-sizing:border-box;}
+  html,body{height:100%;}
+  body{margin:0;font-family:'Segoe UI',Roboto,Arial,sans-serif;background:var(--bg);color:#2a1b22;-webkit-tap-highlight-color:transparent;}
+  /* anti-screenshot / anti-copy deterrents (best-effort) */
+  #screen-exam, #screen-exam *{
+    -webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;
+    -webkit-touch-callout:none;
+  }
+  #screen-exam img{-webkit-user-drag:none;user-drag:none;pointer-events:none;}
+  #screen-exam.blurred{filter:blur(18px);transition:filter .15s;}
+  @media print{
+    #screen-exam, #screen-start, #screen-result{display:none !important;}
+    body::before{content:"Konten ujian tidak dapat dicetak.";display:block;text-align:center;padding:40px;font-size:18px;}
+  }
+  img{max-width:100%;height:auto;border-radius:6px;border:1px solid var(--border);}
+  button{font-family:inherit;cursor:pointer;}
+  .hidden{display:none !important;}
+
+  /* ===== START / INSTRUCTIONS ===== */
+  #screen-start{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;
+    background:linear-gradient(135deg,#fff1f7,#fbd3e3);}
+  .start-card{background:var(--card);border-radius:16px;max-width:640px;width:100%;padding:34px 32px;box-shadow:0 20px 60px rgba(125,47,85,.18);}
+  .school-header{display:flex;align-items:center;gap:14px;margin-bottom:18px;}
+  .school-header img{width:56px;height:auto;border:none;border-radius:0;flex-shrink:0;}
+  .school-header .stxt{line-height:1.35;}
+  .school-header .stxt b{display:block;color:var(--navy);font-size:15px;}
+  .school-header .stxt span{color:var(--gray);font-size:12px;}
+  .start-card h1{margin:0 0 4px;font-size:21px;color:var(--navy);}
+  .start-card .sub{color:var(--gray);margin:0 0 20px;font-size:14px;}
+  .tabs{display:flex;gap:8px;margin-bottom:18px;border-bottom:1.5px solid var(--border);}
+  .tab-btn{padding:9px 16px;border:none;background:none;font-weight:700;font-size:13.5px;color:var(--gray);
+    border-bottom:3px solid transparent;margin-bottom:-2px;}
+  .tab-btn.active{color:var(--blue);border-bottom-color:var(--blue);}
+  .tab-panel{display:none;}
+  .tab-panel.active{display:block;}
+  .info-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px 18px;background:var(--blue-light);
+    border-radius:10px;padding:14px 16px;margin-bottom:18px;font-size:13px;}
+  .info-grid div b{display:block;color:var(--navy);font-size:13px;}
+  .info-grid div span{color:var(--gray);}
+  label{display:block;font-size:13px;font-weight:600;color:var(--navy);margin:14px 0 6px;}
+  input[type=text],input[type=password]{width:100%;padding:12px 14px;border:1.5px solid var(--border);
+    border-radius:8px;font-size:15px;}
+  input:focus{outline:none;border-color:var(--blue);}
+  select{width:100%;padding:12px 14px;border:1.5px solid var(--border);border-radius:8px;font-size:15px;
+    background:var(--card);color:#2a1b22;appearance:none;
+    background-image:url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236b4a58' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat:no-repeat;background-position:right 12px center;background-size:18px;}
+  select:focus{outline:none;border-color:var(--blue);}
+  select:disabled{background-color:#f8eef2;color:var(--gray);cursor:not-allowed;}
+  .instr-list{font-size:13.5px;line-height:1.8;color:#3d2a33;padding-left:20px;margin:0 0 10px;}
+  .rules{font-size:12.5px;color:var(--gray);line-height:1.6;margin:18px 0;padding:12px 14px;
+    background:#fff8ea;border:1px solid #f1e0ad;border-radius:8px;}
+  .btn-primary{width:100%;padding:14px;background:var(--blue);color:#fff;border:none;border-radius:9px;
+    font-size:16px;font-weight:700;margin-top:12px;transition:.15s;}
+  .btn-primary:hover{background:var(--navy);}
+  .btn-primary:disabled{background:#c9aab9;cursor:not-allowed;}
+  .err-msg{color:var(--red);font-size:12.5px;margin-top:6px;min-height:16px;}
+
+  /* ===== EXAM LAYOUT ===== */
+  #screen-exam{display:none;min-height:100vh;flex-direction:column;}
+  #topbar{background:var(--navy);color:#fff;padding:10px 18px;display:flex;align-items:center;
+    justify-content:space-between;gap:12px;flex-wrap:wrap;position:sticky;top:0;z-index:50;}
+  #topbar .brand{display:flex;align-items:center;gap:10px;font-size:13px;font-weight:700;}
+  #topbar .brand img{width:28px;height:auto;border:none;border-radius:0;}
+  #topbar .brand .who{font-weight:400;opacity:.85;font-size:11.5px;display:block;}
+  #timerBox{background:rgba(255,255,255,.16);padding:8px 16px;border-radius:8px;font-weight:700;
+    font-size:18px;letter-spacing:1px;min-width:110px;text-align:center;}
+  #timerBox.low{background:#c0392b;animation:pulse 1s infinite;}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.6}}
+  #violationBadge{background:var(--red);padding:5px 10px;border-radius:20px;font-size:12px;font-weight:700;display:none;}
+  #panelToggle{background:rgba(255,255,255,.18);color:#fff;border:none;padding:8px 12px;border-radius:8px;font-size:13px;}
+
+  #examBody{display:flex;flex:1;overflow:hidden;}
+  #navPanel{width:280px;flex-shrink:0;background:var(--card);border-right:1px solid var(--border);padding:16px;overflow-y:auto;}
+  #navPanel h3{font-size:11.5px;text-transform:uppercase;letter-spacing:.4px;color:var(--gray);margin:14px 0 8px;}
+  #navPanel h3:first-child{margin-top:0;}
+  .navgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;}
+  .navbtn{aspect-ratio:1;border:1.5px solid var(--border);background:var(--card);border-radius:6px;font-size:12px;
+    font-weight:700;color:var(--navy);display:flex;align-items:center;justify-content:center;}
+  .navbtn.answered{background:var(--blue);border-color:var(--blue);color:#fff;}
+  .navbtn.current{outline:3px solid var(--amber);outline-offset:1px;}
+  .legend{display:flex;gap:14px;font-size:11px;color:var(--gray);margin:14px 0 4px;flex-wrap:wrap;}
+  .legend span{display:inline-flex;align-items:center;gap:5px;}
+  .dot{width:10px;height:10px;border-radius:3px;display:inline-block;}
+  #navSubmitBtn{width:100%;margin-top:18px;padding:12px;background:var(--red);color:#fff;border:none;
+    border-radius:8px;font-weight:700;font-size:14px;}
+  #navSubmitBtn.locked{background:#a58a96;}
+  .idbox{background:var(--blue-light);border:1.5px solid var(--border);border-radius:10px;padding:12px 16px;margin-top:14px;font-size:14px;line-height:1.7;}
+  .idbox b{color:var(--navy);}
+
+  #questionArea{flex:1;overflow-y:auto;padding:26px 32px 100px;}
+  .qwrap{max-width:820px;margin:0 auto;}
+  .qnum{font-size:14px;color:var(--gray);margin-bottom:4px;}
+  .qtext{font-size:16.5px;line-height:1.7;margin-bottom:16px;}
+  .qmedia{margin:14px 0;}
+  .qimg-wrap{display:flex;flex-wrap:wrap;gap:14px;}
+  .qimg-wrap .imgbox{position:relative;cursor:zoom-in;width:100%;max-width:760px;}
+  .qimg-wrap img{width:100%;max-width:760px;display:block;background:#fff;}
+  .qimg-wrap .zoomhint{position:absolute;bottom:8px;right:8px;background:rgba(125,47,85,.8);color:#fff;
+    font-size:11px;font-weight:700;padding:4px 9px;border-radius:20px;pointer-events:none;}
+  .qimg-wrap .imgph{width:100%;max-width:760px;height:200px;border:2px dashed var(--border);border-radius:8px;
+    display:flex;align-items:center;justify-content:center;color:var(--gray);font-size:12.5px;text-align:center;
+    background:#fff8fb;padding:10px;}
+  /* tabel / kotak data di dalam soal */
+  table.qtable{width:100%;max-width:640px;border-collapse:collapse;font-size:15.5px;background:#fff;border:1.5px solid var(--navy);border-radius:6px;}
+  table.qtable th,table.qtable td{border:1px solid #c58aa5;padding:10px 12px;text-align:left;}
+  table.qtable th{background:var(--blue-light);color:var(--navy);}
+  #lightbox{position:fixed;inset:0;background:rgba(40,12,26,.94);z-index:1200;display:none;
+    align-items:flex-start;justify-content:flex-start;padding:14px;overflow:auto;}
+  #lightbox.open{display:flex;}
+  #lightbox img{margin:auto;max-width:100%;max-height:92vh;width:auto;border-radius:6px;background:#fff;box-shadow:0 10px 40px rgba(0,0,0,.5);}
+  #lightbox .lb-close{position:fixed;top:16px;right:18px;background:#fff;color:var(--navy);border:none;
+    width:42px;height:42px;border-radius:50%;font-size:18px;font-weight:700;z-index:2;}
+  #lightbox .lb-note{position:fixed;left:0;right:0;bottom:10px;text-align:center;color:#fff;font-size:12px;opacity:.8;pointer-events:none;display:none;}
+  .qtype-hint{font-size:12.5px;color:#a8660a;font-weight:700;margin-bottom:10px;}
+
+  .option{display:flex;align-items:flex-start;gap:12px;padding:14px 16px;border:1.5px solid var(--border);
+    border-radius:10px;margin:0 0 10px;background:var(--card);transition:.12s;font-weight:400;color:#2a1b22;font-size:15px;}
+  .option:hover{border-color:var(--blue);}
+  .option.selected{border-color:var(--blue);background:var(--blue-light);}
+  .option input{margin-top:3px;flex-shrink:0;width:20px;height:20px;accent-color:var(--blue);}
+  .option .otext{font-size:16px;line-height:1.5;}
+  .option .olabel{font-weight:700;color:var(--navy);margin-right:6px;}
+
+  table.matrix{width:100%;border-collapse:collapse;margin-top:8px;font-size:15px;background:#fff;}
+  table.matrix th,table.matrix td{border:1px solid var(--border);padding:8px;text-align:center;}
+  table.matrix th{background:var(--blue-light);color:var(--navy);}
+  table.matrix td.stmt{text-align:left;font-size:15.5px;line-height:1.5;padding:10px 12px;}
+  table.matrix td.rc{padding:0;width:84px;}
+  table.matrix td.rc label{display:flex;align-items:center;justify-content:center;margin:0;padding:14px 0;cursor:pointer;}
+  table.matrix td.rc.sel{background:var(--blue-light);}
+  table.matrix input{width:22px;height:22px;accent-color:var(--blue);}
+
+  #navRow{max-width:820px;margin:24px auto 0;display:flex;justify-content:space-between;gap:10px;}
+  .btn-nav{padding:11px 22px;border-radius:8px;border:1.5px solid var(--border);background:var(--card);
+    font-weight:700;color:var(--navy);font-size:14px;}
+  .btn-nav:disabled{opacity:.4;}
+  .btn-nav.primary{background:var(--blue);color:#fff;border:none;}
+
+  #warnOverlay{position:fixed;inset:0;background:rgba(70,20,45,.95);z-index:999;display:none;
+    align-items:center;justify-content:center;padding:20px;color:#fff;text-align:center;}
+  #warnOverlay .box{max-width:420px;}
+  #warnOverlay h2{color:#ffd166;font-size:22px;}
+  #warnOverlay p{font-size:14.5px;line-height:1.6;opacity:.92;}
+  #warnOverlay button{margin-top:16px;padding:12px 28px;background:#ffd166;border:none;border-radius:8px;
+    font-weight:700;font-size:14.5px;color:#432;}
+
+  /* ===== RESULT ===== */
+  #screen-result{display:none;min-height:100vh;padding:30px 16px;background:var(--bg);}
+  .result-card{max-width:720px;margin:0 auto;background:var(--card);border-radius:16px;padding:32px;box-shadow:0 10px 40px rgba(125,47,85,.12);}
+  .result-card h1{color:var(--navy);margin-top:0;font-size:22px;}
+  .score-hero{text-align:center;padding:26px;background:linear-gradient(135deg,var(--navy),var(--blue));
+    border-radius:14px;color:#fff;margin:18px 0 24px;}
+  .score-hero .num{font-size:46px;font-weight:800;}
+  .score-hero .grade{font-size:15px;opacity:.92;margin-top:4px;}
+  .breakdown{width:100%;border-collapse:collapse;font-size:14px;margin-bottom:20px;}
+  .breakdown th,.breakdown td{padding:9px 10px;border-bottom:1px solid var(--border);text-align:left;}
+  .breakdown th{color:var(--gray);font-size:12px;text-transform:uppercase;}
+  .result-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px;}
+  .result-actions button{flex:1;min-width:180px;padding:13px;border-radius:9px;font-weight:700;font-size:14px;border:none;}
+  #btnExcel{background:var(--blue);color:#fff;}
+  #btnRetrySubmit{background:var(--amber);color:#432;}
+  .submit-status{display:flex;align-items:center;gap:10px;padding:12px 16px;border-radius:9px;font-size:13.5px;
+    font-weight:600;margin-bottom:18px;}
+  .submit-status.sending{background:#fff8ea;color:#8a6d00;border:1px solid #f1e0ad;}
+  .submit-status.ok{background:#e9f9f0;color:#0f7a45;border:1px solid #b7ecd0;}
+  .submit-status.fail{background:#fdecea;color:#a4271f;border:1px solid #f3c3bd;}
+  .dotpulse{width:9px;height:9px;border-radius:50%;background:currentColor;flex-shrink:0;animation:pulse 1s infinite;}
+  .submit-status.ok .dotpulse,.submit-status.fail .dotpulse{animation:none;}
+  .note-small{font-size:12px;color:var(--gray);margin-top:14px;line-height:1.6;}
+
+  @media (max-width:820px){
+    #navPanel{position:fixed;left:-300px;top:0;bottom:0;z-index:60;transition:.2s;box-shadow:4px 0 20px rgba(0,0,0,.15);}
+    #navPanel.open{left:0;}
+    #questionArea{padding:18px 16px 90px;}
+    .qimg-wrap img,.qimg-wrap .imgph{max-width:100%;width:100%;}
+    .start-card{padding:26px 20px;}
+    .info-grid{grid-template-columns:1fr;}
+    table.matrix td.rc{width:72px;}
+    /* di HP, gambar pada pembesar dibuat lebih lebar & bisa digeser */
+    #lightbox img{max-width:none;max-height:none;width:230vw;margin:auto 0;}
+    #lightbox .lb-note{display:block;}
+  }
+</style>
 </head>
 <body>
-<div class="bg-deco" aria-hidden="true"><span class="orb o1"></span><span class="orb o2"></span><span class="orb o3"></span></div>
-<div class="page">
-<header class="kop">
-  <div class="kop-inner">
-    <a class="kembali reveal" href="../../kelas-9.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg> Kelas 9</a>
-    <div class="logo-wrap reveal"><img src="../../assets/img/logo-smpn1dlingo.png" alt="Logo SMP Negeri 1 Dlingo"></div>
-    <p class="sekolah reveal" style="--d:.08s">SMP NEGERI 1 DLINGO</p>
-    <h1 class="judul reveal" style="--d:.16s">Seni Budaya</h1>
-    <div class="ornamen reveal" style="--d:.24s"><i></i></div>
-    <div class="chips reveal" style="--d:.32s"><span class="chip">Kelas <strong>IX</strong></span><span class="chip">Tahun Pelajaran <strong>2026/2027</strong></span></div>
+
+<!-- ============ START / INSTRUCTIONS SCREEN ============ -->
+<div id="screen-start">
+  <div class="start-card">
+    <a href="../../kelas-9.html" style="display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;color:var(--gray);margin-bottom:14px;text-decoration:none;">&larr; Menu Kelas 9</a>
+    <div class="school-header">
+      <img src="../../assets/img/logo-smpn1dlingo.png" alt="Logo Sekolah">
+      <div class="stxt"><b>SMP NEGERI 1 DLINGO</b><span>Asesmen Sumatif Akhir Semester · Seni Budaya · TP 2026/2027</span></div>
+    </div>
+    <h1>📝 Asesmen Sumatif Akhir Semester — Seni Budaya</h1>
+    <p class="sub">Jenjang SMP · Kelas 9 · Semester Ganjil · Materi: Seni Musik (Musik Populer, Teknik Vokal &amp; Ansambel)</p>
+
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="petunjuk">📋 Petunjuk</button>
+      <button class="tab-btn" data-tab="mulai">🚀 Mulai Ujian</button>
+    </div>
+
+    <div class="tab-panel active" id="tab-petunjuk">
+      <div class="info-grid">
+        <div><b id="infoJumlah">50 Soal</b><span>Pilihan Ganda, PG Kompleks &amp; Benar/Salah</span></div>
+        <div><b>90 Menit</b><span>Alokasi waktu · jawaban baru bisa dikirim setelah 40 menit</span></div>
+        <div><b>3 Materi</b><span>Musik Populer, Teknik Vokal &amp; Pengembangan Melodi, Ansambel &amp; Alat Musik</span></div>
+        <div><b>Acak Soal</b><span>Urutan soal &amp; opsi diacak</span></div>
+      </div>
+      <p style="font-size:13.5px;color:#3d2a33;margin:0 0 8px;font-weight:700;">Petunjuk Pengerjaan:</p>
+      <ol class="instr-list">
+        <li>Nama dan kelasmu terisi otomatis dari Menu Kelas 9. Masukkan token ujian pada tab "Mulai Ujian" lalu mulai.</li>
+        <li>Bacalah setiap butir soal dengan cermat sebelum menjawab.</li>
+        <li>Terdapat soal Pilihan Ganda (pilih satu jawaban), Pilihan Ganda Kompleks (centang semua pernyataan yang benar), dan Benar/Salah (tentukan Benar atau Salah untuk setiap pernyataan).</li>
+        <li>Untuk soal Pilihan Ganda Kompleks dan Benar/Salah, setiap pernyataan dinilai sendiri-sendiri, sehingga jawaban yang sebagian benar tetap mendapat skor.</li>
+        <li>Ujian akan tampil dalam mode layar penuh (fullscreen) sejak dimulai.</li>
+        <li>Jangan berpindah tab/aplikasi, keluar dari layar penuh, menyalin teks, mengambil tangkapan layar, atau memakai split screen — semuanya tercatat sebagai pelanggaran.</li>
+        <li>Waktu berjalan otomatis selama 90 menit dan tidak dapat dijeda. Jawaban baru dapat dikirim setelah 40 menit pengerjaan.</li>
+        <li>Gunakan panel navigasi soal untuk melompat ke nomor soal tertentu dan memantau soal yang sudah/belum dijawab. Ketuk gambar pada soal untuk memperbesarnya.</li>
+        <li>Tekan "Kirim Jawaban" setelah selesai. Jika pengiriman gagal, gunakan tombol "Kirim Ulang" yang akan muncul otomatis.</li>
+      </ol>
+    </div>
+
+    <div class="tab-panel" id="tab-mulai">
+      <label>Token Ujian</label>
+      <input type="password" id="inputToken" placeholder="Masukkan token dari guru" autocomplete="off">
+      <div class="idbox hidden" id="idBox">👤 <b id="idNama"></b><br>🏫 Kelas <b id="idKelas"></b></div>
+      <div id="pickWrap">
+        <div class="note-small" style="margin-top:12px;color:#8a6d00;">Data nama &amp; kelas tidak terbaca dari Menu Kelas 9. Silakan buka ujian melalui menu kelas, atau pilih manual di bawah ini.</div>
+        <label>Kelas</label>
+        <select id="inputKelas"><option value="">— Pilih Kelas —</option></select>
+        <label>Nama Lengkap</label>
+        <select id="inputNama" disabled><option value="">— Pilih kelas terlebih dahulu —</option></select>
+      </div>
+      <div class="rules">
+        ⚠️ <b>Perhatian sebelum memulai:</b><br>
+        • Ujian akan tampil dalam mode <b>layar penuh (fullscreen)</b>.<br>
+        • Jangan membuka tab/aplikasi lain atau memakai <b>split screen</b> — sistem akan mencatat pelanggaran.<br>
+        • Waktu berjalan otomatis dan tidak dapat dijeda. Jawaban <b>baru dapat dikirim setelah 40 menit</b>; ujian terkirim otomatis saat waktu habis.<br>
+        • Pastikan koneksi internet stabil agar hasil dapat terkirim ke guru secara real-time.<br>
+        • Layar akan mengabur otomatis dan pelanggaran tercatat jika kamu mencoba keluar layar penuh, menyalin teks, mengambil tangkapan layar (screenshot), atau memakai split screen.
+      </div>
+      <div class="err-msg" id="startErr"></div>
+      <button class="btn-primary" id="btnStart">🚀 Mulai Ujian (Layar Penuh)</button>
+    </div>
   </div>
-</header>
-<main>
-  <div class="glass panel-segera reveal">
-    <div class="ikon-besar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg></div>
-    <span class="lencana">Segera hadir</span>
-    <h2>Soal belum tersedia</h2>
-    <p>Berkas soal <strong>Seni Budaya</strong> Kelas IX sedang disiapkan dan akan diunggah menyusul.</p>
-    <p>Berkas ini akan digantikan pada alamat berikut, sehingga tautan menu tidak perlu diubah.</p>
-    <span class="berkas">soal/kelas-9/seni-budaya.html</span><br>
-    <a class="tombol" href="../../kelas-9.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg> Kembali ke Kelas IX</a>
-  </div>
-</main>
-<footer>
-  <p><strong>SMP Negeri 1 Dlingo</strong> — Bantul, Daerah Istimewa Yogyakarta<br>
-  Portal Asesmen Sumatif Akhir Semester &middot; Tahun Pelajaran 2026/2027</p>
-</footer>
 </div>
-<script src="../../assets/js/main.js"></script>
+
+<!-- ============ EXAM SCREEN ============ -->
+<div id="screen-exam">
+  <div id="topbar">
+    <button id="panelToggle">☰ Soal</button>
+    <div class="brand"><img src="../../assets/img/logo-smpn1dlingo.png" alt="Logo"><span>ASAS SENI BUDAYA KELAS 9 · TP 2026/2027<small class="who" id="brandStudent"></small></span></div>
+    <div id="violationBadge">⚠ Pelanggaran: <span id="violCount">0</span></div>
+    <div id="timerBox">90:00</div>
+  </div>
+  <div id="examBody">
+    <div id="navPanel"></div>
+    <div id="questionArea">
+      <div class="qwrap" id="qwrap"></div>
+      <div id="navRow">
+        <button class="btn-nav" id="btnPrev">← Sebelumnya</button>
+        <button class="btn-nav primary" id="btnNext">Selanjutnya →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="lightbox">
+  <button class="lb-close" id="lightboxClose">✕</button>
+  <img id="lightboxImg" src="" alt="Gambar diperbesar">
+  <div class="lb-note">Geser gambar untuk melihat bagian lain</div>
+</div>
+
+<div id="warnOverlay">
+  <div class="box">
+    <h2 id="warnTitle">⚠ Peringatan</h2>
+    <p id="warnText"></p>
+    <button id="warnBtn">Kembali ke Ujian</button>
+  </div>
+</div>
+
+<!-- ============ RESULT SCREEN ============ -->
+<div id="screen-result">
+  <div class="result-card">
+    <div class="school-header">
+      <img src="../../assets/img/logo-smpn1dlingo.png" alt="Logo Sekolah">
+      <div class="stxt"><b>SMP NEGERI 1 DLINGO BANTUL</b><span>Asesmen Sumatif Akhir Semester · Seni Budaya · TP 2026/2027</span></div>
+    </div>
+    <h1>✅ Hasil Ujian</h1>
+    <div class="score-hero">
+      <div class="num" id="resScore">0 / 0</div>
+      <div class="grade" id="resGrade">Predikat —</div>
+    </div>
+    <div id="submitStatus" class="submit-status sending">
+      <span class="dotpulse"></span><span id="submitStatusText">Mengirim jawaban ke guru...</span>
+    </div>
+    <table class="breakdown" id="resTable"></table>
+    <div class="result-actions">
+      <button id="btnRetrySubmit" class="hidden">🔁 Kirim Ulang</button>
+      <button id="btnExcel">⬇️ Unduh Hasil (Excel)</button>
+    </div>
+    <p class="note-small">
+      Nama: <b id="rNama"></b> · Kelas: <b id="rKelas"></b> · Pelanggaran layar tercatat: <b id="rViol"></b> kali.<br>
+      Jawaban dikirim otomatis secara real-time ke Google Spreadsheet guru begitu halaman ini muncul. Jika status di atas menunjukkan gagal terkirim, gunakan tombol "Kirim Ulang", atau pastikan koneksi internet aktif lalu klik tombol tersebut. Tombol "Unduh Hasil (Excel)" tetap tersedia sebagai cadangan.
+    </p>
+  </div>
+</div>
+
+<script id="questions-data" type="application/json">[{"id":1,"subject":"Musik Populer","text":"Lagu pop Indonesia dirancang agar mudah diterima masyarakat luas. Salah satu cirinya adalah melodi yang sederhana dan mudah diingat. Tujuan utama dari penggunaan melodi sederhana tersebut adalah ....","type":"pg","options":[{"k":"A","t":"agar lagu terdengar rumit"},{"k":"B","t":"agar hanya penyanyi profesional yang bisa menyanyikan"},{"k":"C","t":"agar pendengar mudah menikmati dan menghafal lagu"},{"k":"D","t":"agar lagu memiliki banyak perubahan nada menyanyikan"}],"correct":"C"},{"id":2,"subject":"Musik Populer","text":"Dalam sebuah lagu, susunan nada yang berurutan secara horizontal, sehingga membentuk suatu motif dan frase yang enak didengar disebut ....","type":"pg","options":[{"k":"A","t":"harmoni"},{"k":"B","t":"melodi"},{"k":"C","t":"tempo"},{"k":"D","t":"dinamika"}],"correct":"B"},{"id":3,"subject":"Musik Populer","text":"Perpaduan beberapa nada yang dimainkan secara bersamaan sehingga menghasilkan bunyi yang selaras disebut ....","type":"pg","options":[{"k":"A","t":"harmoni"},{"k":"B","t":"ritme"},{"k":"C","t":"intro"},{"k":"D","t":"artikulasi"}],"correct":"A"},{"id":4,"subject":"Musik Populer","text":"Pada saat sebuah lagu selesai dinyanyikan, terdapat bagian akhir yang menandai berakhirnya seluruh rangkaian musik dan lirik. Bagian akhir tersebut dinamakan ....","type":"pg","options":[{"k":"A","t":"verse"},{"k":"B","t":"bridge"},{"k":"C","t":"chorus"},{"k":"D","t":"outro"}],"correct":"D"},{"id":5,"subject":"Teknik Vokal & Pengembangan Melodi","text":"Cara mengolah suara agar terdengar baik dan benar saat bernyanyi disebut ....","type":"pg","options":[{"k":"A","t":"teknik vokal"},{"k":"B","t":"improvisasi"},{"k":"C","t":"aransemen"},{"k":"D","t":"tempo"}],"correct":"A"},{"id":6,"subject":"Teknik Vokal & Pengembangan Melodi","text":"Pemanfaatan rongga tubuh untuk memperkuat dan memperindah suara disebut ....","type":"pg","options":[{"k":"A","t":"intonasi"},{"k":"B","t":"artikulasi"},{"k":"C","t":"resonansi"},{"k":"D","t":"dinamika"}],"correct":"C"},{"id":7,"subject":"Teknik Vokal & Pengembangan Melodi","text":"Teknik pernapasan yang paling baik digunakan dalam pernapasan adalah ....","type":"pg","options":[{"k":"A","t":"bahu"},{"k":"B","t":"diafragma"},{"k":"C","t":"dada"},{"k":"D","t":"hidung"}],"correct":"B"},{"id":8,"subject":"Teknik Vokal & Pengembangan Melodi","text":"Vero sedang berlatih bernyanyi untuk penampilan di sekolah. Guru musik meminta Vero menggunakan perpaduan suara rendah dan suara tinggi agar suara terdengar lebih seimbang dan merdu. Teknik perpaduan suara tersebut disebut ....","type":"pg","options":[{"k":"A","t":"head voice"},{"k":"B","t":"chest voice"},{"k":"C","t":"falsetto"},{"k":"D","t":"mix voice"}],"correct":"D"},{"id":9,"subject":"Musik Populer","text":"Tambahan bunyi atau variasi musik untuk mengisi bagian kosong dalam lagu disebut ....","type":"pg","options":[{"k":"A","t":"filler lagu"},{"k":"B","t":"bridge"},{"k":"C","t":"intro"},{"k":"D","t":"outro"}],"correct":"A"},{"id":10,"subject":"Teknik Vokal & Pengembangan Melodi","text":"Katon sedang berlatih menyanyikan sebuah lagu dengan nada panjang. Saat bernyanyi, ia membuat suaranya bergetar secara teratur agar terdengar lebih indah dan ekspresif. Teknik olahan suara yang digunakan Katon tersebut disebut ....","type":"pg","options":[{"k":"A","t":"resonansi"},{"k":"B","t":"artikulasi"},{"k":"C","t":"trill"},{"k":"D","t":"vibrato"}],"correct":"D"},{"id":11,"subject":"Musik Populer","type":"matrix","text":"Perhatikan pernyataan berikut tentang pengertian musik populer!","rows":[{"k":"1","t":"Menurut Prier, musik populer adalah musik yang digemari masyarakat luas.","correct":"Benar"},{"k":"2","t":"Menurut Dieter Mack, musik populer hanya dimainkan di lingkungan kerajaan.","correct":"Salah"},{"k":"3","t":"Menurut Sumaryo, musik populer mudah diterima masyarakat.","correct":"Benar"},{"k":"4","t":"Menurut Iskandar, musik populer bersifat hiburan dan komersial.","correct":"Benar"}]},{"id":12,"subject":"Musik Populer","type":"matrix","text":"Perhatikan unsur pembentuk lagu populer berikut!","rows":[{"k":"1","t":"Melodi merupakan rangkaian nada dalam lagu.","correct":"Benar"},{"k":"2","t":"Harmoni adalah perpaduan nada yang selaras.","correct":"Benar"},{"k":"3","t":"Ritme tidak memengaruhi lagu.","correct":"Salah"},{"k":"4","t":"Tempo menentukan cepat lambat lagu.","correct":"Benar"}]},{"id":13,"subject":"Musik Populer","type":"matrix","text":"Perhatikan fungsi ritme berikut!","rows":[{"k":"1","t":"Ritme membantu mengatur ketukan lagu.","correct":"Benar"},{"k":"2","t":"Ritme membuat lagu lebih teratur.","correct":"Benar"},{"k":"3","t":"Ritme berfungsi memainkan nada lagu.","correct":"Salah"},{"k":"4","t":"Ritme membantu menciptakan irama lagu.","correct":"Benar"}]},{"id":14,"subject":"Musik Populer","type":"matrix","text":"Perhatikan jenis tempo berikut!","rows":[{"k":"1","t":"Allegro berarti cepat.","correct":"Benar"},{"k":"2","t":"Largo berarti lambat.","correct":"Benar"},{"k":"3","t":"Moderato berarti sangat cepat.","correct":"Salah"},{"k":"4","t":"Andante berarti sangat lambat sekali.","correct":"Salah"}]},{"id":15,"subject":"Musik Populer","type":"matrix","text":"Perhatikan jenis dinamika berikut!","rows":[{"k":"1","t":"Piano berarti dimainkan dengan tangan.","correct":"Salah"},{"k":"2","t":"Forte berarti dimainkan keras.","correct":"Benar"},{"k":"3","t":"Crescendo berarti semakin lembut.","correct":"Salah"},{"k":"4","t":"Decrescendo berarti semakin pelan.","correct":"Benar"}]},{"id":16,"subject":"Musik Populer","type":"matrix","text":"Perhatikan karakteristik lagu populer berikut!","rows":[{"k":"1","t":"Mudah diingat masyarakat.","correct":"Benar"},{"k":"2","t":"Menggunakan melodi sederhana.","correct":"Benar"},{"k":"3","t":"Hanya dapat dinikmati musisi profesional.","correct":"Salah"},{"k":"4","t":"Tema lagu dekat dengan kehidupan sehari-hari.","correct":"Benar"}]},{"id":17,"subject":"Teknik Vokal & Pengembangan Melodi","type":"matrix","text":"Perhatikan unsur teknik vokal berikut!","rows":[{"k":"1","t":"Resonansi tidak berhubungan dengan suara.","correct":"Salah"},{"k":"2","t":"Intonasi berkaitan dengan ketepatan nada.","correct":"Benar"},{"k":"3","t":"Artikulasi berkaitan dengan kejelasan pengucapan lirik.","correct":"Benar"},{"k":"4","t":"Pernapasan diafragma membantu penyanyi bernapas lebih baik.","correct":"Benar"}]},{"id":18,"subject":"Teknik Vokal & Pengembangan Melodi","type":"matrix","text":"Perhatikan jenis register vokal berikut!","rows":[{"k":"1","t":"Chest voice disebut suara dada.","correct":"Benar"},{"k":"2","t":"Head voice disebut suara kepala.","correct":"Benar"},{"k":"3","t":"Mix voice adalah gabungan suara dada dan kepala.","correct":"Benar"},{"k":"4","t":"Falsetto merupakan suara paling rendah.","correct":"Salah"}]},{"id":19,"subject":"Teknik Vokal & Pengembangan Melodi","type":"matrix","text":"Perhatikan aspek nonteknis dalam bernyanyi berikut!","rows":[{"k":"1","t":"Ekspresi penting dalam penampilan bernyanyi.","correct":"Benar"},{"k":"2","t":"Percaya diri membantu penampilan di panggung.","correct":"Benar"},{"k":"3","t":"Kostum tidak memengaruhi penampilan penyanyi.","correct":"Salah"},{"k":"4","t":"Penguasaan panggung tidak penting saat tampil.","correct":"Salah"}]},{"id":20,"subject":"Teknik Vokal & Pengembangan Melodi","type":"matrix","text":"Perhatikan jenis improvisasi berikut!","rows":[{"k":"1","t":"Improvisasi ritmis dilakukan dengan mengubah irama lagu.","correct":"Benar"},{"k":"2","t":"Improvisasi melodis dilakukan dengan mengembangkan melodi.","correct":"Benar"},{"k":"3","t":"Improvisasi tidak boleh dilakukan dalam musik populer.","correct":"Salah"},{"k":"4","t":"Improvisasi dapat membuat lagu lebih menarik.","correct":"Benar"}]},{"id":21,"subject":"Musik Populer","text":"Perhatikan pernyataan berikut tentang ciri lirik lagu populer!\nPilih semua pernyataan yang benar.","type":"multi","options":[{"k":"1","t":"Menggunakan bahasa sederhana"},{"k":"2","t":"Mudah dipahami pendengar"},{"k":"3","t":"Memiliki tema dekat dengan kehidupan sehari-hari"},{"k":"4","t":"Menggunakan istilah ilmiah yang rumit"}],"correct":["1","2","3"]},{"id":22,"subject":"Musik Populer","text":"Perhatikan jenis dinamika musik berikut!\n(1) Forte\n(2) Crescendo\n(3) Piano\n(4) Mezopiano\nSecara berurutan jenis dinamika musik keras, semakin keras, pelan, dan sedang yang benar adalah ....","type":"pg","options":[{"k":"A","t":"(1), (2), (3), dan (4)"},{"k":"B","t":"(1), (3), (4), dan (2)"},{"k":"C","t":"(2), (3), (4) dan (1)"},{"k":"D","t":"(1), (3), (2), dan (4)"}],"correct":"A"},{"id":23,"subject":"Musik Populer","text":"Perhatikan struktur pembentuk lagu populer berikut!\nPilih semua bagian struktur lagu populer yang umum digunakan pada bagian awal dan akhir lagu.","type":"multi","options":[{"k":"1","t":"Intro"},{"k":"2","t":"Verse"},{"k":"3","t":"Reffrain"},{"k":"4","t":"Coda"}],"correct":["1","4"]},{"id":24,"subject":"Musik Populer","text":"Perhatikan karakteristik lagu pop Indonesia berikut!\nPilih semua karakteristik lagu pop Indonesia yang benar.","type":"multi","options":[{"k":"1","t":"Melodi mudah diingat"},{"k":"2","t":"Irama sederhana"},{"k":"3","t":"Loncatan interval melodi yang jauh"},{"k":"4","t":"Mudah dinyanyikan"},{"k":"5","t":"Dekat dengan kehidupan masyarakat"}],"correct":["5","1","2","4"]},{"id":25,"subject":"Teknik Vokal & Pengembangan Melodi","text":"Perhatikan unsur teknik vokal berikut!\nPilih semua unsur teknik vokal yang benar.","type":"multi","options":[{"k":"1","t":"Artikulasi kejelasan pengucapan kata"},{"k":"2","t":"Intonasi ketepatan membidik nada"},{"k":"3","t":"Pernapasan menggunakan napas diafragma"},{"k":"4","t":"Resonansi pemenggalan kalimat lagu"}],"correct":["1","2","3"]},{"id":26,"subject":"Teknik Vokal & Pengembangan Melodi","table":{"head":["Jenis penempatan vokal","Istilah"],"rows":[["(1) Suara dada","Chest voice"],["(2) Suara kepala","Head voice"],["(3) Suara campuran","Mix voice"],["(4) Falsetto","Whistle"]]},"pre":"Perhatikan penempatan register vokal berikut!","text":"Pilih semua jenis penempatan register vokal dengan istilah yang tepat.","type":"multi","options":[{"k":"1","t":"Suara dada – Chest voice"},{"k":"2","t":"Suara kepala – Head voice"},{"k":"3","t":"Suara campuran – Mix voice"},{"k":"4","t":"Falsetto – Whistle"}],"correct":["1","2","3"]},{"id":27,"subject":"Teknik Vokal & Pengembangan Melodi","text":"Perhatikan fungsi pengembangan melodi lagu pop berikut!\nPilih semua fungsi pengembangan melodi yang benar.","type":"multi","options":[{"k":"1","t":"Membuat lagu lebih menarik"},{"k":"2","t":"Menambah variasi nada"},{"k":"3","t":"Menambah keindahan lagu"},{"k":"4","t":"Membuat lagu monoton"}],"correct":["1","2","3"]},{"id":28,"subject":"Teknik Vokal & Pengembangan Melodi","pre":"Perhatikan tanda ornamentasi modern berikut!","text":"Tanda ornamentasi mordent, grupeto, trill, dan mordent inversi ditunjukkan nomor ....","img":"../../assets/img/SeniBudaya_9_28.png","type":"pg","options":[{"k":"A","t":"(1), (2), (4), dan (3)"},{"k":"B","t":"(1), (3), (2), dan (4)"},{"k":"C","t":"(1), (3), (4) dan (2)"},{"k":"D","t":"(1), (2), (3), dan (4)"}],"correct":"C"},{"id":29,"subject":"Teknik Vokal & Pengembangan Melodi","text":"Perhatikan teknik improvisasi lagu!\nPilih semua teknik mengembangkan melodi yang benar.","type":"multi","options":[{"k":"1","t":"Resonansi"},{"k":"2","t":"Variasi ritme"},{"k":"3","t":"Pengembangan tempo"},{"k":"4","t":"Pengembangan melodi"}],"correct":["2","3","4"]},{"id":30,"subject":"Teknik Vokal & Pengembangan Melodi","text":"Perhatikan langkah mengembangkan melodi berikut!\n(1) Mengembangkan variasi nada\n(2) Menentukan tema lagu\n(3) Membuat motif melodi\n(4) Menyusun melodi akhir\nLangkah mengembangkan melodi yang benar adalah ....","type":"pg","options":[{"k":"A","t":"(1), (3), (4), dan (2)"},{"k":"B","t":"(2), (3), (1), dan (4)"},{"k":"C","t":"(2), (1), (4), dan (3)"},{"k":"D","t":"(3), (2), (1) dan (4)"}],"correct":"B"},{"id":31,"subject":"Ansambel & Alat Musik","text":"Saat tampil di acara sekolah, beberapa siswa memainkan alat musik secara bersama-sama sehingga menghasilkan lagu yang harmonis. Kegiatan tersebut disebut ....","type":"pg","options":[{"k":"A","t":"solo musik"},{"k":"B","t":"paduan suara"},{"k":"C","t":"ansambel musik"},{"k":"D","t":"improvisasi musik"}],"correct":"C"},{"id":32,"subject":"Ansambel & Alat Musik","text":"Dalam ekstrakurikuler musik, semua siswa memainkan alat musik rekorder untuk membawakan lagu daerah. Jenis ansambel tersebut adalah ansambel ....","type":"pg","options":[{"k":"A","t":"campuran"},{"k":"B","t":"modern"},{"k":"C","t":"tradisional"},{"k":"D","t":"sejenis"}],"correct":"D"},{"id":33,"subject":"Ansambel & Alat Musik","text":"Fungsi utama alat musik melodis dalam permainan ansambel adalah ....","type":"pg","options":[{"k":"A","t":"memainkan melodi lagu"},{"k":"B","t":"mengatur pencahayaan panggung"},{"k":"C","t":"menjaga kekuatan suara"},{"k":"D","t":"mempercepat tempo lagu"}],"correct":"A"},{"id":34,"subject":"Ansambel & Alat Musik","text":"Di bawah ini yang termasuk contoh alat musik harmonis adalah ....","type":"pg","options":[{"k":"A","t":"gitar"},{"k":"B","t":"triangle"},{"k":"C","t":"drum"},{"k":"D","t":"tamborin"}],"correct":"A"},{"id":35,"subject":"Ansambel & Alat Musik","text":"Fungsi alat musik ritmis dalam sebuah ansambel adalah ....","type":"pg","options":[{"k":"A","t":"memainkan nada tinggi"},{"k":"B","t":"memainkan melodi utama"},{"k":"C","t":"mengatur irama dan tempo"},{"k":"D","t":"menghasilkan akord lagu"}],"correct":"C"},{"id":36,"subject":"Ansambel & Alat Musik","text":"Dalam permainan musik, gitar termasuk kelompok alat musik ....","type":"pg","options":[{"k":"A","t":"ritmis"},{"k":"B","t":"melodis"},{"k":"C","t":"harmonis"},{"k":"D","t":"perkusi"}],"correct":"C"},{"id":37,"subject":"Ansambel & Alat Musik","text":"Gabungan beberapa nada yang dimainkan secara bersamaan pada gitar disebut ....","type":"pg","options":[{"k":"A","t":"melodi"},{"k":"B","t":"ritme"},{"k":"C","t":"tangga nada"},{"k":"D","t":"akord"}],"correct":"D"},{"id":38,"subject":"Ansambel & Alat Musik","type":"matrix","text":"Perhatikan pernyataan berikut!","rows":[{"k":"1","t":"Menurut Sunarto, ansambel musik adalah aktifitas musik secara berkelompok.","correct":"Benar"},{"k":"2","t":"Ansambel hanya boleh dimainkan dengan satu alat musik.","correct":"Salah"},{"k":"3","t":"Dalam ansambel setiap pemain harus bekerja sama.","correct":"Benar"},{"k":"4","t":"Ansambel dapat dimainkan di sekolah.","correct":"Benar"}]},{"id":39,"subject":"Ansambel & Alat Musik","type":"matrix","text":"Perhatikan contoh alat musik berikut!","rows":[{"k":"1","t":"Drum dan tamborin termasuk alat musik melodis.","correct":"Salah"},{"k":"2","t":"Gitar dan piano termasuk alat musik harmonis.","correct":"Benar"},{"k":"3","t":"Rekorder dimainkan dengan cara dipukul.","correct":"Salah"},{"k":"4","t":"Ansambel campuran menggunakan berbagai jenis alat musik.","correct":"Benar"}]},{"id":40,"subject":"Ansambel & Alat Musik","type":"matrix","text":"Perhatikan fungsi alat musik berikut!","rows":[{"k":"1","t":"Alat musik melodis berfungsi mengatur tempo.","correct":"Salah"},{"k":"2","t":"Pianika dapat memainkan melodi lagu.","correct":"Benar"},{"k":"3","t":"Alat musik harmonis hanya dimainkan dengan dipukul.","correct":"Salah"},{"k":"4","t":"Gitar dapat digunakan mengiringi lagu dengan akord.","correct":"Benar"}]},{"id":41,"subject":"Ansambel & Alat Musik","type":"matrix","text":"Perhatikan pernyataan berikut!","rows":[{"k":"1","t":"Fungsi alat musik harmonis adalah memainkan akord.","correct":"Benar"},{"k":"2","t":"Piano termasuk alat musik harmonis.","correct":"Benar"},{"k":"3","t":"Tamborin dapat memainkan melodi lagu.","correct":"Salah"},{"k":"4","t":"Alat musik ritmis menghasilkan harmonisasi nada","correct":"Salah"}]},{"id":42,"subject":"Ansambel & Alat Musik","type":"matrix","text":"Perhatikan pernyataan berikut!","rows":[{"k":"1","t":"Senar gitar standar berjumlah enam.","correct":"Benar"},{"k":"2","t":"Open string gitar standar adalah E–A–D–G–B–E.","correct":"Benar"},{"k":"3","t":"Gitar dimainkan hanya dengan cara petik.","correct":"Salah"},{"k":"4","t":"Nada open string dimainkan tanpa menekan fret.","correct":"Benar"}]},{"id":43,"subject":"Ansambel & Alat Musik","type":"matrix","text":"Perhatikan penjarian gitar berikut!","rows":[{"k":"1","t":"Huruf P pada gitar berarti ibu jari.","correct":"Benar"},{"k":"2","t":"Huruf I berarti jari telunjuk.","correct":"Benar"},{"k":"3","t":"Huruf A berarti jari manis.","correct":"Benar"},{"k":"4","t":"Huruf CH berarti jari tengah.","correct":"Salah"}]},{"id":44,"subject":"Ansambel & Alat Musik","type":"matrix","text":"Perhatikan pernyataan berikut!","rows":[{"k":"1","t":"Akord adalah gabungan beberapa nada.","correct":"Benar"},{"k":"2","t":"Akord digunakan untuk mengatur tempo.","correct":"Salah"},{"k":"3","t":"Akord gitar hanya memiliki satu nada.","correct":"Salah"},{"k":"4","t":"C Mayor termasuk akord dasar gitar.","correct":"Benar"}]},{"id":45,"subject":"Ansambel & Alat Musik","type":"matrix","text":"Perhatikan pernyataan berikut!","rows":[{"k":"1","t":"Penjarian piano menggunakan lima jari kanan dan lima jari tangan kiri.","correct":"Benar"},{"k":"2","t":"Ibu jari piano diberi nomor 1.","correct":"Benar"},{"k":"3","t":"Piano dimainkan dengan cara menggunakan aliran listrik.","correct":"Salah"},{"k":"4","t":"Kelingking piano diberi nomor 5.","correct":"Benar"}]},{"id":46,"subject":"Ansambel & Alat Musik","type":"matrix","text":"Perhatikan manfaat ansambel berikut!","rows":[{"k":"1","t":"Ansambel melatih kerja sama.","correct":"Benar"},{"k":"2","t":"Ansambel meningkatkan disiplin latihan.","correct":"Benar"},{"k":"3","t":"Ansambel membuat pemain menjadi egois.","correct":"Salah"},{"k":"4","t":"Ansambel dapat melatih rasa tanggung Jawab.","correct":"Benar"}]},{"id":47,"subject":"Ansambel & Alat Musik","type":"matrix","text":"Perhatikan langkah bermain ansambel berikut!","rows":[{"k":"1","t":"Memilih lagu yang akan dimainkan.","correct":"Benar"},{"k":"2","t":"Menentukan alat musik yang digunakan.","correct":"Benar"},{"k":"3","t":"Bermain tanpa latihan terlebih dahulu.","correct":"Salah"},{"k":"4","t":"Berlatih bersama sebelum tampil.","correct":"Benar"}]},{"id":48,"subject":"Ansambel & Alat Musik","text":"Perhatikan pernyataan berikut tentang pengertian ansambel menurut para ahli!\nPilih semua pernyataan yang benar.","type":"multi","options":[{"k":"1","t":"Jamalus menyatakan ansambel dimainkan bersama-sama."},{"k":"2","t":"Banoe menyebut ansambel menghasilkan kesatuan bunyi harmonis."},{"k":"3","t":"Soeharto menyatakan ansambel hanya dimainkan satu orang."},{"k":"4","t":"Sunarto menekankan kekompakan dan tanggung Jawab."}],"correct":["1","2","4"]},{"id":49,"subject":"Ansambel & Alat Musik","text":"Perhatikan jenis ansambel berikut!\nPilih semua pernyataan yang benar.","type":"multi","options":[{"k":"1","t":"Ansambel melodis mengunakan alat musik gitar dan piano"},{"k":"2","t":"Ansambel ritmis mengunakan alat musik cajon, marakas, dan tambourine"},{"k":"3","t":"Ansambel harmonis memainkan mengunakan recorder dan trumpet"},{"k":"4","t":"Ansambel ritmis memainkan melodi lagu."}],"correct":["2"]},{"id":50,"subject":"Ansambel & Alat Musik","text":"Perhatikan nada open string gitar berikut!\nPilih semua pernyataan yang benar.","type":"multi","options":[{"k":"1","t":"Senar 1 bernada e tinggi."},{"k":"2","t":"Senar 2 bernada b."},{"k":"3","t":"Senar 5 bernada g."},{"k":"4","t":"Senar 6 bernada E rendah."}],"correct":["1","2","4"]}]</script>
+<script>
+(function(){
+"use strict";
+
+/* ================= CONFIG ================= */
+const SUBJECT_ORDER = ["Musik Populer","Teknik Vokal & Pengembangan Melodi","Ansambel & Alat Musik"];
+const DURATION_SEC = 90*60;
+const MIN_SUBMIT_SEC = 40*60;   // batas minimal sebelum jawaban boleh dikirim (40 menit)
+const MAPEL = "Seni Budaya";
+const ASESMEN = "ASAS";
+const KELAS_TINGKAT = "IX";
+const MATERI = "Seni Musik: Musik Populer, Teknik Vokal & Pengembangan Melodi, Ansambel & Alat Musik";
+const JUDUL = "ASAS SENI BUDAYA KELAS 9";
+const VALID_TOKEN = "BUD9ZHR";
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxG9qZ85Jf8T7ZumUEIoYB2MZBT-edCLQMIi2Op-H2zVXWSOKrHmWy3vRwrXzGpFTyd/exec";
+
+const RAW_QUESTIONS = JSON.parse(document.getElementById('questions-data').textContent);
+document.getElementById('infoJumlah').textContent = RAW_QUESTIONS.length + " Soal";
+
+/* Data siswa dari assets/js/data-siswa.js (hanya rombel kelas IX) */
+const STUDENTS = {};
+if(typeof DATA_SISWA !== 'undefined'){
+  Object.keys(DATA_SISWA).forEach(k=>{ if(/^IX\b/.test(k)) STUDENTS[k] = DATA_SISWA[k]; });
+}
+
+/* ================= STATE ================= */
+let examQuestions = [];
+let answers = {};
+let current = 0;
+let violCount = 0;
+let timeLeft = DURATION_SEC;
+let timerHandle = null;
+let studentName = "", studentClass = "";
+let prefName = "", prefClass = "";
+let examStarted = false;
+let examFinished = false;
+
+/* ================= UTIL ================= */
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; }
+  return a;
+}
+function fmtTime(s){ const m=Math.floor(s/60), sec=s%60; return String(m).padStart(2,'0')+":"+String(sec).padStart(2,'0'); }
+function escapeHtml(str){ return String(str).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function renderText(t){ return escapeHtml(t).replace(/\n/g,'<br>'); }
+function imgList(img){ if(!img) return []; return Array.isArray(img) ? img : [img]; }
+function r2(x){ return Math.round(x*100)/100; }
+
+/* ================= LIGHTBOX (ketuk gambar untuk memperbesar) ================= */
+document.getElementById('lightboxClose').addEventListener('click',()=>{
+  document.getElementById('lightbox').classList.remove('open');
+});
+document.getElementById('lightbox').addEventListener('click',(e)=>{
+  if(e.target.id==='lightbox') document.getElementById('lightbox').classList.remove('open');
+});
+
+/* ================= TABS (start screen) ================= */
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-'+btn.dataset.tab).classList.add('active');
+  });
+});
+
+/* ================= NAMA & KELAS SISWA ================= */
+(function initStudent(){
+  const selKelas = document.getElementById('inputKelas');
+  Object.keys(STUDENTS).forEach(kelas=>{
+    const opt = document.createElement('option');
+    opt.value = kelas; opt.textContent = kelas;
+    selKelas.appendChild(opt);
+  });
+  selKelas.addEventListener('change',()=>{
+    const selNama = document.getElementById('inputNama');
+    const kelas = selKelas.value;
+    selNama.innerHTML = '';
+    if(!kelas){
+      const opt = document.createElement('option'); opt.value=''; opt.textContent='— Pilih kelas terlebih dahulu —';
+      selNama.appendChild(opt); selNama.disabled = true; return;
+    }
+    const opt0 = document.createElement('option'); opt0.value=''; opt0.textContent='— Pilih Nama —';
+    selNama.appendChild(opt0);
+    (STUDENTS[kelas]||[]).forEach(nm=>{
+      const opt = document.createElement('option'); opt.value = nm; opt.textContent = nm;
+      selNama.appendChild(opt);
+    });
+    selNama.disabled = false;
+  });
+
+  /* Isi otomatis dari Menu Kelas 9 (kelas-9.html): ?kelas=IX%20A&nama=NAMA%20SISWA */
+  const params = new URLSearchParams(window.location.search);
+  const pKelas = (params.get('kelas')||'').replace(/\s+/g,' ').trim();
+  const pNama = (params.get('nama')||'').replace(/\s+/g,' ').trim();
+  const norm = s => String(s||'').replace(/\s+/g,' ').trim().toUpperCase();
+  if(pKelas && pNama){
+    let kelas = pKelas, nama = pNama, ok = true;
+    if(Object.keys(STUDENTS).length){   // data siswa tersedia -> cocokkan
+      const kKey = Object.keys(STUDENTS).find(k=>norm(k)===norm(pKelas));
+      const match = kKey ? STUDENTS[kKey].find(n=>norm(n)===norm(pNama)) : null;
+      if(match){ kelas = kKey; nama = match; } else { ok = false; }
+    }
+    if(ok){
+      prefClass = kelas; prefName = nama;
+      document.getElementById('idNama').textContent = nama;
+      document.getElementById('idKelas').textContent = kelas;
+      document.getElementById('idBox').classList.remove('hidden');
+      document.getElementById('pickWrap').classList.add('hidden');
+      document.querySelector('.tab-btn[data-tab="mulai"]').click();
+      document.getElementById('inputToken').focus();
+    }
+  }
+})();
+
+/* ================= BUILD EXAM (acak soal, opsi, pernyataan) ================= */
+function buildExam(){
+  examQuestions = shuffle(RAW_QUESTIONS).map(src=>{
+    const q = JSON.parse(JSON.stringify(src));
+    if(q.type==='pg' || q.type==='multi') q.options = shuffle(q.options);
+    if(q.type==='matrix') q.rows = shuffle(q.rows);
+    return q;
+  });
+}
+
+/* ================= NAV PANEL ================= */
+function renderNavPanel(){
+  const panel = document.getElementById('navPanel');
+  let html = '<h3>Nomor Soal (1–'+examQuestions.length+')</h3>';
+  html += '<div class="legend"><span><i class="dot" style="background:var(--blue)"></i>Terjawab</span><span><i class="dot" style="background:#fff;border:1.5px solid var(--border)"></i>Belum</span></div>';
+  let grid = '';
+  examQuestions.forEach((q,idx)=>{
+    const answered = isAnswered(q);
+    grid += '<button class="navbtn'+(answered?' answered':'')+(idx===current?' current':'')+'" data-idx="'+idx+'">'+(idx+1)+'</button>';
+  });
+  html += '<div class="navgrid">'+grid+'</div>';
+  html += '<button id="navSubmitBtn">✅ Kirim Jawaban</button>';
+  panel.innerHTML = html;
+  panel.querySelectorAll('.navbtn').forEach(b=>{
+    b.addEventListener('click',()=>{ current=parseInt(b.dataset.idx,10); renderQuestion(); closeMobilePanel(); });
+  });
+  document.getElementById('navSubmitBtn').addEventListener('click', confirmSubmit);
+  updateSubmitLock();
+}
+function closeMobilePanel(){ document.getElementById('navPanel').classList.remove('open'); }
+
+function isAnswered(q){
+  const v = answers[q.id];
+  if(q.type==='pg') return !!v;
+  if(q.type==='multi') return Array.isArray(v) && v.length>0;
+  if(q.type==='matrix'){ if(!v) return false; return q.rows.every(r=>v[r.k]); }
+  return false;
+}
+
+/* ================= RENDER QUESTION ================= */
+function renderTable(t){
+  let h = '<table class="qtable"><thead><tr>'+t.head.map(c=>'<th>'+renderText(c)+'</th>').join('')+'</tr></thead><tbody>';
+  t.rows.forEach(r=>{ h += '<tr>'+r.map(c=>'<td>'+renderText(c)+'</td>').join('')+'</tr>'; });
+  return h+'</tbody></table>';
+}
+function renderQuestion(){
+  const q = examQuestions[current];
+  const wrap = document.getElementById('qwrap');
+  let html = '';
+  html += '<div class="qnum">Soal '+(current+1)+' dari '+examQuestions.length+'</div>';
+  if(q.pre) html += '<div class="qtext">'+renderText(q.pre)+'</div>';
+  const imgs = imgList(q.img);
+  if(imgs.length){
+    html += '<div class="qmedia qimg-wrap">';
+    imgs.forEach(name=>{
+      const src = encodeURI(name);
+      html += '<div class="imgbox" data-full="'+src+'">'+
+        '<img src="'+src+'" alt="Gambar soal" loading="lazy" '+
+        'onerror="this.parentElement.outerHTML=\'<div class=&quot;imgph&quot;>🖼️ Gambar soal tidak termuat<br>(periksa koneksi atau hubungi guru)</div>\'">'+
+        '<span class="zoomhint">🔍 Ketuk untuk perbesar</span></div>';
+    });
+    html += '</div>';
+  }
+  if(q.table) html += '<div class="qmedia">'+renderTable(q.table)+'</div>';
+  html += '<div class="qtext">'+renderText(q.text)+'</div>';
+  if(q.type==='multi') html += '<div class="qtype-hint">☑ Pilihan Ganda Kompleks — centang semua jawaban yang benar (bisa lebih dari satu)</div>';
+  if(q.type==='matrix') html += '<div class="qtype-hint">☑ Benar/Salah — tentukan Benar atau Salah untuk setiap pernyataan</div>';
+
+  if(q.type==='pg') html += renderPG(q);
+  else if(q.type==='multi') html += renderMulti(q);
+  else if(q.type==='matrix') html += renderMatrix(q);
+
+  wrap.innerHTML = html;
+  attachOptionEvents(q);
+  wrap.querySelectorAll('.imgbox').forEach(box=>{
+    box.addEventListener('click',()=>{
+      document.getElementById('lightboxImg').src = box.dataset.full;
+      document.getElementById('lightbox').classList.add('open');
+    });
+  });
+
+  document.getElementById('btnPrev').disabled = (current===0);
+  document.getElementById('btnNext').textContent = (current===examQuestions.length-1) ? 'Selesai →' : 'Selanjutnya →';
+  document.querySelectorAll('.navbtn').forEach(b=>b.classList.toggle('current', parseInt(b.dataset.idx,10)===current));
+  document.getElementById('questionArea').scrollTop = 0;
+}
+
+const LETTERS = ['A','B','C','D','E','F'];
+
+function renderPG(q){
+  const v = answers[q.id]; let html='';
+  q.options.forEach((o,i)=>{
+    const selected = v===o.k;
+    html += '<label class="option'+(selected?' selected':'')+'"><input type="radio" name="pg" value="'+escapeHtml(o.k)+'" '+(selected?'checked':'')+'>'+
+      '<span class="otext"><span class="olabel">'+LETTERS[i]+'.</span>'+escapeHtml(o.t)+'</span></label>';
+  });
+  return html;
+}
+function renderMulti(q){
+  const v = answers[q.id] || []; let html='';
+  q.options.forEach((o,i)=>{
+    const selected = v.includes(o.k);
+    html += '<label class="option'+(selected?' selected':'')+'"><input type="checkbox" name="multi" value="'+escapeHtml(o.k)+'" '+(selected?'checked':'')+'>'+
+      '<span class="otext"><span class="olabel">'+LETTERS[i]+'.</span>'+escapeHtml(o.t)+'</span></label>';
+  });
+  return html;
+}
+function renderMatrix(q){
+  const v = answers[q.id] || {};
+  const cols = ['Benar','Salah'];
+  let html = '<table class="matrix"><thead><tr><th style="text-align:left">Pernyataan</th>';
+  cols.forEach(c=>{ html += '<th>'+c+'</th>'; });
+  html += '</tr></thead><tbody>';
+  q.rows.forEach((r,i)=>{
+    html += '<tr><td class="stmt">'+LETTERS[i]+'. '+escapeHtml(r.t)+'</td>';
+    cols.forEach(c=>{
+      const checked = v[r.k]===c;
+      html += '<td class="rc'+(checked?' sel':'')+'"><label><input type="radio" name="row_'+escapeHtml(r.k)+'" value="'+c+'" data-row="'+escapeHtml(r.k)+'" '+(checked?'checked':'')+' aria-label="'+c+'"></label></td>';
+    });
+    html += '</tr>';
+  });
+  html += '</tbody></table>';
+  return html;
+}
+function attachOptionEvents(q){
+  if(q.type==='pg'){
+    document.querySelectorAll('input[name=pg]').forEach(inp=>{
+      inp.addEventListener('change',()=>{ answers[q.id]=inp.value; renderQuestion(); renderNavPanel(); });
+    });
+  } else if(q.type==='multi'){
+    document.querySelectorAll('input[name=multi]').forEach(inp=>{
+      inp.addEventListener('change',()=>{
+        let cur = answers[q.id] ? answers[q.id].slice() : [];
+        if(inp.checked){ if(!cur.includes(inp.value)) cur.push(inp.value); } else { cur = cur.filter(x=>x!==inp.value); }
+        answers[q.id]=cur; renderQuestion(); renderNavPanel();
+      });
+    });
+  } else if(q.type==='matrix'){
+    document.querySelectorAll('table.matrix input').forEach(inp=>{
+      inp.addEventListener('change',()=>{
+        const cur = answers[q.id] ? Object.assign({},answers[q.id]) : {};
+        cur[inp.dataset.row] = inp.value; answers[q.id]=cur; renderQuestion(); renderNavPanel();
+      });
+    });
+  }
+}
+
+/* ================= NAVIGATION ================= */
+document.getElementById('btnPrev').addEventListener('click',()=>{ if(current>0){ current--; renderQuestion(); } });
+document.getElementById('btnNext').addEventListener('click',()=>{
+  if(current<examQuestions.length-1){ current++; renderQuestion(); } else { confirmSubmit(); }
+});
+document.getElementById('panelToggle').addEventListener('click',()=>{ document.getElementById('navPanel').classList.toggle('open'); });
+
+/* ================= TIMER (berbasis jam sistem, tetap akurat walau tab di-throttle) ================= */
+let startTs = 0, endTs = 0;
+function elapsedSec(){ return Math.floor((Date.now()-startTs)/1000); }
+function canSubmitNow(){ return elapsedSec() >= MIN_SUBMIT_SEC; }
+function updateSubmitLock(){
+  const b = document.getElementById('navSubmitBtn');
+  if(!b || !examStarted) return;
+  const rem = MIN_SUBMIT_SEC - elapsedSec();
+  if(rem > 0){ b.textContent = '🔒 Kirim dibuka dalam '+fmtTime(rem); b.classList.add('locked'); }
+  else { b.textContent = '✅ Kirim Jawaban'; b.classList.remove('locked'); }
+}
+function tick(){
+  timeLeft = Math.max(0, Math.ceil((endTs-Date.now())/1000));
+  const box = document.getElementById('timerBox');
+  box.textContent = fmtTime(timeLeft);
+  if(timeLeft<=300) box.classList.add('low');
+  updateSubmitLock();
+  if(timeLeft<=0){ clearInterval(timerHandle); finishExam(true); }
+}
+function startTimer(){
+  startTs = Date.now(); endTs = startTs + DURATION_SEC*1000;
+  tick(); timerHandle = setInterval(tick,1000);
+}
+
+/* ================= LAYAR PENUH & PENCATATAN PELANGGARAN ================= */
+const logPelanggaran = [];
+let dialogOpen = false, lastViolAt = 0, splitActive = false, blurTimer = null;
+const areaMax = {portrait:0, landscape:0};
+
+function enterFullscreen(){
+  const el = document.documentElement;
+  const req = el.requestFullscreen||el.webkitRequestFullscreen||el.msRequestFullscreen;
+  if(req){ try{ const p = req.call(el); if(p && p.catch) p.catch(()=>{}); }catch(e){} }
+}
+function isFullscreen(){ return !!(document.fullscreenElement||document.webkitFullscreenElement||document.msFullscreenElement); }
+function showWarn(title,text,onOk){
+  const ov = document.getElementById('warnOverlay');
+  document.getElementById('warnTitle').textContent = title;
+  document.getElementById('warnText').textContent = text;
+  ov.style.display='flex';
+  document.getElementById('warnBtn').onclick = ()=>{ ov.style.display='none'; if(onOk) onOk(); };
+}
+function safeAlert(msg){ dialogOpen = true; try{ alert(msg); } finally { dialogOpen = false; } }
+function safeConfirm(msg){ dialogOpen = true; try{ return confirm(msg); } finally { dialogOpen = false; } }
+
+// Jenis: "Pindah tab", "Keluar fullscreen", "Salin teks", "Screenshot", "Split screen", "Kehilangan fokus jendela"
+function catatPelanggaran(jenis){
+  if(!examStarted || examFinished) return;
+  const last = logPelanggaran[logPelanggaran.length-1];
+  if(last && last.jenis===jenis && Date.now()-new Date(last.waktu).getTime() < 1500) return; // satu kejadian, satu catatan
+  logPelanggaran.push({ jenis: jenis, waktu: new Date().toISOString() });
+  violCount = logPelanggaran.length;
+  lastViolAt = Date.now();
+  const badge = document.getElementById('violationBadge');
+  badge.style.display='inline-block';
+  document.getElementById('violCount').textContent = violCount;
+  showWarn('⚠ Pelanggaran Terdeteksi ('+violCount+')',
+    'Sistem mendeteksi: '+jenis+'. Tindakan ini tercatat dan akan dilaporkan kepada guru bersama hasil ujianmu. Tetaplah pada halaman ujian hingga selesai.',
+    ()=>{ if(!isFullscreen()) enterFullscreen(); });
+}
+function ringkasPelanggaran(){
+  const c = {}; logPelanggaran.forEach(p=>{ c[p.jenis]=(c[p.jenis]||0)+1; });
+  return Object.keys(c).map(k=>k+' ×'+c[k]).join('; ') || '-';
+}
+
+// 1) pindah tab / minimize
+document.addEventListener('visibilitychange',()=>{
+  if(document.hidden && examStarted && !examFinished) catatPelanggaran('Pindah tab');
+});
+// 2) keluar layar penuh (ukuran jendela berubah wajar -> dasar pengukuran split screen direset)
+function onFsChange(){
+  areaMax.portrait = 0; areaMax.landscape = 0; splitActive = false;
+  if(!isFullscreen() && examStarted && !examFinished) catatPelanggaran('Keluar fullscreen');
+}
+document.addEventListener('fullscreenchange', onFsChange);
+document.addEventListener('webkitfullscreenchange', onFsChange);
+// 3) menyalin teks
+['copy','cut'].forEach(ev=>document.addEventListener(ev,e=>{
+  if(examStarted && !examFinished){ e.preventDefault(); catatPelanggaran('Salin teks'); }
+}));
+document.addEventListener('contextmenu',e=>{ if(examStarted && !examFinished) e.preventDefault(); });
+document.addEventListener('selectstart',e=>{ if(examStarted && !examFinished) e.preventDefault(); });
+document.addEventListener('dragstart',e=>{ if(examStarted && !examFinished) e.preventDefault(); });
+// 4) screenshot & pintasan terlarang
+function clearClip(){ try{ navigator.clipboard && navigator.clipboard.writeText('').catch(()=>{}); }catch(e){} }
+document.addEventListener('keydown',e=>{
+  if(!examStarted || examFinished) return;
+  const k = (e.key||'').toLowerCase();
+  if(e.key==='F12' || (e.ctrlKey&&e.shiftKey&&['i','j','c'].includes(k)) || (e.altKey&&e.key==='Tab')) e.preventDefault();
+  if((e.ctrlKey||e.metaKey) && ['p','s','u'].includes(k)) e.preventDefault();
+  if((e.ctrlKey||e.metaKey) && ['c','x','a'].includes(k)){ e.preventDefault(); if(k!=='a') catatPelanggaran('Salin teks'); }
+  if(e.key==='PrintScreen' || (e.metaKey&&e.shiftKey&&k==='s') || (e.metaKey&&e.shiftKey&&['Digit3','Digit4','Digit5'].includes(e.code))){
+    catatPelanggaran('Screenshot'); clearClip();
+  }
+});
+document.addEventListener('keyup',e=>{
+  if(!examStarted || examFinished) return;
+  if(e.key==='PrintScreen'){ catatPelanggaran('Screenshot'); clearClip(); }
+});
+// 5) split screen: ukuran jendela (piksel perangkat, tahan terhadap zoom) turun tajam dibanding ukuran terbesar
+function cekSplitScreen(){
+  if(!examStarted || examFinished) return;
+  const dpr = window.devicePixelRatio || 1;
+  const o = window.innerWidth > window.innerHeight ? 'landscape' : 'portrait';
+  const a = (window.innerWidth*dpr)*(window.innerHeight*dpr);
+  if(a > areaMax[o]) areaMax[o] = a;
+  if(areaMax[o] > 0 && a < areaMax[o]*0.8){
+    if(!splitActive){ splitActive = true; catatPelanggaran('Split screen'); }
+  } else if(a > areaMax[o]*0.9){ splitActive = false; }
+}
+let resizeT = null;
+window.addEventListener('resize',()=>{ clearTimeout(resizeT); resizeT = setTimeout(cekSplitScreen,400); });
+setInterval(cekSplitScreen,3000);
+// 6) jendela kehilangan fokus (mis. membuka aplikasi lain berdampingan)
+window.addEventListener('blur',()=>{
+  if(!examStarted || examFinished) return;
+  document.getElementById('screen-exam').classList.add('blurred');
+  clearTimeout(blurTimer);
+  blurTimer = setTimeout(()=>{
+    if(dialogOpen || examFinished || document.hidden) return;
+    if(!document.hasFocus() && Date.now()-lastViolAt > 4000) catatPelanggaran('Kehilangan fokus jendela');
+  },1500);
+});
+window.addEventListener('focus',()=>{
+  clearTimeout(blurTimer);
+  document.getElementById('screen-exam').classList.remove('blurred');
+});
+window.addEventListener('beforeunload',(e)=>{ if(examStarted && !examFinished){ e.preventDefault(); e.returnValue=''; } });
+
+/* ================= START EXAM ================= */
+document.getElementById('btnStart').addEventListener('click',()=>{
+  const token = document.getElementById('inputToken').value.trim();
+  const nama = prefName || document.getElementById('inputNama').value.trim();
+  const kelas = prefClass || document.getElementById('inputKelas').value.trim();
+  const err = document.getElementById('startErr');
+  if(!token){ err.textContent='Token ujian wajib diisi.'; return; }
+  if(token !== VALID_TOKEN){ err.textContent='Token salah. Tanyakan token yang benar kepada gurumu.'; return; }
+  if(!kelas || !nama){ err.textContent='Nama dan kelas belum terbaca. Buka ujian dari Menu Kelas 9 atau pilih nama & kelas pada kolom yang tersedia.'; return; }
+  err.textContent='';
+  studentName = nama; studentClass = kelas;
+  buildExam();
+  answers = {}; current=0; logPelanggaran.length=0; violCount=0; examStarted=true; examFinished=false;
+  areaMax.portrait = 0; areaMax.landscape = 0; splitActive = false;
+
+  document.getElementById('screen-start').style.display='none';
+  document.getElementById('screen-exam').style.display='flex';
+  document.getElementById('brandStudent').textContent = nama+' · Kelas '+kelas;
+  enterFullscreen();               // langsung layar penuh saat tombol Mulai ditekan
+  startTimer(); renderNavPanel(); renderQuestion();
+  setTimeout(cekSplitScreen, 1800);
+});
+
+/* ================= SUBMIT / SCORING ================= */
+function confirmSubmit(){
+  if(!canSubmitNow()){
+    safeAlert('Jawaban baru dapat dikirim setelah 40 menit pengerjaan. Sisa waktu tunggu: '+fmtTime(MIN_SUBMIT_SEC-elapsedSec())+'. Silakan periksa kembali jawabanmu.');
+    return;
+  }
+  const unansweredIdx = examQuestions.findIndex(q=>!isAnswered(q));
+  if(unansweredIdx !== -1){
+    const unansweredCount = examQuestions.filter(q=>!isAnswered(q)).length;
+    safeAlert('Masih ada '+unansweredCount+' soal yang belum dijawab. Silakan lengkapi semua soal terlebih dahulu sebelum mengirim jawaban. Kamu akan diarahkan ke soal pertama yang belum dijawab.');
+    current = unansweredIdx;
+    renderQuestion(); renderNavPanel(); closeMobilePanel();
+    return;
+  }
+  if(safeConfirm('Semua soal telah dijawab. Kirim jawaban sekarang? Jawaban tidak dapat diubah setelah dikirim.')) finishExam(false);
+}
+/* ---- Penilaian PARSIAL ----
+   Soal PG: 1 (benar) atau 0 (salah).
+   Soal PG Kompleks / Benar-Salah: dinilai per-opsi/per-pernyataan, bukan semua-atau-tidak.
+   scoreFrac = (jumlah opsi/pernyataan yang cocok dengan kunci) / (jumlah opsi/pernyataan).
+   Contoh: dari 4 pernyataan, siswa benar 3 -> scoreFrac = 0.75 (bukan 0).
+   Soal yang tidak dijawab sama sekali bernilai 0.
+   Nilai akhir = jumlah (scoreFrac × bobot), bobot tiap soal = 100 ÷ jumlah soal. */
+function scoreFrac(q){
+  const v = answers[q.id];
+  if(q.type==='pg'){
+    return (v===q.correct) ? 1 : 0;
+  }
+  if(q.type==='multi'){
+    if(!Array.isArray(v) || !v.length) return 0;
+    let matches = 0;
+    q.options.forEach(o=>{
+      const correctFlag = q.correct.includes(o.k);
+      const studentFlag = v.includes(o.k);
+      if(correctFlag === studentFlag) matches++;
+    });
+    return q.options.length ? matches/q.options.length : 0;
+  }
+  if(q.type==='matrix'){
+    if(!v) return 0;
+    let matches = 0;
+    q.rows.forEach(r=>{ if(v[r.k]===r.correct) matches++; });
+    return q.rows.length ? matches/q.rows.length : 0;
+  }
+  return 0;
+}
+
+// Teks jawaban siswa / kunci memakai nomor ASLI soal & pernyataan pada naskah (bukan urutan acak)
+function byK(a,b){ return String(a.k).localeCompare(String(b.k)); }
+function jawabanText(q){
+  const v = answers[q.id];
+  if(q.type==='pg'){
+    const o = q.options.find(x=>x.k===v);
+    return o ? (o.k+'. '+o.t) : '(kosong)';
+  }
+  if(q.type==='multi'){
+    return (Array.isArray(v)&&v.length) ? v.slice().sort().map(k=>'('+k+')').join(' ; ') : '(kosong)';
+  }
+  if(q.type==='matrix'){
+    if(!v) return '(kosong)';
+    return q.rows.slice().sort(byK).map(r=>'('+r.k+'):'+(v[r.k]||'-')).join(' ; ');
+  }
+  return '(kosong)';
+}
+function kunciText(q){
+  if(q.type==='pg') return q.correct;
+  if(q.type==='multi') return q.correct.slice().sort().map(k=>'('+k+')').join(' ; ');
+  if(q.type==='matrix') return q.rows.slice().sort(byK).map(r=>'('+r.k+'):'+r.correct).join(' ; ');
+  return '';
+}
+
+function finishExam(autoSubmit){
+  if(examFinished) return;
+  examFinished = true;
+  clearInterval(timerHandle);
+  if(isFullscreen()){ try{ (document.exitFullscreen||document.webkitExitFullscreen||function(){}).call(document); }catch(e){} }
+  document.getElementById('screen-exam').style.display='none';
+  document.getElementById('warnOverlay').style.display='none';
+  document.getElementById('lightbox').classList.remove('open');
+
+  const totalMaks = examQuestions.length;
+  const weight = totalMaks ? 100/totalMaks : 0;
+  const perSubject = {};
+  SUBJECT_ORDER.forEach(s=>perSubject[s]={score:0,max:0,total:0,penuh:0});
+  let totalScore = 0, fullCount = 0;
+  const perQuestion = [];
+  examQuestions.forEach(q=>{
+    if(!perSubject[q.subject]){ perSubject[q.subject]={score:0,max:0,total:0,penuh:0}; SUBJECT_ORDER.push(q.subject); }
+    const frac = scoreFrac(q);
+    const qScore = frac*weight;
+    totalScore += qScore;
+    if(frac>=0.999) fullCount++;
+    perSubject[q.subject].total++;
+    perSubject[q.subject].score += qScore;
+    perSubject[q.subject].max += weight;
+    if(frac>=0.999) perSubject[q.subject].penuh++;
+    perQuestion.push({q, frac, qScore});
+  });
+  totalScore = r2(totalScore);
+  let grade='D', gradeLabel='Perlu Bimbingan';
+  if(totalScore>=90){grade='A';gradeLabel='Sangat Baik';}
+  else if(totalScore>=75){grade='B';gradeLabel='Baik';}
+  else if(totalScore>=60){grade='C';gradeLabel='Cukup';}
+
+  document.getElementById('resScore').textContent = totalScore.toFixed(2)+' / 100';
+  document.getElementById('resGrade').textContent = 'Predikat '+grade+' — '+gradeLabel+' · '+fullCount+' dari '+totalMaks+' soal terjawab sempurna (penilaian bersifat parsial per pernyataan)' + (autoSubmit?' · waktu habis, jawaban terkirim otomatis':'');
+  document.getElementById('rNama').textContent = studentName;
+  document.getElementById('rKelas').textContent = studentClass;
+  document.getElementById('rViol').textContent = violCount;
+
+  let tbl = '<tr><th>Materi</th><th>Skor</th><th>Maks</th></tr>';
+  const detailParts = [];
+  SUBJECT_ORDER.forEach(s=>{
+    const sc = r2(perSubject[s].score), mx = r2(perSubject[s].max);
+    tbl += '<tr><td>'+escapeHtml(s)+'</td><td>'+sc+'</td><td>'+mx+'</td></tr>';
+    detailParts.push(s+' '+sc+'/'+mx);
+  });
+  document.getElementById('resTable').innerHTML = tbl;
+
+  window._examResult = {
+    nama: studentName, kelas: studentClass, skor: totalScore, skorMaks: 100, pct: totalScore,
+    grade: grade+' ('+gradeLabel+')', detail: detailParts.join(' | ') + ' | Pelanggaran: '+violCount+'x',
+    perSubject: perSubject, violasi: logPelanggaran.length, jenisPelanggaran: logPelanggaran.slice(), ringkasanPelanggaran: ringkasPelanggaran(), durasiDetik: Math.min(elapsedSec(),DURATION_SEC),
+    skorPerSoal: perQuestion.map(p=>r2(p.qScore))
+  };
+
+  document.getElementById('screen-result').style.display='block';
+  window.scrollTo(0,0);
+  autoSubmitToSheet();
+}
+
+/* ================= GOOGLE APPS SCRIPT AUTO-SUBMIT (real-time ke Google Sheets) ================= */
+function setSubmitStatus(state, text){
+  const el = document.getElementById('submitStatus');
+  el.className = 'submit-status '+state;
+  document.getElementById('submitStatusText').textContent = text;
+  document.getElementById('btnRetrySubmit').classList.toggle('hidden', state==='sending');
+}
+function buildAnswerDetail(){
+  return examQuestions.map((q,idx)=>({
+    no: idx+1, noAsli: q.id, subject: q.subject,
+    jawaban: jawabanText(q), kunci: kunciText(q), benar: r2(scoreFrac(q))
+  }));
+}
+function autoSubmitToSheet(){
+  if(!navigator.onLine){
+    setSubmitStatus('fail','❌ Gagal terkirim — perangkat sedang offline. Sambungkan internet lalu klik "Kirim Ulang".');
+    return;
+  }
+  if(!APPS_SCRIPT_URL || APPS_SCRIPT_URL.indexOf('PASTE_YOUR_DEPLOYMENT_ID_HERE')>-1){
+    setSubmitStatus('fail','⚠ URL Google Apps Script belum dipasang oleh guru. Gunakan "Unduh Hasil (Excel)" sebagai cadangan.');
+    return;
+  }
+  setSubmitStatus('sending','Mengirim jawaban ke guru...');
+  const r = window._examResult;
+  const payload = {
+    timestamp: new Date().toISOString(),
+    mapel: MAPEL, jenisAsesmen: ASESMEN, judul: JUDUL, materi: MATERI, tingkat: KELAS_TINGKAT,
+    nama: r.nama, kelas: r.kelas, skor: r.skor, skorMaks: r.skorMaks, persentase: r.pct,
+    grade: r.grade, pelanggaran: logPelanggaran.length, jenisPelanggaran: logPelanggaran, ringkasanPelanggaran: r.ringkasanPelanggaran, durasiDetik: r.durasiDetik, detailPerMapel: r.detail,
+    jawaban: buildAnswerDetail()
+  };
+  fetch(APPS_SCRIPT_URL, {
+    method: 'POST', mode: 'no-cors',
+    headers: {'Content-Type':'text/plain;charset=utf-8'},
+    body: JSON.stringify(payload)
+  }).then(()=>{
+    setSubmitStatus('ok','✅ Jawaban berhasil terkirim ke Google Spreadsheet guru.');
+  }).catch(()=>{
+    setSubmitStatus('fail','❌ Gagal terkirim (masalah jaringan). Klik "Kirim Ulang" untuk mencoba lagi.');
+  });
+}
+document.getElementById('btnRetrySubmit').addEventListener('click', autoSubmitToSheet);
+
+/* ================= EXCEL EXPORT (cadangan) ================= */
+document.getElementById('btnExcel').addEventListener('click',()=>{
+  if(typeof XLSX === 'undefined'){ alert('Pustaka Excel belum termuat. Periksa koneksi internet lalu coba lagi.'); return; }
+  const r = window._examResult;
+  const rows = [];
+  rows.push(['Nama','Kelas','No','No Asli','Materi','Soal','Jawaban Siswa','Kunci Jawaban','Skor Soal (0-1, parsial)']);
+  examQuestions.forEach((q,idx)=>{
+    const shortText = ((q.pre?q.pre+' ':'')+q.text).replace(/\s+/g,' ').slice(0,80)+'...';
+    rows.push([r.nama, r.kelas, idx+1, q.id, q.subject, shortText, jawabanText(q), kunciText(q), r2(scoreFrac(q))]);
+  });
+  rows.push([]);
+  rows.push(['RINGKASAN']);
+  rows.push(['Nama','Kelas','Skor Akhir (0-100)','Grade','Pelanggaran','Jenis Pelanggaran']);
+  rows.push([r.nama, r.kelas, r.skor, r.grade, r.violasi, r.ringkasanPelanggaran]);
+
+  const ws = XLSX.utils.aoa_to_sheet(rows);
+  ws['!cols'] = [{wch:18},{wch:8},{wch:5},{wch:8},{wch:30},{wch:60},{wch:34},{wch:34},{wch:10}];
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Hasil ASAS Seni Budaya K9');
+  const fname = 'Hasil_ASAS_SeniBudaya_Kelas9_'+r.nama.replace(/[^a-zA-Z0-9]/g,'_')+'.xlsx';
+  XLSX.writeFile(wb, fname);
+});
+
+})();
+</script>
 </body>
 </html>
