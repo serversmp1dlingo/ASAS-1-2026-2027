@@ -2,46 +2,941 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Matematika — Kelas 7 — ASAS SMP Negeri 1 Dlingo</title>
-<meta name="description" content="Soal Matematika Kelas 7">
-<meta name="robots" content="noindex">
-<link rel="icon" href="../../assets/img/logo-smpn1dlingo.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../../assets/css/style.css">
-<script>document.documentElement.classList.add('js');</script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Asesmen Sumatif Akhir Semester (ASAS) — Matematika — Kelas 7 — SMP N 1 Dlingo</title>
+<link rel="icon" type="image/png" href="../../assets/img/logo-smpn1dlingo.png">
+<!-- MathJax 3 untuk notasi matematika -->
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']], processEscapes: true },
+    options: { ignoreHtmlClass: 'tex2jax_ignore', processHtmlClass: 'tex2jax_process' }
+  };
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-chtml.min.js" id="mathjax-script" async></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<!-- Data nama & rombel siswa (folder assets/js) -->
+<script src="../../assets/js/data-siswa.js"></script>
+<style>
+  :root{
+    --ink:#3d3000; --primary:#8a6500; --primary-dark:#5f4300; --primary-light:#fdf0b0;
+    --green:#2f7d4f; --red:#b3392f; --amber:#e0a72e; --gray:#6a5a22;
+    --bg:#fff6c4; --card:#fffdf0; --border:#e3d086; --radius:10px;
+  }
+  *{box-sizing:border-box;}
+  html,body{height:100%;}
+  body{margin:0;font-family:'Segoe UI',Roboto,Arial,sans-serif;background:var(--bg);color:#2b2410;-webkit-tap-highlight-color:transparent;}
+  /* pencegahan salin / screenshot (sebisa mungkin) */
+  #screen-exam, #screen-exam *{-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;-webkit-touch-callout:none;}
+  #screen-exam img{-webkit-user-drag:none;user-drag:none;}
+  #screen-exam.blurred{filter:blur(18px);transition:filter .15s;}
+  @media print{
+    #screen-exam, #screen-start, #screen-result{display:none !important;}
+    body::before{content:"Konten ujian tidak dapat dicetak.";display:block;text-align:center;padding:40px;font-size:18px;}
+  }
+  img{max-width:100%;height:auto;}
+  button{font-family:inherit;cursor:pointer;}
+  .hidden{display:none !important;}
+
+  /* ===== START ===== */
+  #screen-start{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;
+    background:linear-gradient(135deg,#fff3a8,#ffe27a);}
+  .start-card{background:var(--card);border-radius:16px;max-width:660px;width:100%;padding:32px 30px;box-shadow:0 18px 50px rgba(95,67,0,.22);border:1px solid var(--border);}
+  .back-link{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;color:var(--gray);margin-bottom:14px;text-decoration:none;}
+  .school-header{display:flex;align-items:center;gap:14px;margin-bottom:18px;}
+  .school-header img{width:56px;height:auto;flex-shrink:0;}
+  .school-header .stxt{line-height:1.35;}
+  .school-header .stxt b{display:block;color:var(--ink);font-size:15px;}
+  .school-header .stxt span{color:var(--gray);font-size:12px;}
+  .start-card h1{margin:0 0 4px;font-size:21px;color:var(--ink);}
+  .start-card .sub{color:var(--gray);margin:0 0 20px;font-size:14px;}
+  .tabs{display:flex;gap:8px;margin-bottom:18px;border-bottom:1.5px solid var(--border);}
+  .tab-btn{padding:9px 16px;border:none;background:none;font-weight:700;font-size:13.5px;color:var(--gray);border-bottom:3px solid transparent;margin-bottom:-2px;}
+  .tab-btn.active{color:var(--primary);border-bottom-color:var(--primary);}
+  .tab-panel{display:none;} .tab-panel.active{display:block;}
+  .info-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px 18px;background:var(--primary-light);border-radius:10px;padding:14px 16px;margin-bottom:18px;font-size:13px;}
+  .info-grid div b{display:block;color:var(--ink);font-size:13.5px;}
+  .info-grid div span{color:var(--gray);}
+  label.lbl{display:block;font-size:13px;font-weight:600;color:var(--ink);margin:14px 0 6px;}
+  input[type=text]{width:100%;padding:12px 14px;border:1.5px solid var(--border);border-radius:8px;font-size:15px;background:#fff;text-transform:uppercase;letter-spacing:1px;}
+  input:focus,select:focus{outline:none;border-color:var(--primary);}
+  select{width:100%;padding:12px 14px;border:1.5px solid var(--border);border-radius:8px;font-size:15px;background:#fff;color:#2b2410;}
+  select:disabled{background:#f6f0d2;color:var(--gray);cursor:not-allowed;}
+  .peserta{background:#fff;border:1.5px solid var(--border);border-radius:10px;padding:12px 14px;margin-top:4px;}
+  .peserta b{display:block;font-size:16px;color:var(--ink);}
+  .peserta span{font-size:13px;color:var(--gray);}
+  .instr-list{font-size:13.5px;line-height:1.8;color:#3b3214;padding-left:20px;margin:0 0 10px;}
+  .rules{font-size:12.5px;color:#5b4a10;line-height:1.65;margin:18px 0;padding:12px 14px;background:#fff0b3;border:1px solid #ecd06a;border-radius:8px;}
+  .btn-primary{width:100%;padding:14px;background:var(--primary);color:#fff;border:none;border-radius:9px;font-size:16px;font-weight:700;margin-top:12px;transition:.15s;}
+  .btn-primary:hover{background:var(--primary-dark);}
+  .btn-primary:disabled{background:#c9b988;cursor:not-allowed;}
+  .err-msg{color:var(--red);font-size:12.5px;margin-top:6px;min-height:16px;font-weight:600;}
+
+  /* ===== EXAM ===== */
+  #screen-exam{display:none;min-height:100vh;flex-direction:column;}
+  #topbar{background:#f5d95a;color:var(--ink);padding:10px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;position:sticky;top:0;z-index:50;border-bottom:2px solid #d9b93a;}
+  #topbar .brand{display:flex;align-items:center;gap:10px;font-size:13px;font-weight:700;}
+  #topbar .brand img{width:28px;height:auto;}
+  #topbar .brand .who{font-weight:500;opacity:.85;font-size:11.5px;display:block;}
+  #timerBox{background:var(--ink);color:#fff6c4;padding:8px 16px;border-radius:8px;font-weight:700;font-size:18px;letter-spacing:1px;min-width:110px;text-align:center;}
+  #timerBox.low{background:#c0392b;color:#fff;animation:pulse 1s infinite;}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.6}}
+  #violationBadge{background:var(--red);color:#fff;padding:5px 10px;border-radius:20px;font-size:12px;font-weight:700;display:none;}
+  #panelToggle{background:var(--ink);color:#fff6c4;border:none;padding:8px 12px;border-radius:8px;font-size:13px;font-weight:700;}
+
+  #examBody{display:flex;flex:1;overflow:hidden;}
+  #navPanel{width:280px;flex-shrink:0;background:var(--card);border-right:1px solid var(--border);padding:16px;overflow-y:auto;}
+  #navPanel h3{font-size:11.5px;text-transform:uppercase;letter-spacing:.4px;color:var(--gray);margin:14px 0 8px;}
+  #navPanel h3:first-child{margin-top:0;}
+  .navgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;}
+  .navbtn{aspect-ratio:1;border:1.5px solid var(--border);background:#fff;border-radius:6px;font-size:12px;font-weight:700;color:var(--ink);display:flex;align-items:center;justify-content:center;}
+  .navbtn.answered{background:var(--green);border-color:var(--green);color:#fff;}
+  .navbtn.current{outline:3px solid var(--amber);outline-offset:1px;}
+  .legend{display:flex;gap:14px;font-size:11px;color:var(--gray);margin:14px 0 4px;flex-wrap:wrap;}
+  .legend span{display:inline-flex;align-items:center;gap:5px;}
+  .dot{width:10px;height:10px;border-radius:3px;display:inline-block;}
+  #navSubmitBtn{width:100%;margin-top:18px;padding:12px;background:var(--red);color:#fff;border:none;border-radius:8px;font-weight:700;font-size:14px;}
+  #navSubmitBtn.locked{background:#b9a96a;}
+  .minnote{font-size:11.5px;color:var(--gray);margin-top:8px;line-height:1.5;}
+
+  #questionArea{flex:1;overflow-y:auto;padding:26px 32px 100px;}
+  .qwrap{max-width:860px;margin:0 auto;}
+  .qnum{font-size:14px;color:var(--gray);margin-bottom:6px;font-weight:600;}
+  .qtext{font-size:17px;line-height:1.75;margin-bottom:16px;}
+  .qtext2{margin-top:14px;}
+  .tblwrap{overflow-x:auto;margin:10px 0;max-width:100%;}
+  table.qtable{border-collapse:collapse;background:#fff;font-size:16px;min-width:60%;}
+  table.qtable th,table.qtable td{border:1.5px solid #8d7a2e;padding:8px 14px;text-align:center;}
+  table.qtable thead th,table.qtable tbody th{background:#f7e58e;color:var(--ink);}
+  table.qtable tbody th{text-align:left;}
+  .qimg-wrap{margin:14px 0;display:flex;flex-wrap:wrap;gap:14px;}
+  .qimg-wrap .imgbox{position:relative;cursor:zoom-in;width:100%;}
+  .qimg-wrap img{width:100%;max-width:100%;display:block;border-radius:8px;border:2px solid var(--border);background:#fff;}
+  .qimg-wrap .zoomhint{position:absolute;bottom:10px;right:10px;background:rgba(61,48,0,.82);color:#fff;font-size:12px;font-weight:700;padding:5px 11px;border-radius:20px;pointer-events:none;}
+  .qimg-wrap .imgph{width:100%;height:160px;border:2px dashed var(--border);border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--gray);font-size:12.5px;text-align:center;background:#fffbe0;padding:10px;}
+  #lightbox{position:fixed;inset:0;background:rgba(30,24,0,.95);z-index:1200;display:none;overflow:auto;-webkit-overflow-scrolling:touch;}
+  #lightbox.open{display:block;}
+  #lightbox .lb-inner{min-height:100%;display:flex;align-items:center;justify-content:center;padding:56px 10px 20px;}
+  #lightbox img{width:100%;max-width:1100px;height:auto;border-radius:6px;cursor:zoom-in;}
+  #lightbox.zoomed .lb-inner{display:block;}
+  #lightbox.zoomed img{width:230%;max-width:none;cursor:zoom-out;}
+  #lightbox .lb-close{position:fixed;top:12px;right:14px;background:#fff6c4;color:var(--ink);border:none;width:40px;height:40px;border-radius:50%;font-size:18px;font-weight:700;z-index:2;}
+  #lightbox .lb-tip{position:fixed;top:18px;left:14px;color:#fff6c4;font-size:12.5px;z-index:2;opacity:.9;}
+  .qtype-hint{font-size:13px;color:#8a5a00;font-weight:700;margin-bottom:10px;}
+
+  .option{display:flex;align-items:flex-start;gap:12px;padding:14px 16px;border:1.5px solid var(--border);border-radius:10px;margin-bottom:10px;background:#fff;transition:.12s;}
+  .option:hover{border-color:var(--primary);}
+  .option.selected{border-color:var(--primary);background:#fdeea0;}
+  .option input{margin-top:4px;flex-shrink:0;width:19px;height:19px;}
+  .option .otext{font-size:16.5px;line-height:1.55;}
+  .option .olabel{font-weight:700;color:var(--ink);margin-right:6px;}
+
+  table.matrix{width:100%;border-collapse:collapse;margin-top:8px;font-size:15.5px;background:#fff;}
+  table.matrix th,table.matrix td{border:1.5px solid #c9b45a;padding:11px 10px;text-align:center;}
+  table.matrix th{background:#f7e58e;color:var(--ink);}
+  table.matrix td.stmt{text-align:left;line-height:1.6;}
+  table.matrix td.pick{width:78px;}
+  table.matrix input{width:22px;height:22px;}
+
+  #navRow{max-width:860px;margin:24px auto 0;display:flex;justify-content:space-between;gap:10px;}
+  .btn-nav{padding:12px 22px;border-radius:8px;border:1.5px solid var(--border);background:#fff;font-weight:700;color:var(--ink);font-size:14.5px;}
+  .btn-nav:disabled{opacity:.4;}
+  .btn-nav.primary{background:var(--primary);color:#fff;border:none;}
+  .btn-nav.locked{background:#b9a96a;}
+
+  #warnOverlay,#modalOverlay{position:fixed;inset:0;background:rgba(61,48,0,.95);z-index:1300;display:none;align-items:center;justify-content:center;padding:20px;color:#fff;text-align:center;}
+  #warnOverlay{z-index:1400;}
+  #warnOverlay .box,#modalOverlay .box{max-width:440px;}
+  #warnOverlay h2,#modalOverlay h2{color:#ffe27a;font-size:22px;margin-top:0;}
+  #warnOverlay p,#modalOverlay p{font-size:15px;line-height:1.65;opacity:.95;}
+  #warnOverlay button,#modalOverlay button{margin:16px 6px 0;padding:12px 26px;background:#ffe27a;border:none;border-radius:8px;font-weight:700;font-size:14.5px;color:#432;}
+  #modalOverlay button.sec{background:transparent;color:#ffe27a;border:1.5px solid #ffe27a;}
+
+  /* ===== RESULT ===== */
+  #screen-result{display:none;min-height:100vh;padding:30px 16px;background:var(--bg);}
+  .result-card{max-width:720px;margin:0 auto;background:var(--card);border-radius:16px;padding:32px;box-shadow:0 10px 40px rgba(95,67,0,.12);border:1px solid var(--border);}
+  .result-card h1{color:var(--ink);margin-top:0;font-size:22px;}
+  .score-hero{text-align:center;padding:26px;background:linear-gradient(135deg,#f7dc6a,#e9bf3b);border-radius:14px;color:var(--ink);margin:18px 0 24px;}
+  .score-hero .num{font-size:46px;font-weight:800;}
+  .score-hero .grade{font-size:15px;margin-top:4px;}
+  .breakdown{width:100%;border-collapse:collapse;font-size:14px;margin-bottom:20px;}
+  .breakdown th,.breakdown td{padding:9px 10px;border-bottom:1px solid var(--border);text-align:left;}
+  .breakdown th{color:var(--gray);font-size:12px;text-transform:uppercase;}
+  .result-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px;}
+  .result-actions button{flex:1;min-width:180px;padding:13px;border-radius:9px;font-weight:700;font-size:14px;border:none;}
+  #btnExcel{background:var(--primary);color:#fff;}
+  #btnRetrySubmit{background:var(--amber);color:#432;}
+  .submit-status{display:flex;align-items:center;gap:10px;padding:12px 16px;border-radius:9px;font-size:13.5px;font-weight:600;margin-bottom:18px;}
+  .submit-status.sending{background:#fff0b3;color:#7a5a00;border:1px solid #ecd06a;}
+  .submit-status.ok{background:#e9f9f0;color:#0f7a45;border:1px solid #b7ecd0;}
+  .submit-status.fail{background:#fdecea;color:#a4271f;border:1px solid #f3c3bd;}
+  .dotpulse{width:9px;height:9px;border-radius:50%;background:currentColor;flex-shrink:0;animation:pulse 1s infinite;}
+  .submit-status.ok .dotpulse,.submit-status.fail .dotpulse{animation:none;}
+  .note-small{font-size:12px;color:var(--gray);margin-top:14px;line-height:1.6;}
+
+  @media (max-width:820px){
+    #navPanel{position:fixed;left:-300px;top:0;bottom:0;z-index:60;transition:.2s;box-shadow:4px 0 20px rgba(0,0,0,.18);}
+    #navPanel.open{left:0;}
+    #questionArea{padding:18px 14px 90px;}
+    .qtext{font-size:16.5px;}
+    .start-card{padding:24px 18px;}
+    table.matrix td.pick{width:62px;}
+    table.qtable{font-size:15px;}
+  }
+</style>
 </head>
 <body>
-<div class="bg-deco" aria-hidden="true"><span class="orb o1"></span><span class="orb o2"></span><span class="orb o3"></span></div>
-<div class="page">
-<header class="kop">
-  <div class="kop-inner">
-    <a class="kembali reveal" href="../../kelas-7.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg> Kelas 7</a>
-    <div class="logo-wrap reveal"><img src="../../assets/img/logo-smpn1dlingo.png" alt="Logo SMP Negeri 1 Dlingo"></div>
-    <p class="sekolah reveal" style="--d:.08s">SMP NEGERI 1 DLINGO</p>
-    <h1 class="judul reveal" style="--d:.16s">Matematika</h1>
-    <div class="ornamen reveal" style="--d:.24s"><i></i></div>
-    <div class="chips reveal" style="--d:.32s"><span class="chip">Kelas <strong>VII</strong></span><span class="chip">Tahun Pelajaran <strong>2026/2027</strong></span></div>
+
+<!-- ============ START ============ -->
+<div id="screen-start">
+  <div class="start-card">
+    <a class="back-link" href="../../kelas-7.html">&larr; Menu Kelas 7</a>
+    <div class="school-header">
+      <img src="../../assets/img/logo-smpn1dlingo.png" alt="Logo Sekolah" onerror="this.style.display='none'">
+      <div class="stxt"><b>SMP NEGERI 1 DLINGO</b><span>Asesmen Sumatif Akhir Semester (ASAS) · Matematika · TP 2026/2027</span></div>
+    </div>
+    <h1>📝 ASAS Matematika — Kelas 7</h1>
+    <p class="sub">Jenjang SMP · Kelas 7 · Semester Ganjil</p>
+
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="petunjuk">📋 Petunjuk</button>
+      <button class="tab-btn" data-tab="mulai">🚀 Mulai Ujian</button>
+    </div>
+
+    <div class="tab-panel active" id="tab-petunjuk">
+      <div class="info-grid">
+        <div><b id="infoJumlah">30 Soal</b><span>Pilihan Ganda &amp; PG Kompleks (Benar/Salah)</span></div>
+        <div><b id="infoDurasi">90 Menit</b><span>Alokasi waktu pengerjaan</span></div>
+        <div><b>4 Materi</b><span>Bilangan, Aljabar, Persamaan &amp; Pertidaksamaan Linear, Perbandingan</span></div>
+        <div><b>Acak Soal</b><span>Urutan soal &amp; opsi diacak tiap siswa</span></div>
+      </div>
+      <p style="font-size:13.5px;color:#3b3214;margin:0 0 8px;font-weight:700;">Petunjuk Pengerjaan:</p>
+      <ol class="instr-list">
+        <li>Masukkan token ujian pada tab "Mulai Ujian". Nama dan kelas sudah terisi otomatis dari menu kelas.</li>
+        <li>Bacalah setiap butir soal dengan cermat sebelum menjawab.</li>
+        <li>Terdapat soal Pilihan Ganda (pilih satu jawaban) dan Pilihan Ganda Kompleks (pilih lebih dari satu jawaban, atau tentukan Benar/Salah tiap pernyataan).</li>
+        <li><b>Penilaian parsial:</b> pada soal PG Kompleks dan Benar/Salah, setiap pernyataan/opsi yang kamu jawab dengan benar tetap mendapat nilai.</li>
+        <li>Ujian tampil dalam mode layar penuh (fullscreen) sejak dimulai.</li>
+        <li>Jangan membuka tab/aplikasi lain, menyalin teks, mengambil tangkapan layar, atau memakai split screen — setiap pelanggaran dicatat dan dilaporkan ke guru.</li>
+        <li>Waktu berjalan otomatis dan tidak dapat dijeda. Jawaban baru dapat dikirim setelah <b id="infoMin">40 menit</b> pengerjaan.</li>
+        <li>Gunakan panel navigasi soal untuk melompat ke nomor tertentu dan memantau soal yang sudah/belum dijawab.</li>
+        <li>Tekan "Kirim Jawaban" setelah selesai. Jika pengiriman gagal, gunakan tombol "Kirim Ulang".</li>
+      </ol>
+    </div>
+
+    <div class="tab-panel" id="tab-mulai">
+      <label class="lbl">Token Ujian</label>
+      <input type="text" id="inputToken" placeholder="Masukkan token dari guru" autocomplete="off" autocapitalize="characters" spellcheck="false">
+
+      <div id="pesertaBox" class="hidden">
+        <label class="lbl">Peserta</label>
+        <div class="peserta"><b id="pNama"></b><span id="pKelas"></span></div>
+      </div>
+      <div id="pickBox" class="hidden">
+        <label class="lbl">Kelas</label>
+        <select id="inputKelas"><option value="">— Pilih Kelas —</option></select>
+        <label class="lbl">Nama Lengkap</label>
+        <select id="inputNama" disabled><option value="">— Pilih kelas terlebih dahulu —</option></select>
+      </div>
+
+      <div class="rules">
+        ⚠️ <b>Perhatian sebelum memulai:</b><br>
+        • Ujian akan tampil dalam mode <b>layar penuh (fullscreen)</b>.<br>
+        • Mencoba keluar layar penuh, pindah tab/aplikasi, menyalin teks, mengambil tangkapan layar, atau memakai split screen dihitung sebagai <b>pelanggaran</b>.<br>
+        • Waktu berjalan otomatis dan tidak dapat dijeda. Ujian terkirim otomatis saat waktu habis.<br>
+        • Pastikan koneksi internet stabil agar hasil dapat terkirim ke guru.
+      </div>
+      <div class="err-msg" id="startErr"></div>
+      <button class="btn-primary" id="btnStart">🚀 Mulai Ujian (Layar Penuh)</button>
+    </div>
   </div>
-</header>
-<main>
-  <div class="glass panel-segera reveal">
-    <div class="ikon-besar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg></div>
-    <span class="lencana">Segera hadir</span>
-    <h2>Soal belum tersedia</h2>
-    <p>Berkas soal <strong>Matematika</strong> Kelas VII sedang disiapkan dan akan diunggah menyusul.</p>
-    <p>Berkas ini akan digantikan pada alamat berikut, sehingga tautan menu tidak perlu diubah.</p>
-    <span class="berkas">soal/kelas-7/matematika.html</span><br>
-    <a class="tombol" href="../../kelas-7.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg> Kembali ke Kelas VII</a>
-  </div>
-</main>
-<footer>
-  <p><strong>SMP Negeri 1 Dlingo</strong> — Bantul, Daerah Istimewa Yogyakarta<br>
-  Portal Asesmen Sumatif Akhir Semester &middot; Tahun Pelajaran 2026/2027</p>
-</footer>
 </div>
-<script src="../../assets/js/main.js"></script>
+
+<!-- ============ EXAM ============ -->
+<div id="screen-exam">
+  <div id="topbar">
+    <button id="panelToggle">☰ Soal</button>
+    <div class="brand"><img src="../../assets/img/logo-smpn1dlingo.png" alt="Logo" onerror="this.style.display='none'"><span>ASAS MATEMATIKA 7 · TP 2026/2027<small class="who" id="brandStudent"></small></span></div>
+    <div id="violationBadge">⚠ Pelanggaran: <span id="violCount">0</span></div>
+    <div id="timerBox">90:00</div>
+  </div>
+  <div id="examBody">
+    <div id="navPanel"></div>
+    <div id="questionArea">
+      <div class="qwrap" id="qwrap"></div>
+      <div id="navRow">
+        <button class="btn-nav" id="btnPrev">← Sebelumnya</button>
+        <button class="btn-nav primary" id="btnNext">Selanjutnya →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="lightbox">
+  <span class="lb-tip">Ketuk gambar untuk memperbesar / memperkecil</span>
+  <button class="lb-close" id="lightboxClose">✕</button>
+  <div class="lb-inner"><img id="lightboxImg" src="" alt="Gambar diperbesar"></div>
+</div>
+
+<div id="warnOverlay">
+  <div class="box">
+    <h2 id="warnTitle">⚠ Peringatan</h2>
+    <p id="warnText"></p>
+    <button id="warnBtn">Kembali ke Ujian</button>
+  </div>
+</div>
+
+<div id="modalOverlay">
+  <div class="box">
+    <h2 id="modalTitle"></h2>
+    <p id="modalText"></p>
+    <div id="modalBtns"></div>
+  </div>
+</div>
+
+<!-- ============ RESULT ============ -->
+<div id="screen-result">
+  <div class="result-card">
+    <div class="school-header">
+      <img src="../../assets/img/logo-smpn1dlingo.png" alt="Logo Sekolah" onerror="this.style.display='none'">
+      <div class="stxt"><b>SMP NEGERI 1 DLINGO BANTUL</b><span>Asesmen Sumatif Akhir Semester (ASAS) · Matematika · TP 2026/2027</span></div>
+    </div>
+    <h1>✅ Hasil Ujian</h1>
+    <div class="score-hero">
+      <div class="num" id="resScore">0 / 100</div>
+      <div class="grade" id="resGrade">Predikat —</div>
+    </div>
+    <div id="submitStatus" class="submit-status sending">
+      <span class="dotpulse"></span><span id="submitStatusText">Mengirim jawaban ke guru...</span>
+    </div>
+    <table class="breakdown" id="resTable"></table>
+    <div class="result-actions">
+      <button id="btnRetrySubmit" class="hidden">🔁 Kirim Ulang</button>
+      <button id="btnExcel">⬇️ Unduh Hasil (Excel)</button>
+    </div>
+    <p class="note-small">
+      Nama: <b id="rNama"></b> · Kelas: <b id="rKelas"></b> · Pelanggaran tercatat: <b id="rViol"></b> kali.<br>
+      Jawaban dikirim otomatis ke Google Spreadsheet guru begitu halaman ini muncul. Jika status di atas menunjukkan gagal terkirim, pastikan internet aktif lalu klik "Kirim Ulang". Tombol "Unduh Hasil (Excel)" tersedia sebagai cadangan.
+    </p>
+  </div>
+</div>
+
+<script id="questions-data" type="application/json">[{"no": 1, "subject": "Bilangan Bulat & Pecahan", "type": "matrix", "text": "Tentukan benar atau salah untuk setiap pernyataan berikut!", "text2": null, "img": null, "options": null, "correct": null, "rows": [{"text": "$8 + (-6) = -2$", "correct": "S"}, {"text": "$(-5) \\times (-3) = 15$", "correct": "B"}, {"text": "$-8 + 3 \\times (-2) = -14$", "correct": "B"}]}, {"no": 2, "subject": "Bilangan Bulat & Pecahan", "type": "pg", "text": "Diberikan empat bilangan pecahan berikut: $\\dfrac{4}{5}$ ; 62%; 0,7; 0,25<br>Jika diurutkan secara naik, urutan yang tepat adalah ….", "text2": null, "img": null, "options": ["$\\dfrac{4}{5}$; 0,7; 62%; 0,25", "$\\dfrac{4}{5}$; 62%; 0,7; 0,25", "0,25; 0,7; 62%; $\\dfrac{4}{5}$", "0,25; 62%; 0,7; $\\dfrac{4}{5}$"], "correct": 3, "rows": null}, {"no": 3, "subject": "Bilangan Bulat & Pecahan", "type": "pg", "text": "Berikut adalah tabel besarnya suhu di beberapa kota.<div class=\"tblwrap\"><table class=\"qtable\"><thead><tr><th>NAMA KOTA<\/th><th>BESAR SUHU (°C)<\/th><\/tr><\/thead><tbody><tr><td>P<\/td><td>−4<\/td><\/tr><tr><td>Q<\/td><td>6<\/td><\/tr><tr><td>R<\/td><td>−1<\/td><\/tr><tr><td>S<\/td><td>20<\/td><\/tr><\/tbody><\/table><\/div>Urutan nama kota jika diurutkan dari suhu paling rendah adalah ….", "text2": null, "img": null, "options": ["Kota R, P, Q, S", "Kota P, R, S, Q", "Kota S, Q, P, R", "Kota P, R, Q, S"], "correct": 3, "rows": null}, {"no": 4, "subject": "Bilangan Bulat & Pecahan", "type": "matrix", "text": "Dalam seleksi Olimpiade Matematika tersedia 30 butir soal dengan pedoman penskoran sebagai berikut:<br><b>Tabel pedoman penskoran<\/b><div class=\"tblwrap\"><table class=\"qtable\"><thead><tr><th>Tiap butir soal<\/th><th>Skor<\/th><\/tr><\/thead><tbody><tr><td>Benar<\/td><td>4<\/td><\/tr><tr><td>Salah<\/td><td>−1<\/td><\/tr><tr><td>Tidak dijawab<\/td><td>0<\/td><\/tr><\/tbody><\/table><\/div>Alisha menjawab 28 butir soal dan 24 di antaranya benar.<br>Tentukan benar atau salah pernyataan di bawah ini!", "text2": null, "img": null, "options": null, "correct": null, "rows": [{"text": "4 butir soal yang dijawab Alisha adalah salah", "correct": "B"}, {"text": "Jumlah skor jawaban benar Alisha adalah 112", "correct": "S"}, {"text": "Skor yang diperoleh Alisha adalah 92", "correct": "B"}]}, {"no": 5, "subject": "Bilangan Bulat & Pecahan", "type": "pg", "text": "Ibu mempunyai minyak goreng 0,75 liter, kemudian membeli lagi 1,2 liter. Banyak minyak goreng ibu sekarang adalah ….", "text2": null, "img": null, "options": ["0,25 liter", "0,45 liter", "1,75 liter", "1,95 liter"], "correct": 3, "rows": null}, {"no": 6, "subject": "Bilangan Bulat & Pecahan", "type": "pg", "text": "Hasil dari $\\dfrac{3}{7} + \\dfrac{2}{5}$ adalah ….", "text2": null, "img": null, "options": ["$\\dfrac{5}{12}$", "$\\dfrac{29}{35}$", "$\\dfrac{65}{12}$", "$\\dfrac{204}{35}$"], "correct": 1, "rows": null}, {"no": 7, "subject": "Bilangan Bulat & Pecahan", "type": "pg", "text": "Hasil dari $-42 - (-18)$ adalah ….", "text2": null, "img": null, "options": ["60", "24", "−24", "−60"], "correct": 2, "rows": null}, {"no": 8, "subject": "Bilangan Bulat & Pecahan", "type": "pg", "text": "Operasi \"∆\" berarti kalikan bilangan pertama dengan 3, kemudian jumlahkan hasilnya dengan bilangan kedua. Hasil dari −2 ∆ 5 adalah ….", "text2": null, "img": null, "options": ["−1", "−3", "1", "11"], "correct": 0, "rows": null}, {"no": 9, "subject": "Bentuk Aljabar", "type": "pg", "text": "Bentuk aljabar yang menyatakan total harga 7 koper berukuran besar yang masing-masing harganya $a$ rupiah dan 3 koper berukuran sedang yang masing-masing harganya $b$ rupiah adalah ….", "text2": null, "img": null, "options": ["$7a - 3b$", "$7a \\times 3b$", "$7b + 3a$", "$7a + 3b$"], "correct": 3, "rows": null}, {"no": 10, "subject": "Bentuk Aljabar", "type": "matrix", "text": "Diketahui bentuk aljabar $7x^{2} - 4x + 8y - 3$. Tentukan benar atau salah untuk setiap pernyataan berikut!", "text2": null, "img": null, "options": null, "correct": null, "rows": [{"text": "$x$ dan $y$ merupakan variabel", "correct": "B"}, {"text": "$7x^{2}$, $4x$, $8y$ dan $3$ merupakan suku", "correct": "S"}, {"text": "Konstanta $-3$", "correct": "B"}]}, {"no": 11, "subject": "Bentuk Aljabar", "type": "multi", "text": "Dari pernyataan-pernyataan berikut, pilihlah jawaban yang benar dengan menandai centang (✓)!", "text2": null, "img": null, "options": ["$3p + 9p = 12p$", "$6k - 10k = 4k$", "$-4m + 7m = 3m$", "$-5d - 4d = 9d$"], "correct": [0, 2], "rows": null}, {"no": 12, "subject": "Bentuk Aljabar", "type": "pg", "text": "Perhatikan pasangan suku berikut:<br>(1) $2x$ dan $2y$<br>(2) $3m$ dan $5m$<br>(3) $7a$ dan $8a^{2}$<br>(4) $5y$ dan $9y$<br>Yang merupakan pasangan suku sejenis adalah ….", "text2": null, "img": null, "options": ["(1) dan (3)", "(1) dan (4)", "(2) dan (3)", "(2) dan (4)"], "correct": 3, "rows": null}, {"no": 13, "subject": "Bentuk Aljabar", "type": "matrix", "text": "Diketahui $P = 2x + 6$ dan $Q = x + 5$. Tentukan benar atau salah untuk setiap pernyataan berikut!", "text2": null, "img": null, "options": null, "correct": null, "rows": [{"text": "$P + Q$ adalah $2x + 11$", "correct": "S"}, {"text": "$P - Q$ adalah $x + 1$", "correct": "B"}, {"text": "$P \\times Q$ adalah $2x^{2} + 16x + 30$", "correct": "B"}]}, {"no": 14, "subject": "Bentuk Aljabar", "type": "pg", "text": "Hasil pengurangan $-8p + 10q - 9r$ dari $4p - 11q - 9r$ adalah ….", "text2": null, "img": null, "options": ["$-4p - q$", "$12p - 21q$", "$-4p - q - 18r$", "$-12p + 21q - 18r$"], "correct": 1, "rows": null}, {"no": 15, "subject": "Persamaan & Pertidaksamaan Linear", "type": "pg", "text": "Diketahui $4(2x + 5) = 3(2x + 4)$. Nilai dari $2x - 3$ adalah ….", "text2": null, "img": null, "options": ["−11", "−4", "4", "5"], "correct": 0, "rows": null}, {"no": 16, "subject": "Bentuk Aljabar", "type": "pg", "text": "Bentuk $(2x + 4)(3x - 2)$ adalah ….", "text2": null, "img": null, "options": ["$6x^{2} + 16x - 8$", "$6x^{2} + 16x - 8$", "$6x^{2} + 8x - 8$", "$6x^{2} - 8x - 8$"], "correct": 2, "rows": null}, {"no": 17, "subject": "Persamaan & Pertidaksamaan Linear", "type": "pg", "text": "Himpunan penyelesaian dari $p + 6 \\gt 13$, $p$ bilangan bulat adalah ….", "text2": null, "img": null, "options": ["$\\{7, 8, 9, 10, \\ldots\\}$", "$\\{8, 9, 10, 11, \\ldots\\}$", "$\\{9, 10, 11, \\ldots\\}$", "$\\{10, 11, 12, \\ldots\\}$"], "correct": 1, "rows": null}, {"no": 18, "subject": "Persamaan & Pertidaksamaan Linear", "type": "pg", "text": "Penyelesaian dari $8x + 2 \\gt 3x + 3$ adalah ….", "text2": null, "img": null, "options": ["$x \\gt \\dfrac{1}{3}$", "$x \\gt \\dfrac{1}{4}$", "$x \\gt \\dfrac{1}{5}$", "$x \\gt \\dfrac{1}{6}$"], "correct": 2, "rows": null}, {"no": 19, "subject": "Persamaan & Pertidaksamaan Linear", "type": "pg", "text": "Himpunan penyelesaian dari $\\dfrac{1}{3}(5 - 2x) \\lt 5$, dengan $x \\in$ bilangan bulat adalah ….", "text2": null, "img": null, "options": ["$\\{\\ldots, -8, -7, -6, -5\\}$", "$\\{\\ldots, -9, -8, -7, -6\\}$", "$\\{-5, -4, -3, -2, \\ldots\\}$", "$\\{-4, -3, -2, -1, \\ldots\\}$"], "correct": 3, "rows": null}, {"no": 20, "subject": "Perbandingan", "type": "multi", "text": "Seorang pedagang sedang mencatat stok barang-barang yang ada di Gudang dan didapatkan beberapa data. Tentukan pernyataan mana yang benar terkait perbandingan jumlah stok barang di Gudang tersebut! (<i>Jawaban benar lebih dari satu<\/i>)", "text2": null, "img": null, "options": ["Perbandingan 1,5 lusin terhadap 20 buah adalah 9 : 10", "Perbandingan 2 gros terhadap 144 buah adalah 2 : 1", "Perbandingan 0,5 kodi terhadap 2 lusin adalah 5 : 12", "Perbandingan 250 lembar terhadap 0,5 rim adalah 1 : 2"], "correct": [0, 1, 2], "rows": null}, {"no": 21, "subject": "Perbandingan", "type": "matrix", "text": "Sebuah pabrik menggunakan cairan penetral untuk mengolah limbah cair sebelum dibuang ke lingkungan. Hubungan antara volume limbah dan kebutuhan cairan penetral disajikan dalam tabel berikut:<div class=\"tblwrap\"><table class=\"qtable\"><tbody><tr><th>Volume limbah (m<sup>3<\/sup>)<\/th><td>12<\/td><td>30<\/td><td>50<\/td><\/tr><tr><th>Cairan Penetral (liter)<\/th><td>0,6<\/td><td>1,5<\/td><td>2,5<\/td><\/tr><\/tbody><\/table><\/div>Berdasarkan standar prosedur operasional di atas, benar atau salah pernyataan berikut!", "text2": null, "img": null, "options": null, "correct": null, "rows": [{"text": "Rasio antara volume limbah terhadap cairan penetral adalah 20 : 1", "correct": "B"}, {"text": "Setiap 1 m<sup>3<\/sup> limbah membutuhkan 0,05 liter cairan penetral", "correct": "B"}, {"text": "Jika pabrik hanya memiliki 0,4 liter cairan penetral, maka volume limbah maksimal yang bisa diolah adalah 8 m<sup>3<\/sup>", "correct": "B"}]}, {"no": 22, "subject": "Perbandingan", "type": "pg", "text": "Sebuah peta memiliki skala 1 : 500.000. Jika jarak dua kota pada peta adalah 6 cm, maka jarak sebenarnya kedua kota tersebut adalah ….", "text2": null, "img": null, "options": ["15 km", "30 km", "60 km", "300 km"], "correct": 1, "rows": null}, {"no": 23, "subject": "Perbandingan", "type": "pg", "text": "Jarak sebenarnya antara rumah Andi dan sekolah adalah 2 km. Jika digambar pada peta dengan skala 1 : 100.000, maka jarak pada peta adalah ….", "text2": null, "img": null, "options": ["1 cm", "2 cm", "20 cm", "200 cm"], "correct": 1, "rows": null}, {"no": 24, "subject": "Perbandingan", "type": "pg", "text": "Jarak sebenarnya antara dua kota adalah 150 km. Pada peta, jarak kedua kota tersebut adalah 6 cm. Skala peta tersebut adalah ….", "text2": null, "img": null, "options": ["1 : 25.000", "1 : 250.000", "1 : 2.500.000", "1 : 25.000.000"], "correct": 2, "rows": null}, {"no": 25, "subject": "Perbandingan", "type": "multi", "text": "Perhatikan denah rumah di bawah ini!", "text2": "Diketahui lebar rumah sebenarnya adalah 8 m.<br>Tentukan pernyataan-pernyataan berikut ini yang benar. <i>Jawaban benar lebih dari satu.<\/i>", "img": ["../../assets/img/Matematika_7_25.png"], "options": ["Skala denah rumah di atas 1 : 100", "Lebar garasi sebenarnya adalah 4 m", "Keliling garasi sebenarnya 24 m", "Luas kamar tidur utama sebenarnya adalah 22 m<sup>2<\/sup>"], "correct": [0, 1, 3], "rows": null}, {"no": 26, "subject": "Perbandingan", "type": "pg", "text": "Diketahui pernyataan-pernyataan berikut:<br>(1) Banyak pekerja dan waktu yang diperlukan untuk menyelesaikan suatu pekerjaan<br>(2) Kecepatan mobil dan jarak yang ditempuh dalam waktu satu jam<br>(3) Banyak buku yang dibeli dan harga yang harus dibayar<br>(4) Banyak kambing dan waktu yang diperlukan untuk menghabiskan persediaan makanan<br>Yang merupakan perbandingan senilai adalah ….", "text2": null, "img": null, "options": ["(1) dan (3)", "(1) dan (4)", "(2) dan (3)", "(2) dan (4)"], "correct": 2, "rows": null}, {"no": 27, "subject": "Perbandingan", "type": "pg", "text": "Perhatikan pernyataan tentang perbandingan dua besaran berikut:<br>(1) Banyak pensil yang dibeli dan harga yang harus dibayar<br>(2) Banyak pekerja dan waktu yang diperlukan untuk menyelesaikan suatu pekerjaan<br>(3) Banyak BBM yang diperlukan dan jarak yang ditempuh sebuah kendaraan bermotor<br>(4) Kecepatan kendaraan dan waktu yang diperlukan untuk menempuh jarak tertentu<br>Pernyataan di atas yang merupakan perbandingan berbalik nilai adalah ….", "text2": null, "img": null, "options": ["(1) dan (3)", "(1) dan (4)", "(2) dan (3)", "(2) dan (4)"], "correct": 3, "rows": null}, {"no": 28, "subject": "Perbandingan", "type": "pg", "text": "Sebuah mobil menghabiskan 7 liter BBM untuk menempuh jarak 98 km. Banyaknya bensin yang diperlukan untuk menempuh jarak 140 km adalah ….", "text2": null, "img": null, "options": ["8 liter", "10 liter", "12 liter", "14 liter"], "correct": 1, "rows": null}, {"no": 29, "subject": "Perbandingan", "type": "pg", "text": "Sebuah pekerjaan dapat diselesaikan dalam waktu 20 hari oleh 5 orang. Jika pekerjaan tersebut dikerjakan oleh 10 orang, maka berapa lama pekerjaan tersebut dapat selesai?", "text2": null, "img": null, "options": ["10 hari", "20 hari", "30 hari", "40 hari"], "correct": 0, "rows": null}, {"no": 30, "subject": "Perbandingan", "type": "pg", "text": "Seorang peternak mempunyai persediaan makanan untuk 20 ekor kambing selama 18 hari. Kemudian peternak membeli 4 ekor lagi, berapa lama persediaan itu akan habis?", "text2": null, "img": null, "options": ["72 hari", "40 hari", "20 hari", "15 hari"], "correct": 3, "rows": null}]</script>
+<script>
+(function(){
+"use strict";
+
+/* ================= CONFIG ================= */
+const MAPEL = "Matematika";
+const JENJANG = 7;
+const JENIS_UJIAN = "ASAS";
+const SUBJECT_ORDER = ["Bilangan Bulat & Pecahan", "Bentuk Aljabar", "Persamaan & Pertidaksamaan Linear", "Perbandingan"];
+const DURATION_SEC = 90*60;        // total waktu ujian
+const MIN_SUBMIT_SEC = 40*60;      // batas waktu MINIMAL sebelum jawaban boleh dikirim (40 menit)
+const VALID_TOKEN = "MTA7KTI";
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwOKZ-eczqPcrwzdVdSL5Nldi4JRkAC70LcWH7aN74ze92t4a50ftI7kj8GDRMlyfb5/exec";
+
+const RAW_QUESTIONS = JSON.parse(document.getElementById('questions-data').textContent);
+const STUDENTS = (typeof DATA_SISWA !== 'undefined') ? DATA_SISWA : null;
+const LETTERS = ['A','B','C','D','E','F'];
+
+document.getElementById('infoJumlah').textContent = RAW_QUESTIONS.length + " Soal";
+document.getElementById('infoDurasi').textContent = (DURATION_SEC/60) + " Menit";
+document.getElementById('infoMin').textContent = (MIN_SUBMIT_SEC/60) + " menit";
+document.getElementById('timerBox').textContent = fmtTime(DURATION_SEC);
+
+/* ================= STATE ================= */
+let examQuestions = [];
+let answers = {};
+let current = 0;
+let startTime = 0, endTime = 0;
+let timerHandle = null;
+let studentName = "", studentClass = "";
+let examStarted = false, examFinished = false;
+let graceUntil = 0;
+
+/* ================= LOG PELANGGARAN ================= */
+const logPelanggaran = [];
+function catatPelanggaran(jenis){
+  logPelanggaran.push({ jenis: jenis, waktu: new Date().toISOString() });
+}
+
+/* ================= UTIL ================= */
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; }
+  return a;
+}
+function fmtTime(s){ s=Math.max(0,Math.floor(s)); const m=Math.floor(s/60), sec=s%60; return String(m).padStart(2,'0')+":"+String(sec).padStart(2,'0'); }
+function escapeHtml(str){ return String(str).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function typesetMath(){ if(window.MathJax && window.MathJax.typesetPromise){ window.MathJax.typesetPromise().catch(()=>{}); } }
+function elapsedSec(){ return (Date.now()-startTime)/1000; }
+
+/* ================= MODAL (pengganti alert/confirm) ================= */
+function showModal(title, text, buttons){
+  document.getElementById('modalTitle').textContent = title;
+  document.getElementById('modalText').textContent = text;
+  const box = document.getElementById('modalBtns'); box.innerHTML = '';
+  buttons.forEach(b=>{
+    const btn = document.createElement('button');
+    btn.textContent = b.label; if(b.sec) btn.className = 'sec';
+    btn.addEventListener('click',()=>{ document.getElementById('modalOverlay').style.display='none'; if(b.fn) b.fn(); });
+    box.appendChild(btn);
+  });
+  document.getElementById('modalOverlay').style.display='flex';
+}
+
+/* ================= LIGHTBOX ================= */
+const lb = document.getElementById('lightbox');
+document.getElementById('lightboxClose').addEventListener('click',()=>{ lb.classList.remove('open','zoomed'); });
+document.getElementById('lightboxImg').addEventListener('click',()=>{ lb.classList.toggle('zoomed'); });
+
+/* ================= TABS ================= */
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-'+btn.dataset.tab).classList.add('active');
+  });
+});
+
+/* ================= DATA SISWA (otomatis dari menu kelas) ================= */
+(function initStudent(){
+  const params = new URLSearchParams(window.location.search);
+  const pKelas = (params.get('kelas')||'').trim();
+  const pNama = (params.get('nama')||'').trim();
+  const selKelas = document.getElementById('inputKelas');
+  const err = document.getElementById('startErr');
+
+  if(!STUDENTS){
+    err.textContent = 'Data siswa belum termuat (assets/js/data-siswa.js). Hubungi guru.';
+  }
+  const valid = STUDENTS && pKelas && pNama && STUDENTS[pKelas] && STUDENTS[pKelas].includes(pNama);
+  if(valid){
+    studentClass = pKelas; studentName = pNama;
+    document.getElementById('pNama').textContent = pNama;
+    document.getElementById('pKelas').textContent = 'Kelas ' + pKelas;
+    document.getElementById('pesertaBox').classList.remove('hidden');
+    document.querySelector('.tab-btn[data-tab="mulai"]').click();
+    return;
+  }
+  /* Cadangan: bila halaman dibuka langsung (tanpa lewat menu kelas), siswa memilih rombel & nama */
+  document.getElementById('pickBox').classList.remove('hidden');
+  if(!STUDENTS) return;
+  Object.keys(STUDENTS).filter(k=>/^VII\s/.test(k)).forEach(k=>{
+    const o = document.createElement('option'); o.value=k; o.textContent=k; selKelas.appendChild(o);
+  });
+  selKelas.addEventListener('change',()=>{
+    const selNama = document.getElementById('inputNama');
+    selNama.innerHTML='';
+    const k = selKelas.value;
+    if(!k){
+      selNama.innerHTML='<option value="">— Pilih kelas terlebih dahulu —</option>'; selNama.disabled=true; return;
+    }
+    const o0 = document.createElement('option'); o0.value=''; o0.textContent='— Pilih Nama —'; selNama.appendChild(o0);
+    (STUDENTS[k]||[]).forEach(nm=>{ const o=document.createElement('option'); o.value=nm; o.textContent=nm; selNama.appendChild(o); });
+    selNama.disabled=false;
+  });
+})();
+
+/* ================= BUILD EXAM (acak soal & opsi) ================= */
+function buildExam(){
+  const all = RAW_QUESTIONS.map((q,i)=>({q,i}));
+  examQuestions = shuffle(all).map(o=>{
+    const q = JSON.parse(JSON.stringify(o.q));
+    q._id = o.i;
+    if(q.options){
+      q.options = shuffle(q.options.map((html,id)=>({id:id, html:html})));
+    }
+    if(q.rows){
+      q.rows = shuffle(q.rows.map((r,id)=>({id:id, text:r.text, correct:r.correct})));
+    }
+    return q;
+  });
+}
+
+/* ================= NAV PANEL ================= */
+function minLeft(){ return Math.max(0, MIN_SUBMIT_SEC - elapsedSec()); }
+function renderNavPanel(){
+  const panel = document.getElementById('navPanel');
+  let html = '<h3>Nomor Soal (1–'+examQuestions.length+')</h3>';
+  html += '<div class="legend"><span><i class="dot" style="background:#2f7d4f"></i>Terjawab</span><span><i class="dot" style="background:#fff;border:1.5px solid #e3d086"></i>Belum</span></div>';
+  let grid = '';
+  examQuestions.forEach((q,idx)=>{
+    grid += '<button class="navbtn'+(isAnswered(q)?' answered':'')+(idx===current?' current':'')+'" data-idx="'+idx+'">'+(idx+1)+'</button>';
+  });
+  html += '<div class="navgrid">'+grid+'</div>';
+  html += '<button id="navSubmitBtn">✅ Kirim Jawaban</button><div class="minnote" id="minNote"></div>';
+  panel.innerHTML = html;
+  panel.querySelectorAll('.navbtn').forEach(b=>{
+    b.addEventListener('click',()=>{ current=parseInt(b.dataset.idx,10); renderQuestion(); closeMobilePanel(); });
+  });
+  document.getElementById('navSubmitBtn').addEventListener('click', confirmSubmit);
+  updateSubmitLock();
+}
+function updateSubmitLock(){
+  const left = minLeft();
+  const nb = document.getElementById('navSubmitBtn'), note = document.getElementById('minNote');
+  const bn = document.getElementById('btnNext');
+  const lastQ = (current===examQuestions.length-1);
+  if(nb) nb.classList.toggle('locked', left>0);
+  if(note) note.textContent = left>0 ? ('Jawaban baru dapat dikirim setelah '+(MIN_SUBMIT_SEC/60)+' menit pengerjaan (sisa '+fmtTime(left)+').') : '';
+  if(bn && lastQ){ bn.classList.toggle('locked', left>0); bn.textContent = left>0 ? ('Kirim dalam '+fmtTime(left)) : 'Selesai →'; }
+}
+function closeMobilePanel(){ document.getElementById('navPanel').classList.remove('open'); }
+
+function isAnswered(q){
+  const v = answers[q._id];
+  if(q.type==='pg') return v!==undefined && v!==null;
+  if(q.type==='multi') return Array.isArray(v) && v.length>0;
+  if(q.type==='matrix'){ if(!v) return false; return q.rows.every(r=>v[r.id]); }
+  return false;
+}
+
+/* ================= RENDER QUESTION ================= */
+function renderImgs(q){
+  const list = q.img ? (Array.isArray(q.img)?q.img:[q.img]) : [];
+  if(!list.length) return '';
+  let html = '<div class="qimg-wrap">';
+  list.forEach(src=>{
+    const name = src.split('/').pop();
+    html += '<div class="imgbox" data-full="'+encodeURI(src)+'">'+
+      '<img src="'+encodeURI(src)+'" alt="Gambar soal" loading="eager" '+
+      'onerror="this.parentElement.outerHTML=\'<div class=&quot;imgph&quot;>🖼️ '+escapeHtml(name)+'<br>(gambar belum ditemukan di folder assets/img)</div>\'">'+
+      '<span class="zoomhint">🔍 Ketuk untuk perbesar</span></div>';
+  });
+  return html + '</div>';
+}
+function renderQuestion(){
+  const q = examQuestions[current];
+  const wrap = document.getElementById('qwrap');
+  let html = '<div class="qnum">Soal '+(current+1)+' dari '+examQuestions.length+'</div>';
+  html += '<div class="qtext">'+q.text+'</div>';
+  html += renderImgs(q);
+  if(q.text2) html += '<div class="qtext qtext2">'+q.text2+'</div>';
+  if(q.type==='multi') html += '<div class="qtype-hint">☑ Pilihan Ganda Kompleks — pilih lebih dari satu jawaban</div>';
+  if(q.type==='matrix') html += '<div class="qtype-hint">☑ Pilihan Ganda Kompleks — tentukan Benar atau Salah untuk setiap pernyataan</div>';
+  if(q.type==='pg') html += renderPG(q);
+  else if(q.type==='multi') html += renderMulti(q);
+  else if(q.type==='matrix') html += renderMatrix(q);
+  wrap.innerHTML = html;
+  typesetMath();
+  attachOptionEvents(q);
+  wrap.querySelectorAll('.imgbox').forEach(box=>{
+    box.addEventListener('click',()=>{
+      document.getElementById('lightboxImg').src = box.dataset.full;
+      lb.classList.remove('zoomed'); lb.classList.add('open'); lb.scrollTop=0;
+    });
+  });
+  document.getElementById('btnPrev').disabled = (current===0);
+  const bn = document.getElementById('btnNext');
+  bn.classList.remove('locked');
+  bn.textContent = (current===examQuestions.length-1) ? 'Selesai →' : 'Selanjutnya →';
+  document.querySelectorAll('.navbtn').forEach(b=>b.classList.toggle('current', parseInt(b.dataset.idx,10)===current));
+  document.getElementById('questionArea').scrollTop = 0;
+  updateSubmitLock();
+}
+function renderPG(q){
+  const v = answers[q._id]; let html='';
+  q.options.forEach((o,i)=>{
+    const sel = (v===o.id);
+    html += '<label class="option'+(sel?' selected':'')+'"><input type="radio" name="pg" value="'+o.id+'" '+(sel?'checked':'')+'>'+
+      '<span class="otext"><span class="olabel">'+LETTERS[i]+'.</span>'+o.html+'</span></label>';
+  });
+  return html;
+}
+function renderMulti(q){
+  const v = answers[q._id] || []; let html='';
+  q.options.forEach((o,i)=>{
+    const sel = v.includes(o.id);
+    html += '<label class="option'+(sel?' selected':'')+'"><input type="checkbox" name="multi" value="'+o.id+'" '+(sel?'checked':'')+'>'+
+      '<span class="otext"><span class="olabel">'+(i+1)+'.</span>'+o.html+'</span></label>';
+  });
+  return html;
+}
+function renderMatrix(q){
+  const v = answers[q._id] || {};
+  let html = '<table class="matrix"><thead><tr><th style="text-align:left">Pernyataan</th><th>Benar</th><th>Salah</th></tr></thead><tbody>';
+  q.rows.forEach((r,i)=>{
+    html += '<tr><td class="stmt">'+(i+1)+'. '+r.text+'</td>';
+    ['B','S'].forEach(c=>{
+      html += '<td class="pick"><input type="radio" name="row_'+r.id+'" value="'+c+'" data-row="'+r.id+'" '+(v[r.id]===c?'checked':'')+'></td>';
+    });
+    html += '</tr>';
+  });
+  return html + '</tbody></table>';
+}
+function attachOptionEvents(q){
+  if(q.type==='pg'){
+    document.querySelectorAll('input[name=pg]').forEach(inp=>{
+      inp.addEventListener('change',()=>{ answers[q._id]=parseInt(inp.value,10); renderQuestion(); renderNavPanel(); });
+    });
+  } else if(q.type==='multi'){
+    document.querySelectorAll('input[name=multi]').forEach(inp=>{
+      inp.addEventListener('change',()=>{
+        let cur = answers[q._id] ? answers[q._id].slice() : [];
+        const id = parseInt(inp.value,10);
+        if(inp.checked){ if(!cur.includes(id)) cur.push(id); } else { cur = cur.filter(x=>x!==id); }
+        answers[q._id]=cur; renderQuestion(); renderNavPanel();
+      });
+    });
+  } else if(q.type==='matrix'){
+    document.querySelectorAll('table.matrix input').forEach(inp=>{
+      inp.addEventListener('change',()=>{
+        const cur = answers[q._id] ? Object.assign({},answers[q._id]) : {};
+        cur[inp.dataset.row] = inp.value; answers[q._id]=cur; renderQuestion(); renderNavPanel();
+      });
+    });
+  }
+}
+
+/* ================= NAVIGASI ================= */
+document.getElementById('btnPrev').addEventListener('click',()=>{ if(current>0){ current--; renderQuestion(); } });
+document.getElementById('btnNext').addEventListener('click',()=>{
+  if(current<examQuestions.length-1){ current++; renderQuestion(); } else { confirmSubmit(); }
+});
+document.getElementById('panelToggle').addEventListener('click',()=>{ document.getElementById('navPanel').classList.toggle('open'); });
+
+/* ================= TIMER ================= */
+function startTimer(){
+  startTime = Date.now(); endTime = startTime + DURATION_SEC*1000;
+  timerHandle = setInterval(()=>{
+    const left = Math.max(0, Math.ceil((endTime-Date.now())/1000));
+    const box = document.getElementById('timerBox');
+    box.textContent = fmtTime(left);
+    box.classList.toggle('low', left<=300);
+    updateSubmitLock();
+    if(left<=0){ clearInterval(timerHandle); finishExam(true); }
+  },500);
+}
+
+/* ================= FULLSCREEN & ANTI-CURANG ================= */
+function enterFullscreen(){
+  const el = document.documentElement;
+  const req = el.requestFullscreen||el.webkitRequestFullscreen||el.msRequestFullscreen;
+  if(req){ try{ const p=req.call(el); if(p && p.catch) p.catch(()=>{}); }catch(e){} }
+}
+function isFullscreen(){ return !!(document.fullscreenElement||document.webkitFullscreenElement||document.msFullscreenElement); }
+function showWarn(title,text,onOk){
+  const ov = document.getElementById('warnOverlay');
+  document.getElementById('warnTitle').textContent = title;
+  document.getElementById('warnText').textContent = text;
+  ov.style.display='flex';
+  document.getElementById('warnBtn').onclick = ()=>{ ov.style.display='none'; document.getElementById('screen-exam').classList.remove('blurred'); if(onOk) onOk(); };
+}
+let lastViolAt = 0;
+function logViolation(jenis, reason){
+  if(!examStarted || examFinished) return;
+  const now = Date.now();
+  if(now < graceUntil) return;               // abaikan transisi layar penuh saat mulai
+  if(now - lastViolAt < 1500) return;        // satu kejadian = satu pelanggaran (hindari hitung ganda)
+  lastViolAt = now;
+  catatPelanggaran(jenis);
+  const badge = document.getElementById('violationBadge');
+  badge.style.display='inline-block';
+  document.getElementById('violCount').textContent = logPelanggaran.length;
+  showWarn('⚠ Pelanggaran Terdeteksi ('+logPelanggaran.length+')',
+    'Sistem mendeteksi: '+reason+'. Tindakan ini tercatat dan dilaporkan kepada guru bersama hasil ujianmu. Tetaplah pada halaman ujian hingga selesai.',
+    ()=>{ if(!isFullscreen()) enterFullscreen(); });
+}
+const active = ()=> examStarted && !examFinished;
+
+document.addEventListener('visibilitychange',()=>{
+  if(document.hidden && active()) logViolation('Pindah tab','berpindah tab / membuka aplikasi lain');
+});
+function onFsChange(){
+  if(!isFullscreen() && active()) logViolation('Keluar fullscreen','keluar dari mode layar penuh');
+}
+document.addEventListener('fullscreenchange', onFsChange);
+document.addEventListener('webkitfullscreenchange', onFsChange);
+
+/* Jendela kehilangan fokus (mis. split screen / aplikasi lain / alat tangkap layar) */
+window.addEventListener('blur',()=>{
+  if(!active()) return;
+  document.getElementById('screen-exam').classList.add('blurred');
+  setTimeout(()=>{
+    if(active() && !document.hidden && !document.hasFocus()){
+      logViolation('Split screen','jendela ujian kehilangan fokus (kemungkinan split screen / aplikasi lain / tangkap layar)');
+    }
+  },400);
+});
+window.addEventListener('focus',()=>{
+  if(document.getElementById('warnOverlay').style.display!=='flex')
+    document.getElementById('screen-exam').classList.remove('blurred');
+});
+
+/* Deteksi split screen / perubahan ukuran layar */
+const baseSize = {};
+const orient = ()=>{               // orientasi PERANGKAT (bukan ukuran jendela), agar jendela sempit di desktop tidak terbaca 'potret'
+  const t = screen.orientation && screen.orientation.type;
+  if(t) return t.indexOf('portrait')===0 ? 'p' : 'l';
+  return (screen.width>=screen.height) ? 'l' : 'p';
+};
+function updateBase(){
+  const o = orient(), b = baseSize[o] || {w:0,h:0};
+  baseSize[o] = { w:Math.max(b.w,window.innerWidth), h:Math.max(b.h,window.innerHeight) };
+}
+let shrunk = false, resizeTimer = null;
+function checkSize(){
+  if(!active()) return;
+  if(Date.now() < graceUntil){ updateBase(); return; }
+  const b = baseSize[orient()];
+  if(!b){ updateBase(); return; }
+  const small = (window.innerWidth < b.w*0.8) || (window.innerHeight < b.h*0.7);
+  if(small && !shrunk){ shrunk = true; logViolation('Split screen','ukuran layar berubah (split screen / jendela diperkecil)'); }
+  else if(!small){ shrunk = false; updateBase(); }
+}
+window.addEventListener('resize',()=>{ clearTimeout(resizeTimer); resizeTimer = setTimeout(checkSize,500); });
+window.addEventListener('orientationchange',()=>{ setTimeout(()=>{ shrunk=false; updateBase(); },900); });
+
+/* Salin teks */
+['copy','cut'].forEach(ev=>{
+  document.addEventListener(ev,e=>{ if(active()){ e.preventDefault(); logViolation('Salin teks','menyalin teks soal'); } });
+});
+document.addEventListener('contextmenu',e=>{ if(active()) e.preventDefault(); });
+document.addEventListener('selectstart',e=>{ if(active()) e.preventDefault(); });
+document.addEventListener('dragstart',e=>{ if(active()) e.preventDefault(); });
+
+/* Keyboard: screenshot, salin, cetak, devtools */
+function clearClipboard(){ try{ navigator.clipboard && navigator.clipboard.writeText('').catch(()=>{}); }catch(e){} }
+document.addEventListener('keydown',e=>{
+  if(!active()) return;
+  const k = (e.key||'').toLowerCase();
+  if(e.key==='PrintScreen' || e.code==='PrintScreen'){
+    clearClipboard(); logViolation('Screenshot','mencoba mengambil tangkapan layar (screenshot)'); return;
+  }
+  if(e.metaKey && e.shiftKey && (k==='s' || ['Digit3','Digit4','Digit5'].includes(e.code))){
+    e.preventDefault(); logViolation('Screenshot','mencoba mengambil tangkapan layar (screenshot)'); return;
+  }
+  if(e.ctrlKey && e.shiftKey && k==='s'){ logViolation('Screenshot','mencoba mengambil tangkapan layar (screenshot)'); return; }
+  if((e.ctrlKey||e.metaKey) && ['c','x','a'].includes(k)){
+    e.preventDefault(); logViolation('Salin teks','menyalin teks soal'); return;
+  }
+  if(e.key==='F12' || (e.ctrlKey&&e.shiftKey&&['i','j','c'].includes(k)) || (e.ctrlKey && k==='u') ){
+    e.preventDefault(); logViolation('Membuka DevTools','mencoba membuka alat pengembang (developer tools)'); return;
+  }
+  if((e.ctrlKey||e.metaKey) && (k==='p' || k==='s')){
+    e.preventDefault(); logViolation('Cetak / simpan halaman','mencoba mencetak atau menyimpan halaman'); return;
+  }
+  if(e.altKey && e.key==='Tab') e.preventDefault();
+});
+document.addEventListener('keyup',e=>{
+  if(!active()) return;
+  if(e.key==='PrintScreen' || e.code==='PrintScreen'){ clearClipboard(); logViolation('Screenshot','mencoba mengambil tangkapan layar (screenshot)'); }
+});
+window.addEventListener('beforeunload',(e)=>{ if(active()){ e.preventDefault(); e.returnValue=''; } });
+
+/* ================= MULAI UJIAN ================= */
+document.getElementById('btnStart').addEventListener('click',()=>{
+  const token = document.getElementById('inputToken').value.trim().toUpperCase();
+  const err = document.getElementById('startErr');
+  if(!STUDENTS){ err.textContent='Data siswa belum termuat. Hubungi guru.'; return; }
+  if(!token){ err.textContent='Token ujian wajib diisi.'; return; }
+  if(token !== VALID_TOKEN.toUpperCase()){ err.textContent='Token salah. Tanyakan token yang benar kepada gurumu.'; return; }
+  if(!studentName || !studentClass){
+    const kelas = document.getElementById('inputKelas').value.trim();
+    const nama = document.getElementById('inputNama').value.trim();
+    if(!kelas || !nama){ err.textContent='Kelas dan nama wajib dipilih sebelum memulai.'; return; }
+    studentClass = kelas; studentName = nama;
+  }
+  err.textContent='';
+  buildExam();
+  answers = {}; current = 0; logPelanggaran.length = 0; examStarted = true; examFinished = false;
+  graceUntil = Date.now() + 3000;
+  document.getElementById('screen-start').style.display='none';
+  document.getElementById('screen-exam').style.display='flex';
+  document.getElementById('brandStudent').textContent = studentName+' · Kelas '+studentClass;
+  enterFullscreen();
+  renderNavPanel(); renderQuestion(); startTimer();
+  setTimeout(()=>{ updateBase(); },3200);
+});
+
+/* ================= KIRIM / PENILAIAN ================= */
+function confirmSubmit(){
+  const left = minLeft();
+  if(left>0){
+    showModal('Belum bisa mengirim','Jawaban baru dapat dikirim setelah '+(MIN_SUBMIT_SEC/60)+' menit pengerjaan. Sisa waktu tunggu: '+fmtTime(left)+'. Periksa kembali jawabanmu terlebih dahulu.',[{label:'Kembali ke Soal'}]);
+    return;
+  }
+  const unansweredIdx = examQuestions.findIndex(q=>!isAnswered(q));
+  if(unansweredIdx !== -1){
+    const n = examQuestions.filter(q=>!isAnswered(q)).length;
+    showModal('Masih ada soal belum dijawab','Masih ada '+n+' soal yang belum dijawab. Lengkapi semua soal sebelum mengirim jawaban. Kamu akan diarahkan ke soal pertama yang belum dijawab.',[{label:'Baik',fn:()=>{
+      current = unansweredIdx; renderQuestion(); renderNavPanel(); closeMobilePanel();
+    }}]);
+    return;
+  }
+  showModal('Kirim Jawaban?','Semua soal telah dijawab. Kirim jawaban sekarang? Jawaban tidak dapat diubah setelah dikirim.',[
+    {label:'Ya, Kirim',fn:()=>finishExam(false)},
+    {label:'Periksa Lagi',sec:true}
+  ]);
+}
+
+/* ---- Penilaian PARSIAL ----
+   PG biasa: 1 atau 0.
+   PG Kompleks (multi) & Benar/Salah (matrix): dinilai per opsi / per pernyataan.
+   scoreFrac = (jumlah opsi/pernyataan yang sesuai kunci) / (jumlah opsi/pernyataan).
+   Bobot tiap soal = 100 / jumlah soal; nilai akhir langsung skala 0–100. */
+function scoreFrac(q){
+  const v = answers[q._id];
+  if(q.type==='pg'){
+    return (v===q.correct) ? 1 : 0;
+  }
+  if(q.type==='multi'){
+    const n = q.options.length; let match = 0;
+    q.options.forEach(o=>{
+      const key = q.correct.includes(o.id);
+      const stu = Array.isArray(v) && v.includes(o.id);
+      if(key===stu) match++;
+    });
+    return n ? match/n : 0;
+  }
+  if(q.type==='matrix'){
+    if(!v) return 0;
+    let match = 0;
+    q.rows.forEach(r=>{ if(v[r.id]===r.correct) match++; });
+    return q.rows.length ? match/q.rows.length : 0;
+  }
+  return 0;
+}
+function answerCode(q){
+  const v = answers[q._id];
+  if(q.type==='pg') return (v===undefined||v===null) ? '-' : LETTERS[v];
+  if(q.type==='multi') return (Array.isArray(v)&&v.length) ? v.slice().sort((a,b)=>a-b).map(x=>x+1).join(',') : '-';
+  if(q.type==='matrix'){
+    const rows = q.rows.slice().sort((a,b)=>a.id-b.id);
+    return rows.map(r=>(v&&v[r.id])||'-').join(',');
+  }
+  return '-';
+}
+function keyCode(q){
+  if(q.type==='pg') return LETTERS[q.correct];
+  if(q.type==='multi') return q.correct.slice().sort((a,b)=>a-b).map(x=>x+1).join(',');
+  return q.rows.slice().sort((a,b)=>a.id-b.id).map(r=>r.correct).join(',');
+}
+
+function finishExam(autoSubmit){
+  if(examFinished) return;
+  examFinished = true;
+  clearInterval(timerHandle);
+  if(isFullscreen()){ try{ (document.exitFullscreen||document.webkitExitFullscreen||function(){}).call(document); }catch(e){} }
+  document.getElementById('screen-exam').style.display='none';
+  document.getElementById('warnOverlay').style.display='none';
+  document.getElementById('modalOverlay').style.display='none';
+  lb.classList.remove('open','zoomed');
+
+  const total = examQuestions.length;
+  const weight = total ? 100/total : 0;
+  const perSubject = {};
+  SUBJECT_ORDER.forEach(s=>perSubject[s]={score:0,max:0,total:0,penuh:0});
+  let totalScore = 0, fullCount = 0;
+  examQuestions.forEach(q=>{
+    if(!perSubject[q.subject]){ perSubject[q.subject]={score:0,max:0,total:0,penuh:0}; SUBJECT_ORDER.push(q.subject); }
+    const frac = scoreFrac(q), qs = frac*weight;
+    totalScore += qs; if(frac>=0.999) fullCount++;
+    const ps = perSubject[q.subject]; ps.total++; ps.score += qs; ps.max += weight; if(frac>=0.999) ps.penuh++;
+  });
+  totalScore = Math.round(totalScore*100)/100;
+  let grade='D', gradeLabel='Perlu Bimbingan';
+  if(totalScore>=90){grade='A';gradeLabel='Sangat Baik';}
+  else if(totalScore>=75){grade='B';gradeLabel='Baik';}
+  else if(totalScore>=60){grade='C';gradeLabel='Cukup';}
+
+  document.getElementById('resScore').textContent = totalScore.toFixed(2)+' / 100';
+  document.getElementById('resGrade').textContent = 'Predikat '+grade+' — '+gradeLabel+' · '+fullCount+' dari '+total+' soal terjawab sempurna (penilaian parsial per pernyataan/opsi)'+(autoSubmit?' · waktu habis, jawaban terkirim otomatis':'');
+  document.getElementById('rNama').textContent = studentName;
+  document.getElementById('rKelas').textContent = studentClass;
+  document.getElementById('rViol').textContent = logPelanggaran.length;
+
+  let tbl = '<tr><th>Materi</th><th>Skor</th><th>Maks</th></tr>';
+  const detailParts = [];
+  SUBJECT_ORDER.forEach(s=>{
+    const sc = Math.round(perSubject[s].score*100)/100, mx = Math.round(perSubject[s].max*100)/100;
+    tbl += '<tr><td>'+escapeHtml(s)+'</td><td>'+sc+'</td><td>'+mx+'</td></tr>';
+    detailParts.push(s+' '+sc+'/'+mx);
+  });
+  document.getElementById('resTable').innerHTML = tbl;
+
+  window._examResult = {
+    nama: studentName, kelas: studentClass, skor: totalScore, skorMaks: 100, pct: totalScore,
+    grade: grade+' ('+gradeLabel+')',
+    detail: detailParts.join(' | ') + ' | Pelanggaran: '+logPelanggaran.length+'x',
+    pelanggaran: logPelanggaran.length,
+    durasiMenit: Math.round(elapsedSec()/6)/10
+  };
+  document.getElementById('screen-result').style.display='block';
+  window.scrollTo(0,0);
+  autoSubmitToSheet();
+}
+
+/* ================= KIRIM KE GOOGLE APPS SCRIPT ================= */
+function setSubmitStatus(state, text){
+  const el = document.getElementById('submitStatus');
+  el.className = 'submit-status '+state;
+  document.getElementById('submitStatusText').textContent = text;
+  document.getElementById('btnRetrySubmit').classList.toggle('hidden', state==='sending' || state==='ok');
+}
+function buildAnswerDetail(){
+  return examQuestions.map((q,idx)=>({
+    no: idx+1, noSoal: q.no, subject: q.subject,
+    jawaban: answerCode(q), kunci: keyCode(q),
+    benar: Math.round(scoreFrac(q)*100)/100
+  })).sort((a,b)=>a.noSoal-b.noSoal);
+}
+function autoSubmitToSheet(){
+  if(!navigator.onLine){
+    setSubmitStatus('fail','❌ Gagal terkirim — perangkat sedang offline. Sambungkan internet lalu klik "Kirim Ulang".');
+    return;
+  }
+  setSubmitStatus('sending','Mengirim jawaban ke guru...');
+  const r = window._examResult;
+  const payload = {
+    timestamp: new Date().toISOString(),
+    token: VALID_TOKEN,
+    mapel: MAPEL, jenjang: JENJANG, jenisUjian: JENIS_UJIAN,
+    nama: r.nama, kelas: r.kelas,
+    skor: r.skor, skorMaks: r.skorMaks, persentase: r.pct,
+    grade: r.grade, detailPerMapel: r.detail,
+    durasiMenit: r.durasiMenit,
+    jenisPelanggaran: logPelanggaran, pelanggaran: logPelanggaran.length,
+    jawaban: buildAnswerDetail()
+  };
+  fetch(APPS_SCRIPT_URL, {
+    method: 'POST', mode: 'no-cors',
+    headers: {'Content-Type':'text/plain;charset=utf-8'},
+    body: JSON.stringify(payload)
+  }).then(()=>{
+    setSubmitStatus('ok','✅ Jawaban berhasil terkirim ke Google Spreadsheet guru.');
+  }).catch(()=>{
+    setSubmitStatus('fail','❌ Gagal terkirim (masalah jaringan). Klik "Kirim Ulang" untuk mencoba lagi.');
+  });
+}
+document.getElementById('btnRetrySubmit').addEventListener('click', autoSubmitToSheet);
+
+/* ================= EXCEL (cadangan) ================= */
+document.getElementById('btnExcel').addEventListener('click',()=>{
+  const r = window._examResult;
+  if(typeof XLSX === 'undefined'){ showModal('Excel belum siap','Pustaka Excel belum termuat. Periksa koneksi internet lalu coba lagi.',[{label:'OK'}]); return; }
+  const rows = [['Nama','Kelas','No (urut siswa)','No Soal Asli','Materi','Jawaban Siswa','Kunci','Skor Soal (0-1, parsial)']];
+  examQuestions.slice().sort((a,b)=>a.no-b.no).forEach(q=>{
+    rows.push([r.nama, r.kelas, examQuestions.indexOf(q)+1, q.no, q.subject, answerCode(q), keyCode(q), Math.round(scoreFrac(q)*100)/100]);
+  });
+  rows.push([]);
+  rows.push(['RINGKASAN']);
+  rows.push(['Nama','Kelas','Skor Akhir (0-100)','Grade','Pelanggaran']);
+  rows.push([r.nama, r.kelas, r.skor, r.grade, r.pelanggaran]);
+  if(logPelanggaran.length){
+    rows.push([]); rows.push(['JENIS PELANGGARAN','Waktu']);
+    logPelanggaran.forEach(p=>rows.push([p.jenis,p.waktu]));
+  }
+  const ws = XLSX.utils.aoa_to_sheet(rows);
+  ws['!cols'] = [{wch:28},{wch:8},{wch:14},{wch:12},{wch:34},{wch:18},{wch:18},{wch:14}];
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Hasil ASAS Matematika 7');
+  XLSX.writeFile(wb, 'Hasil_ASAS_Matematika7_'+r.nama.replace(/[^a-zA-Z0-9]/g,'_')+'.xlsx');
+});
+
+})();
+</script>
 </body>
 </html>
