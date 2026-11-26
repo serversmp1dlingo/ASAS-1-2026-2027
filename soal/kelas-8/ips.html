@@ -2,46 +2,933 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ilmu Pengetahuan Sosial — Kelas 8 — ASAS SMP Negeri 1 Dlingo</title>
-<meta name="description" content="Soal Ilmu Pengetahuan Sosial Kelas 8">
-<meta name="robots" content="noindex">
-<link rel="icon" href="../../assets/img/logo-smpn1dlingo.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../../assets/css/style.css">
-<script>document.documentElement.classList.add('js');</script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Asesmen Sumatif Akhir Semester — IPS — SMP N 1 Dlingo</title>
+<link rel="icon" type="image/png" href="../../assets/img/logo-smpn1dlingo.png">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+  :root{
+    --navy:#8f4310; --blue:#c2601a; --blue-light:#ffe6cc; --green:#2e8b57;
+    --red:#b3412f; --amber:#e0952b; --gray:#6a5240; --bg:#fff0de; --border:#f2d2a9; --radius:10px;
+    --card:#ffffff;
+  }
+  *{box-sizing:border-box;}
+  html,body{height:100%;}
+  body{margin:0;font-family:'Segoe UI',Roboto,Arial,sans-serif;background:var(--bg);color:#2b1d12;-webkit-tap-highlight-color:transparent;}
+  /* anti-screenshot / anti-copy deterrents (best-effort; see note in app) */
+  #screen-exam, #screen-exam *{
+    -webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;
+    -webkit-touch-callout:none;
+  }
+  #screen-exam img{-webkit-user-drag:none;user-drag:none;pointer-events:none;}
+  #screen-exam.blurred{filter:blur(18px);transition:filter .15s;}
+  @media print{
+    #screen-exam, #screen-start, #screen-result{display:none !important;}
+    body::before{content:"Konten ujian tidak dapat dicetak.";display:block;text-align:center;padding:40px;font-size:18px;}
+  }
+  img{max-width:100%;height:auto;border-radius:6px;border:1px solid var(--border);}
+  button{font-family:inherit;cursor:pointer;}
+  .hidden{display:none !important;}
+
+  /* ===== START / INSTRUCTIONS ===== */
+  #screen-start{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;
+    background:linear-gradient(135deg,#fff3e3,#ffd9b0);}
+  .start-card{background:var(--card);border-radius:16px;max-width:640px;width:100%;padding:34px 32px;box-shadow:0 20px 60px rgba(0,0,0,.25);}
+  .school-header{display:flex;align-items:center;gap:14px;margin-bottom:18px;}
+  .school-header img{width:56px;height:auto;border:none;border-radius:0;flex-shrink:0;}
+  .school-header .stxt{line-height:1.35;}
+  .school-header .stxt b{display:block;color:var(--navy);font-size:15px;}
+  .school-header .stxt span{color:var(--gray);font-size:12px;}
+  .start-card h1{margin:0 0 4px;font-size:21px;color:var(--navy);}
+  .start-card .sub{color:var(--gray);margin:0 0 20px;font-size:14px;}
+  .tabs{display:flex;gap:8px;margin-bottom:18px;border-bottom:1.5px solid var(--border);}
+  .tab-btn{padding:9px 16px;border:none;background:none;font-weight:700;font-size:13.5px;color:var(--gray);
+    border-bottom:3px solid transparent;margin-bottom:-2px;}
+  .tab-btn.active{color:var(--blue);border-bottom-color:var(--blue);}
+  .tab-panel{display:none;}
+  .tab-panel.active{display:block;}
+  .info-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px 18px;background:var(--blue-light);
+    border-radius:10px;padding:14px 16px;margin-bottom:18px;font-size:13px;}
+  .info-grid div b{display:block;color:var(--navy);font-size:13px;}
+  .info-grid div span{color:var(--gray);}
+  label{display:block;font-size:13px;font-weight:600;color:var(--navy);margin:14px 0 6px;}
+  input[type=text],input[type=password]{width:100%;padding:12px 14px;border:1.5px solid var(--border);
+    border-radius:8px;font-size:15px;}
+  input:focus{outline:none;border-color:var(--blue);}
+  select{width:100%;padding:12px 14px;border:1.5px solid var(--border);border-radius:8px;font-size:15px;
+    background:var(--card);color:#1b2430;appearance:none;
+    background-image:url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235b6472' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat:no-repeat;background-position:right 12px center;background-size:18px;}
+  select:focus{outline:none;border-color:var(--blue);}
+  select:disabled{background-color:#f7ece0;color:var(--gray);cursor:not-allowed;}
+  .instr-list{font-size:13.5px;line-height:1.8;color:#4a3626;padding-left:20px;margin:0 0 10px;}
+  .rules{font-size:12.5px;color:var(--gray);line-height:1.6;margin:18px 0;padding:12px 14px;
+    background:#fff8e6;border:1px solid #f1d9a0;border-radius:8px;}
+  .btn-primary{width:100%;padding:14px;background:var(--blue);color:#fff;border:none;border-radius:9px;
+    font-size:16px;font-weight:700;margin-top:12px;transition:.15s;}
+  .btn-primary:hover{background:var(--navy);}
+  .btn-primary:disabled{background:#d9c3ae;cursor:not-allowed;}
+  .err-msg{color:var(--red);font-size:12.5px;margin-top:6px;min-height:16px;}
+
+  /* ===== EXAM LAYOUT ===== */
+  #screen-exam{display:none;min-height:100vh;flex-direction:column;}
+  #topbar{background:var(--navy);color:#fff;padding:10px 18px;display:flex;align-items:center;
+    justify-content:space-between;gap:12px;flex-wrap:wrap;position:sticky;top:0;z-index:50;}
+  #topbar .brand{display:flex;align-items:center;gap:10px;font-size:13px;font-weight:700;}
+  #topbar .brand img{width:28px;height:auto;border:none;border-radius:0;}
+  #topbar .brand .who{font-weight:400;opacity:.85;font-size:11.5px;display:block;}
+  #timerBox{background:rgba(255,255,255,.12);padding:8px 16px;border-radius:8px;font-weight:700;
+    font-size:18px;letter-spacing:1px;min-width:110px;text-align:center;}
+  #timerBox.low{background:#c0392b;animation:pulse 1s infinite;}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.6}}
+  #violationBadge{background:var(--red);padding:5px 10px;border-radius:20px;font-size:12px;font-weight:700;display:none;}
+  #panelToggle{background:rgba(255,255,255,.15);color:#fff;border:none;padding:8px 12px;border-radius:8px;font-size:13px;}
+
+  #examBody{display:flex;flex:1;overflow:hidden;}
+  #navPanel{width:280px;flex-shrink:0;background:var(--card);border-right:1px solid var(--border);padding:16px;overflow-y:auto;}
+  #navPanel h3{font-size:11.5px;text-transform:uppercase;letter-spacing:.4px;color:var(--gray);margin:14px 0 8px;}
+  #navPanel h3:first-child{margin-top:0;}
+  .navgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;}
+  .navbtn{aspect-ratio:1;border:1.5px solid var(--border);background:var(--card);border-radius:6px;font-size:12px;
+    font-weight:700;color:var(--navy);display:flex;align-items:center;justify-content:center;}
+  .navbtn.answered{background:var(--green);border-color:var(--green);color:#fff;}
+  .navbtn.current{outline:3px solid var(--amber);outline-offset:1px;}
+  .legend{display:flex;gap:14px;font-size:11px;color:var(--gray);margin:14px 0 4px;flex-wrap:wrap;}
+  .legend span{display:inline-flex;align-items:center;gap:5px;}
+  .dot{width:10px;height:10px;border-radius:3px;display:inline-block;}
+  #navSubmitBtn{width:100%;margin-top:18px;padding:12px;background:var(--red);color:#fff;border:none;
+    border-radius:8px;font-weight:700;font-size:14px;}
+  #navSubmitBtn.locked{background:#b79f8c;}
+  .idbox{background:var(--blue-light);border:1.5px solid var(--border);border-radius:10px;padding:12px 16px;margin-top:14px;font-size:14px;line-height:1.7;}
+  .idbox b{color:var(--navy);}
+
+  #questionArea{flex:1;overflow-y:auto;padding:26px 32px 100px;}
+  .qwrap{max-width:820px;margin:0 auto;}
+  .qsubject{display:inline-block;background:var(--blue-light);color:var(--blue);font-size:11.5px;font-weight:700;
+    padding:4px 12px;border-radius:20px;margin-bottom:10px;text-transform:uppercase;letter-spacing:.3px;}
+  .qnum{font-size:14px;color:var(--gray);margin-bottom:4px;}
+  .qtext{font-size:16px;line-height:1.7;white-space:pre-wrap;margin-bottom:16px;}
+  .qimg-wrap{margin:14px 0;display:flex;flex-wrap:wrap;gap:14px;}
+  .qimg-wrap .imgbox{position:relative;cursor:zoom-in;width:100%;max-width:860px;}
+  .qimg-wrap img{width:100%;max-width:860px;display:block;background:#fff;}
+  .qimg-wrap .zoomhint{display:block;text-align:right;margin-top:6px;color:var(--navy);font-size:12px;font-weight:700;pointer-events:none;}
+  .qimg-wrap .imgph{width:100%;max-width:760px;height:200px;border:2px dashed var(--border);border-radius:8px;
+    display:flex;align-items:center;justify-content:center;color:var(--gray);font-size:12.5px;text-align:center;
+    background:#fffaf3;padding:10px;}
+  #lightbox{position:fixed;inset:0;background:rgba(10,20,35,.94);z-index:1200;display:none;
+    align-items:center;justify-content:center;padding:14px;}
+  #lightbox.open{display:flex;}
+  #lightbox img{max-width:100%;max-height:none;width:100%;border-radius:6px;box-shadow:0 10px 40px rgba(0,0,0,.5);background:#fff;}
+  #lightbox .lb-close{position:fixed;z-index:2;top:16px;right:18px;background:#fff;color:var(--navy);border:none;
+    width:38px;height:38px;border-radius:50%;font-size:18px;font-weight:700;}
+  .qtext{white-space:normal;}
+  .tblwrap{overflow-x:auto;margin:12px 0;}
+  table.qtable{border-collapse:collapse;width:100%;font-size:15px;background:#fff;}
+  table.qtable th,table.qtable td{border:1.5px solid #d9a66b;padding:9px 12px;text-align:left;}
+  table.qtable th{background:var(--blue-light);color:var(--navy);}
+  .stimulus{border:2px solid #d9a66b;background:#fffaf0;border-radius:10px;padding:14px 16px;margin:0 0 16px;font-size:15.5px;line-height:1.7;}
+  .stimulus .st-title{font-size:12px;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px;}
+  #lightbox{overflow:auto;align-items:flex-start;}
+  #lightbox img{cursor:zoom-in;margin:auto;}
+  #lightbox.zoom img{max-width:none;width:220vw;max-height:none;cursor:zoom-out;}
+  #lightbox .lb-tip{position:fixed;left:50%;bottom:14px;transform:translateX(-50%);background:rgba(255,255,255,.92);color:var(--navy);font-size:12px;font-weight:700;padding:6px 14px;border-radius:20px;pointer-events:none;}
+  .qtype-hint{font-size:12.5px;color:var(--amber);font-weight:700;margin-bottom:10px;}
+
+  .option{display:flex;align-items:flex-start;gap:12px;padding:13px 16px;border:1.5px solid var(--border);
+    border-radius:10px;margin-bottom:10px;background:var(--card);transition:.12s;}
+  .option:hover{border-color:var(--blue);}
+  .option.selected{border-color:var(--blue);background:var(--blue-light);}
+  .option input{margin-top:3px;flex-shrink:0;width:17px;height:17px;}
+  .option .otext{font-size:15px;line-height:1.5;}
+  .option .olabel{font-weight:700;color:var(--navy);margin-right:4px;}
+
+  table.matrix{width:100%;border-collapse:collapse;margin-top:8px;font-size:14px;}
+  table.matrix th,table.matrix td{border:1px solid var(--border);padding:10px;text-align:center;}
+  table.matrix th{background:var(--blue-light);color:var(--navy);}
+  table.matrix td.stmt{text-align:left;font-size:14px;}
+  table.matrix input{width:17px;height:17px;}
+
+  #navRow{max-width:820px;margin:24px auto 0;display:flex;justify-content:space-between;gap:10px;}
+  .btn-nav{padding:11px 22px;border-radius:8px;border:1.5px solid var(--border);background:var(--card);
+    font-weight:700;color:var(--navy);font-size:14px;}
+  .btn-nav:disabled{opacity:.4;}
+  .btn-nav.primary{background:var(--blue);color:#fff;border:none;}
+
+  #warnOverlay{position:fixed;inset:0;background:rgba(90,40,5,.96);z-index:999;display:none;
+    align-items:center;justify-content:center;padding:20px;color:#fff;text-align:center;}
+  #warnOverlay .box{max-width:420px;}
+  #warnOverlay h2{color:#ffd166;font-size:22px;}
+  #warnOverlay p{font-size:14.5px;line-height:1.6;opacity:.9;}
+  #warnOverlay button{margin-top:16px;padding:12px 28px;background:#ffd166;border:none;border-radius:8px;
+    font-weight:700;font-size:14.5px;color:#432;}
+
+  /* ===== RESULT ===== */
+  #screen-result{display:none;min-height:100vh;padding:30px 16px;background:var(--bg);}
+  .result-card{max-width:720px;margin:0 auto;background:var(--card);border-radius:16px;padding:32px;box-shadow:0 10px 40px rgba(0,0,0,.08);}
+  .result-card h1{color:var(--navy);margin-top:0;font-size:22px;}
+  .score-hero{text-align:center;padding:26px;background:linear-gradient(135deg,var(--navy),var(--blue));
+    border-radius:14px;color:#fff;margin:18px 0 24px;}
+  .score-hero .num{font-size:46px;font-weight:800;}
+  .score-hero .grade{font-size:15px;opacity:.9;margin-top:4px;}
+  .breakdown{width:100%;border-collapse:collapse;font-size:14px;margin-bottom:20px;}
+  .breakdown th,.breakdown td{padding:9px 10px;border-bottom:1px solid var(--border);text-align:left;}
+  .breakdown th{color:var(--gray);font-size:12px;text-transform:uppercase;}
+  .result-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px;}
+  .result-actions button{flex:1;min-width:180px;padding:13px;border-radius:9px;font-weight:700;font-size:14px;border:none;}
+  #btnExcel{background:var(--blue);color:#fff;}
+  #btnRetrySubmit{background:var(--amber);color:#432;}
+  .submit-status{display:flex;align-items:center;gap:10px;padding:12px 16px;border-radius:9px;font-size:13.5px;
+    font-weight:600;margin-bottom:18px;}
+  .submit-status.sending{background:#fff8ea;color:#8a6d00;border:1px solid #f1e0ad;}
+  .submit-status.ok{background:#e9f9f0;color:#0f7a45;border:1px solid #b7ecd0;}
+  .submit-status.fail{background:#fdecea;color:#a4271f;border:1px solid #f3c3bd;}
+  .dotpulse{width:9px;height:9px;border-radius:50%;background:currentColor;flex-shrink:0;animation:pulse 1s infinite;}
+  .submit-status.ok .dotpulse,.submit-status.fail .dotpulse{animation:none;}
+  .note-small{font-size:12px;color:var(--gray);margin-top:14px;line-height:1.6;}
+
+  @media (max-width:820px){
+    #navPanel{position:fixed;left:-300px;top:0;bottom:0;z-index:60;transition:.2s;box-shadow:4px 0 20px rgba(0,0,0,.15);}
+    #navPanel.open{left:0;}
+    #questionArea{padding:18px 16px 90px;}
+    .qimg-wrap img,.qimg-wrap .imgph{max-width:100%;width:100%;}
+  }
+</style>
 </head>
 <body>
-<div class="bg-deco" aria-hidden="true"><span class="orb o1"></span><span class="orb o2"></span><span class="orb o3"></span></div>
-<div class="page">
-<header class="kop">
-  <div class="kop-inner">
-    <a class="kembali reveal" href="../../kelas-8.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg> Kelas 8</a>
-    <div class="logo-wrap reveal"><img src="../../assets/img/logo-smpn1dlingo.png" alt="Logo SMP Negeri 1 Dlingo"></div>
-    <p class="sekolah reveal" style="--d:.08s">SMP NEGERI 1 DLINGO</p>
-    <h1 class="judul reveal" style="--d:.16s">Ilmu Pengetahuan Sosial</h1>
-    <div class="ornamen reveal" style="--d:.24s"><i></i></div>
-    <div class="chips reveal" style="--d:.32s"><span class="chip">Kelas <strong>VIII</strong></span><span class="chip">Tahun Pelajaran <strong>2026/2027</strong></span></div>
+
+<!-- ============ START / INSTRUCTIONS SCREEN ============ -->
+<div id="screen-start">
+  <div class="start-card">
+    <a href="../../kelas-9.html" style="display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;color:var(--gray);margin-bottom:14px;">&larr; Menu Kelas 9</a>
+    <div class="school-header">
+      <img src="../../assets/img/logo-smpn1dlingo.png" alt="Logo Sekolah">
+      <div class="stxt"><b>SMP NEGERI 1 DLINGO</b><span>Asesmen Sumatif Akhir Semester · IPS · TP 2026/2027</span></div>
+    </div>
+    <h1>📝 Asesmen Sumatif Akhir Semester — IPS</h1>
+    <p class="sub">Jenjang SMP · Kelas 9 · Semester Ganjil · Materi: Perkembangan Ekonomi Era Digital</p>
+
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="petunjuk">📋 Petunjuk</button>
+      <button class="tab-btn" data-tab="mulai">🚀 Mulai Ujian</button>
+    </div>
+
+    <div class="tab-panel active" id="tab-petunjuk">
+      <div class="info-grid">
+        <div><b id="infoJumlah">50 Soal</b><span>25 Pilihan Ganda, 14 PG Kompleks &amp; 11 Benar/Salah</span></div>
+        <div><b>90 Menit</b><span>Alokasi waktu · jawaban baru bisa dikirim setelah 40 menit</span></div>
+        <div><b>5 Kelompok Materi</b><span>Uang &amp; Lembaga Keuangan, Ekonomi Digital &amp; Literasi Finansial, Perdagangan Internasional, Kependudukan &amp; IPM, Poros Maritim &amp; Ekonomi Kreatif</span></div>
+        <div><b>Acak Soal</b><span>Urutan soal &amp; opsi diacak</span></div>
+      </div>
+      <p style="font-size:13.5px;color:#4a3626;margin:0 0 8px;font-weight:700;">Petunjuk Pengerjaan:</p>
+      <ol class="instr-list">
+        <li>Nama dan kelasmu terisi otomatis dari Menu Kelas 9 (tidak perlu mengetik lagi). Masukkan token ujian pada tab "Mulai Ujian" lalu mulai.</li>
+        <li>Bacalah setiap butir soal dengan cermat sebelum menjawab.</li>
+        <li>Terdapat soal Pilihan Ganda (pilih satu jawaban), Pilihan Ganda Kompleks (pilih lebih dari satu jawaban), dan Benar/Salah (tentukan Benar atau Salah tiap pernyataan). Untuk soal PG Kompleks dan Benar/Salah, nilai dihitung <b>per opsi/pernyataan</b>: jika sebagian jawabanmu benar, kamu tetap memperoleh sebagian nilai soal itu.</li>
+        <li>Ujian akan tampil dalam mode layar penuh (fullscreen) sejak dimulai.</li>
+        <li>Jangan berpindah tab/aplikasi, keluar dari layar penuh, menyalin teks, mengambil tangkapan layar, atau memakai split screen — semuanya tercatat sebagai pelanggaran.</li>
+        <li>Waktu berjalan otomatis selama 90 menit dan tidak dapat dijeda. Jawaban baru dapat dikirim setelah 40 menit pengerjaan.</li>
+        <li>Gunakan panel navigasi soal untuk melompat ke nomor soal tertentu dan memantau soal yang sudah/belum dijawab.</li>
+        <li>Tekan "Kirim Jawaban" setelah selesai. Jika pengiriman gagal, gunakan tombol "Kirim Ulang" yang akan muncul otomatis.</li>
+      </ol>
+    </div>
+
+    <div class="tab-panel" id="tab-mulai">
+      <label>Token Ujian</label>
+      <input type="password" id="inputToken" placeholder="Masukkan token dari guru">
+      <div class="idbox hidden" id="idBox">👤 <b id="idNama"></b><br>🏫 Kelas <b id="idKelas"></b></div>
+      <div id="pickWrap" class="hidden">
+        <div class="note-small" style="margin-top:12px;color:#8a6d00;">Nama &amp; kelas tidak terbaca dari Menu Kelas 9. Sebaiknya buka ujian melalui Menu Kelas 9; jika tidak bisa, pilih manual di bawah ini.</div>
+        <label>Kelas</label>
+        <select id="inputKelas"><option value="">— Pilih Kelas —</option></select>
+        <label>Nama Lengkap</label>
+        <select id="inputNama" disabled><option value="">— Pilih kelas terlebih dahulu —</option></select>
+      </div>
+      <div class="rules">
+        ⚠️ <b>Perhatian sebelum memulai:</b><br>
+        • Ujian akan tampil dalam mode <b>layar penuh (fullscreen)</b>.<br>
+        • Jangan membuka tab/aplikasi lain atau memakai <b>split screen</b> — sistem akan mencatat pelanggaran.<br>
+        • Waktu berjalan otomatis dan tidak dapat dijeda. Jawaban <b>baru dapat dikirim setelah 40 menit</b>; ujian terkirim otomatis saat waktu habis.<br>
+        • Pastikan koneksi internet stabil agar hasil dapat terkirim ke guru secara real-time.<br>
+        • Layar akan mengabur otomatis dan pelanggaran tercatat jika kamu mencoba keluar layar penuh, menyalin teks, mengambil tangkapan layar (screenshot), atau memakai split screen.
+      </div>
+      <div class="err-msg" id="startErr"></div>
+      <button class="btn-primary" id="btnStart">🚀 Mulai Ujian (Layar Penuh)</button>
+    </div>
   </div>
-</header>
-<main>
-  <div class="glass panel-segera reveal">
-    <div class="ikon-besar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg></div>
-    <span class="lencana">Segera hadir</span>
-    <h2>Soal belum tersedia</h2>
-    <p>Berkas soal <strong>Ilmu Pengetahuan Sosial</strong> Kelas VIII sedang disiapkan dan akan diunggah menyusul.</p>
-    <p>Berkas ini akan digantikan pada alamat berikut, sehingga tautan menu tidak perlu diubah.</p>
-    <span class="berkas">soal/kelas-8/ips.html</span><br>
-    <a class="tombol" href="../../kelas-8.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg> Kembali ke Kelas VIII</a>
-  </div>
-</main>
-<footer>
-  <p><strong>SMP Negeri 1 Dlingo</strong> — Bantul, Daerah Istimewa Yogyakarta<br>
-  Portal Asesmen Sumatif Akhir Semester &middot; Tahun Pelajaran 2026/2027</p>
-</footer>
 </div>
-<script src="../../assets/js/main.js"></script>
+
+<!-- ============ EXAM SCREEN ============ -->
+<div id="screen-exam">
+  <div id="topbar">
+    <button id="panelToggle">☰ Soal</button>
+    <div class="brand"><img src="../../assets/img/logo-smpn1dlingo.png" alt="Logo"><span>ASAS IPS KELAS 9 · TP 2026/2027<small class="who" id="brandStudent"></small></span></div>
+    <div id="violationBadge">⚠ Pelanggaran: <span id="violCount">0</span></div>
+    <div id="timerBox">90:00</div>
+  </div>
+  <div id="examBody">
+    <div id="navPanel"></div>
+    <div id="questionArea">
+      <div class="qwrap" id="qwrap"></div>
+      <div id="navRow">
+        <button class="btn-nav" id="btnPrev">← Sebelumnya</button>
+        <button class="btn-nav primary" id="btnNext">Selanjutnya →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="lightbox">
+  <button class="lb-close" id="lightboxClose">✕</button>
+  <img id="lightboxImg" src="" alt="Gambar diperbesar">
+  <div class="lb-tip">Ketuk gambar untuk memperbesar / memperkecil</div>
+</div>
+
+<div id="warnOverlay">
+  <div class="box">
+    <h2 id="warnTitle">⚠ Peringatan</h2>
+    <p id="warnText"></p>
+    <button id="warnBtn">Kembali ke Ujian</button>
+  </div>
+</div>
+
+<!-- ============ RESULT SCREEN ============ -->
+<div id="screen-result">
+  <div class="result-card">
+    <div class="school-header">
+      <img src="../../assets/img/logo-smpn1dlingo.png" alt="Logo Sekolah">
+      <div class="stxt"><b>SMP NEGERI 1 DLINGO BANTUL</b><span>Asesmen Sumatif Akhir Semester · IPS · TP 2026/2027</span></div>
+    </div>
+    <h1>✅ Hasil Ujian</h1>
+    <div class="score-hero">
+      <div class="num" id="resScore">0 / 0</div>
+      <div class="grade" id="resGrade">Predikat —</div>
+    </div>
+    <div id="submitStatus" class="submit-status sending">
+      <span class="dotpulse"></span><span id="submitStatusText">Mengirim jawaban ke guru...</span>
+    </div>
+    <table class="breakdown" id="resTable"></table>
+    <div class="result-actions">
+      <button id="btnRetrySubmit" class="hidden">🔁 Kirim Ulang</button>
+      <button id="btnExcel">⬇️ Unduh Hasil (Excel)</button>
+    </div>
+    <p class="note-small">
+      Nama: <b id="rNama"></b> · Kelas: <b id="rKelas"></b> · Pelanggaran layar tercatat: <b id="rViol"></b> kali.<br>
+      Jawaban dikirim otomatis secara real-time ke Google Spreadsheet guru begitu halaman ini muncul. Jika status di atas menunjukkan gagal terkirim, gunakan tombol "Kirim Ulang", atau pastikan koneksi internet aktif lalu klik tombol tersebut. Tombol "Unduh Hasil (Excel)" tetap tersedia sebagai cadangan.
+    </p>
+  </div>
+</div>
+
+<script id="questions-data" type="application/json">[{"subject": "Uang & Lembaga Keuangan", "no": 1, "type": "pg", "text": "Perhatikan peristiwa-peristiwa berikut!\n\n(1) Kebutuhan manusia semakin banyak dan beragam sehingga tidak dapat lagi dipenuhi sendiri.\n(2) Manusia praaksara berburu dan mengumpulkan makanan sambil berpindah-pindah (nomaden).\n(3) Manusia mulai bercocok tanam, beternak, dan menetap di satu tempat.\n(4) Manusia saling menukar barang dengan barang (barter).\n\nUrutan peristiwa yang tepat dari yang paling awal adalah ....", "options": ["(2) – (3) – (1) – (4)", "(2) – (1) – (3) – (4)", "(3) – (2) – (1) – (4)", "(3) – (1) – (2) – (4)"], "correct": "(2) – (3) – (1) – (4)"}, {"subject": "Uang & Lembaga Keuangan", "no": 2, "type": "pg", "text": "Perhatikan peristiwa-peristiwa berikut!\n\n(1) Rina membeli semangkuk bakso seharga Rp15.000,00 dan langsung menerima bakso tersebut.\n(2) Pak Dedi melunasi utang Rp500.000,00 kepada tetangganya tanpa menerima barang atau jasa.\n(3) Sebuah toko memasang label bertuliskan Rp25.000,00 pada setiap buku yang dijual.\n(4) Bu Lastri menyimpan sebagian uangnya sebagai kekayaan untuk keperluan di masa depan.\n\nPasangan peristiwa dan fungsi uang yang tepat adalah ....", "options": ["(1) alat pembayaran; (2) alat tukar; (3) penunjuk harga; (4) penimbun kekayaan", "(1) alat tukar; (2) alat pembayaran; (3) satuan hitung; (4) penimbun kekayaan", "(1) alat tukar; (2) alat pembayaran; (3) penunjuk harga; (4) pendorong kegiatan ekonomi", "(1) alat tukar; (2) alat pembayaran; (3) penunjuk harga; (4) penimbun kekayaan"], "correct": "(1) alat tukar; (2) alat pembayaran; (3) penunjuk harga; (4) penimbun kekayaan"}, {"subject": "Uang & Lembaga Keuangan", "no": 3, "type": "pg", "text": "Seorang petani menjual 10 kg beras di pasar, lalu uang hasil penjualan ia gunakan untuk membeli garam dan minyak goreng. Fungsi uang yang paling tampak dalam kegiatan tersebut adalah ....", "options": ["alat pembayaran utang", "penyimpan kekayaan", "alat tukar", "satuan hitung"], "correct": "alat tukar"}, {"subject": "Uang & Lembaga Keuangan", "no": 4, "type": "pg", "text": "Lembaga negara independen yang berfungsi mengatur, mengawasi, memeriksa, dan menyidik seluruh kegiatan di sektor jasa keuangan di Indonesia, bertujuan untuk memastikan bahwa sektor jasa keuangan berjalan secara transparan, akuntabel, dan melindungi kepentingan masyarakat adalah ....", "options": ["Bank Indonesia", "Otoritas Jasa Keuangan", "Lembaga Penjamin Simpanan", "Bursa Efek Indonesia"], "correct": "Otoritas Jasa Keuangan"}, {"subject": "Uang & Lembaga Keuangan", "no": 5, "type": "pg", "pre": "Perhatikan gambar kartu prabayar berikut!", "img": "../../assets/img/IPS_9_5.png", "text": "Kartu tersebut menyimpan nilai uang pada chip dan harus diisi saldo terlebih dahulu sebelum digunakan di gerbang tol. Kartu tersebut termasuk jenis uang ....", "options": ["uang kartal", "uang elektronik", "uang giral", "uang kuasi"], "correct": "uang elektronik"}, {"subject": "Uang & Lembaga Keuangan", "no": 6, "type": "pg", "text": "Keluarga Pak Seto membayar premi setiap bulan kepada perusahaan asuransi. Ketika rumah mereka mengalami kebakaran, perusahaan memberikan ganti rugi sesuai perjanjian. Manfaat utama asuransi yang dirasakan keluarga Pak Seto adalah ....", "options": ["memperoleh pinjaman tanpa bunga", "memperoleh bagi hasil dari penjualan saham", "menggandakan tabungan dalam waktu singkat", "mengalihkan risiko kerugian keuangan kepada perusahaan asuransi"], "correct": "mengalihkan risiko kerugian keuangan kepada perusahaan asuransi"}, {"subject": "Ekonomi Digital & Literasi Finansial", "no": 7, "type": "pg", "text": "Seorang pengrajin di desa wisata memasarkan produknya melalui media sosial dan marketplace sehingga pembelinya datang dari berbagai kota, bahkan luar negeri. Kondisi ini menunjukkan bahwa interaksi masyarakat abad ke-21 ditandai oleh ....", "options": ["interaksi yang terbatas pada wilayah tempat tinggal", "interaksi yang melampaui batas ruang dan waktu berkat teknologi digital", "kembalinya barter sebagai alat transaksi utama", "berkurangnya peran teknologi dalam kegiatan ekonomi"], "correct": "interaksi yang melampaui batas ruang dan waktu berkat teknologi digital"}, {"subject": "Uang & Lembaga Keuangan", "no": 8, "type": "pg", "text": "Perhatikan kebutuhan finansial berikut!\n\n(1) Menyimpan uang dengan aman dan memperoleh bunga.\n(2) Mengalihkan risiko kerugian akibat kecelakaan kendaraan.\n(3) Membeli kepemilikan perusahaan untuk investasi jangka panjang.\n\nLembaga keuangan yang paling tepat untuk memenuhi kebutuhan (1), (2), dan (3) secara berturut-turut adalah ....", "options": ["perusahaan asuransi, bank umum, koperasi simpan pinjam", "perusahaan sekuritas, perusahaan asuransi, bank umum", "bank umum, perusahaan asuransi, perusahaan sekuritas (pasar modal)", "koperasi simpan pinjam, perusahaan pembiayaan, perusahaan asuransi"], "correct": "bank umum, perusahaan asuransi, perusahaan sekuritas (pasar modal)"}, {"subject": "Ekonomi Digital & Literasi Finansial", "no": 9, "type": "pg", "text": "Dua pelaku usaha kuliner sejenis memiliki perkembangan yang berbeda. Usaha A memasarkan produk melalui media sosial dan marketplace serta menerima pembayaran QR; omzetnya naik 40% dalam setahun dengan pembeli dari lima kota. Usaha B hanya melayani pembeli yang datang langsung dan menerima pembayaran tunai; omzetnya relatif tetap. Faktor utama yang paling menjelaskan perbedaan perkembangan kedua usaha tersebut adalah ....", "options": ["pemanfaatan teknologi digital untuk memperluas pasar dan mempermudah transaksi", "perbedaan harga bahan baku yang digunakan", "lokasi usaha yang lebih strategis", "jumlah karyawan yang lebih banyak"], "correct": "pemanfaatan teknologi digital untuk memperluas pasar dan mempermudah transaksi"}, {"subject": "Ekonomi Digital & Literasi Finansial", "no": 10, "type": "pg", "text": "Dengan fitur paylater, Elsya membeli barang melalui aplikasi dan membayarnya bulan depan; jika terlambat, ia dikenai bunga dan denda. Elsya sering membeli barang melebihi penghasilannya sehingga tagihannya menumpuk. Evaluasi yang paling tepat terhadap penggunaan paylater oleh Elsya adalah ....", "options": ["paylater aman dipakai tanpa batas karena pembayarannya ditunda", "tagihan tidak perlu dibayar apabila Elsya lupa", "paylater sebaiknya dipakai untuk semua keinginan agar tabungan tetap aman", "Elsya sebaiknya memakai paylater sebatas kemampuan bayar, hanya untuk kebutuhan, serta memahami bunga dan dendanya"], "correct": "Elsya sebaiknya memakai paylater sebatas kemampuan bayar, hanya untuk kebutuhan, serta memahami bunga dan dendanya"}, {"subject": "Ekonomi Digital & Literasi Finansial", "no": 11, "type": "pg", "text": "Adnan berpenghasilan Rp2.500.000 per bulan dan membagi uangnya sebagai berikut: 50% untuk kebutuhan, 30% untuk keinginan, dan 20% untuk tabungan. Ia ingin membeli sepeda seharga Rp1.800.000 hanya dari tabungan tanpa tambahan dana lain. Waktu minimal yang diperlukan agar sepeda tersebut dapat terbeli adalah ....", "options": ["3 bulan", "4 bulan", "5 bulan", "6 bulan"], "correct": "4 bulan"}, {"subject": "Uang & Lembaga Keuangan", "no": 12, "type": "pg", "text": "Perhatikan daftar kurs valuta asing yang dikeluarkan oleh Bank \"Mandiri Sejahtera\" berikut ini !<div class=\"tblwrap\"><table class=\"qtable\"><tr><th><b>Valuta Asing<\/b><\/th><th><b>Kurs Beli (Rp)<\/b><\/th><th><b>Kurs Jual (Rp)<\/b><\/th><\/tr><tr><td>US $ 1 (<i>Dollar USA<\/i>)<\/td><td>18.200<\/td><td>18.400<\/td><\/tr><tr><td>SG $ 1 (<i>Dollar Singapore<\/i>)<\/td><td>14.100<\/td><td>14.300<\/td><\/tr><\/table><\/div>Ibu Arifah baru saja pulang berwisata dari Singapura dan masih menyimpan sisa uang kertas asing sebanyak <b>SGD 2.500<\/b>. Ia mendatangi bank tersebut untuk menukarkan seluruh sisa uang Singapura miliknya kembali ke dalam bentuk mata uang Rupiah.\nBerdasarkan data kurs di atas, jumlah uang rupiah yang akan diterima oleh Ibu Arifah adalah ...", "options": ["Rp 35.250.000", "Rp 35.750.000", "Rp 45.500.000", "Rp 46.000.000"], "correct": "Rp 35.250.000"}, {"subject": "Poros Maritim & Ekonomi Kreatif", "no": 13, "type": "pg", "text": "Pemerintah membangun pelabuhan dan jaringan transportasi laut antarpulau agar daerah-daerah saling terhubung. Pembangunan ini mendukung pilar poros maritim dunia, yaitu ....", "options": ["budaya maritim", "diplomasi maritim", "pertahanan maritim", "infrastruktur dan konektivitas maritim"], "correct": "infrastruktur dan konektivitas maritim"}, {"subject": "Poros Maritim & Ekonomi Kreatif", "no": 14, "type": "pg", "text": "Kapal nelayan asing menangkap ikan tanpa izin di laut yang berjarak 150 mil laut dari garis dasar Indonesia. Wilayah tersebut dan hak Indonesia di dalamnya adalah ....", "options": ["laut teritorial, karena Indonesia memiliki kedaulatan mutlak sampai jarak 200 mil laut", "Zona Ekonomi Eksklusif (ZEE), karena Indonesia memiliki hak berdaulat memanfaatkan sumber daya alamnya", "laut bebas, karena jaraknya melebihi 12 mil laut sehingga semua negara bebas menangkap ikan", "laut teritorial, karena Indonesia wajib menjamin hak lintas damai bagi semua kapal"], "correct": "Zona Ekonomi Eksklusif (ZEE), karena Indonesia memiliki hak berdaulat memanfaatkan sumber daya alamnya"}, {"subject": "Poros Maritim & Ekonomi Kreatif", "no": 15, "type": "pg", "pre": "Perhatikan data kondisi terumbu karang Indonesia berikut!", "img": "../../assets/img/IPS_9_15.png", "text": "<div class=\"tblwrap\"><table class=\"qtable\"><tr><th><b>Kondisi<\/b><\/th><th><b>Persentase<\/b><\/th><\/tr><tr><td>Sangat baik<\/td><td>5,58%<\/td><\/tr><tr><td>Baik<\/td><td>26,95%<\/td><\/tr><tr><td>Cukup<\/td><td>36,90%<\/td><\/tr><tr><td>Kurang baik<\/td><td>30,76%<\/td><\/tr><\/table><\/div>Kesimpulan yang paling tepat berdasarkan data tersebut adalah ....", "options": ["lebih dari separuh terumbu karang berkondisi baik dan sangat baik sehingga program rehabilitasi tidak diperlukan lagi", "terumbu karang berkondisi kurang baik merupakan persentase terbesar sehingga seluruh terumbu karang sudah rusak", "terumbu karang berkondisi baik dan sangat baik baru sekitar sepertiga (±32,5%), sehingga pengelolaan dan rehabilitasi seperti COREMAP II masih diperlukan", "terumbu karang berkondisi sangat baik mendominasi sehingga potensi sumber daya laut tidak perlu dilindungi."], "correct": "terumbu karang berkondisi baik dan sangat baik baru sekitar sepertiga (±32,5%), sehingga pengelolaan dan rehabilitasi seperti COREMAP II masih diperlukan"}, {"subject": "Poros Maritim & Ekonomi Kreatif", "no": 16, "type": "pg", "text": "Kabupaten X memiliki potensi melimpah berupa limbah tempurung kelapa dan serat pandan, serta didukung komunitas perajin anyaman tradisional yang terampil. Namun, selama satu dekade terakhir, pendapatan perajin stagnan karena produk yang dihasilkan hanya berupa peralatan rumah tangga konvensional (seperti gayung dan tikar polos) yang bersaing langsung dengan produk plastik pabrikan.\nJika pemerintah daerah dan pelaku usaha ingin meningkatkan nilai tambah ekonomi melalui sinergi antar-subsektor ekonomi kreatif, langkah strategis yang paling tepat adalah ....", "options": ["Memperbanyak jumlah produksi tikar polos menggunakan mesin pencetak massal agar harga jualnya lebih murah daripada produk plastik", "Mengalihkan seluruh perajin anyaman menjadi tenaga kerja di sektor kuliner dan periklanan karena kedua subsektor tersebut paling cepat menghasilkan uang", "Mengintegrasikan subsektor kriya dengan subsektor desain produk dan fesyen melalui penciptaan tas ramah lingkungan berstandar estetika global dengan merek terdaftar", "Membatasi penjualan bahan baku tempurung kelapa ke luar daerah sambil mempertahankan desain produk tradisional tanpa perubahan agar keasliannya terjaga"], "correct": "Mengintegrasikan subsektor kriya dengan subsektor desain produk dan fesyen melalui penciptaan tas ramah lingkungan berstandar estetika global dengan merek terdaftar"}, {"subject": "Perdagangan Internasional", "no": 17, "type": "pg", "text": "Perhatikan kegiatan impor berikut!\n\n(1) Indonesia mengimpor kurma dan buah kiwi.\n(2) Indonesia membeli pesawat tempur dan kereta cepat.\n(3) Indonesia mengimpor garam dan daging meskipun dapat memproduksinya sendiri.\n(4) Indonesia mengimpor tekstil karena harga produk luar negeri lebih murah daripada produk nasional.\n\nPenyebab perdagangan internasional untuk (1), (2), (3), dan (4) secara berurutan adalah ....", "options": ["kondisi alam tidak mendukung – SDM dan teknologi belum mumpuni – produksi dalam negeri tidak mencukupi – produksi dalam negeri lebih mahal", "SDM dan teknologi belum mumpuni – kondisi alam tidak mendukung – produksi dalam negeri lebih mahal – produksi dalam negeri tidak mencukupi", "kondisi alam tidak mendukung – produksi dalam negeri tidak mencukupi – SDM dan teknologi belum mumpuni – produksi dalam negeri lebih mahal", "produksi dalam negeri tidak mencukupi – kondisi alam tidak mendukung – produksi dalam negeri lebih mahal – SDM dan teknologi belum mumpuni"], "correct": "kondisi alam tidak mendukung – SDM dan teknologi belum mumpuni – produksi dalam negeri tidak mencukupi – produksi dalam negeri lebih mahal"}, {"subject": "Perdagangan Internasional", "no": 18, "type": "pg", "text": "Pemerintah mewajibkan pembangunan smelter agar nikel tidak dijual sebagai bahan mentah. Meskipun Uni Eropa menggugat dan menang di WTO, Indonesia tetap menggenjot hilirisasi sehingga ekspor nikel meningkat, namun pengolahannya masih bekerja sama dengan negara asing. Kesimpulan yang paling tepat adalah ....", "options": ["hilirisasi sebaiknya dihentikan karena melanggar ketentuan WTO dan tidak memberi manfaat ekonomi", "Indonesia sudah mandiri sepenuhnya dalam mengolah nikel sehingga tidak memerlukan kerja sama asing", "ekspor bahan mentah lebih menguntungkan daripada hilirisasi karena tidak membutuhkan teknologi dan tenaga ahli", "hilirisasi meningkatkan nilai tambah dan ekspor, tetapi ketergantungan pada tenaga ahli, teknologi, dan perusahaan asing menjadi tantangan sehingga penguatan SDM dan teknologi dalam negeri diperlukan"], "correct": "hilirisasi meningkatkan nilai tambah dan ekspor, tetapi ketergantungan pada tenaga ahli, teknologi, dan perusahaan asing menjadi tantangan sehingga penguatan SDM dan teknologi dalam negeri diperlukan"}, {"subject": "Kependudukan, IPM & Kesejahteraan", "no": 19, "type": "pg", "text": "Suatu negara berpenduduk 200 juta jiwa, terdiri atas 140 juta jiwa usia produktif, 45 juta jiwa usia belum produktif, dan 15 juta jiwa usia tidak produktif. Rasio ketergantungan negara tersebut dan maknanya adalah ....", "options": ["30,0%; setiap 100 penduduk menanggung 30 penduduk usia tidak produktif", "42,9%; setiap 100 penduduk usia produktif menanggung sekitar 43 penduduk usia tidak produktif", "70,0%; setiap 100 penduduk usia tidak produktif menanggung 70 penduduk usia produktif", "233,3%; setiap 100 penduduk usia produktif menanggung 233 penduduk usia tidak produktif"], "correct": "42,9%; setiap 100 penduduk usia produktif menanggung sekitar 43 penduduk usia tidak produktif"}, {"subject": "Kependudukan, IPM & Kesejahteraan", "no": 20, "type": "pg", "text": "Di Kabupaten Mulia, sebagian besar penduduknya berusia produktif, tetapi banyak yang menganggur karena tidak memiliki keahlian. Jika dibiarkan, kondisi ini dapat meningkatkan pengangguran, kriminalitas, dan kemiskinan. Kebijakan yang paling tepat agar bonus demografi menjadi keuntungan ekonomi adalah ....", "options": ["meningkatkan pendidikan dan pelatihan keterampilan serta memperluas lapangan kerja sesuai kebutuhan industri", "mendorong penduduk usia produktif pindah ke luar daerah tanpa pembekalan keterampilan", "mengurangi anggaran pendidikan dan kesehatan agar dana dialihkan ke sektor lain", "meningkatkan jumlah penduduk sebanyak-banyaknya tanpa memperhatikan kualitasnya"], "correct": "meningkatkan pendidikan dan pelatihan keterampilan serta memperluas lapangan kerja sesuai kebutuhan industri"}, {"subject": "Perdagangan Internasional", "no": 21, "type": "pg", "text": "Perhatikan pernyataan berikut!\n\n(1) Negara A mampu memproduksi kopi lebih banyak daripada negara B dengan sumber daya produksi yang sama.\n(2) Negara C mampu memproduksi tekstil dengan biaya tenaga kerja yang jauh lebih murah daripada negara D.\n\nTeori yang menjelaskan pernyataan (1) dan (2) serta tokohnya secara berurutan adalah ....", "options": ["keunggulan komparatif oleh David Ricardo dan keunggulan mutlak oleh Adam Smith", "keunggulan mutlak oleh David Ricardo dan keunggulan komparatif oleh Adam Smith", "keunggulan mutlak oleh Adam Smith dan keunggulan komparatif oleh David Ricardo", "keunggulan mutlak dan keunggulan komparatif, keduanya dikembangkan oleh Adam Smith"], "correct": "keunggulan mutlak oleh Adam Smith dan keunggulan komparatif oleh David Ricardo"}, {"subject": "Perdagangan Internasional", "no": 22, "type": "pg", "text": "Indonesia adalah produsen minyak sawit (CPO) terbesar dunia, dan CPO diolah menjadi biodiesel B-30 serta green diesel yang memperkuat ketahanan energi. Namun, perluasan kebun sawit sering dikritik karena dampaknya bagi lingkungan. Sikap yang paling tepat agar sejalan dengan upaya menjadi negara maju adalah ....", "options": ["menghentikan seluruh perkebunan sawit karena pasti merusak lingkungan", "terus mengembangkan sawit dan produk turunannya sebagai sumber devisa dan energi dengan tetap menerapkan prinsip keberlanjutan bagi lingkungan dan masyarakat", "memperluas lahan sawit tanpa batas agar produksi CPO dan devisa meningkat secepat-cepatnya", "mengekspor seluruh CPO sebagai bahan mentah karena paling cepat menghasilkan uang"], "correct": "terus mengembangkan sawit dan produk turunannya sebagai sumber devisa dan energi dengan tetap menerapkan prinsip keberlanjutan bagi lingkungan dan masyarakat"}, {"subject": "Perdagangan Internasional", "no": 23, "type": "pg", "text": "Negara Z pada tahun 2023 mengekspor barang senilai US$ 200 miliar dan mengimpor barang senilai US$ 180 miliar. Pada tahun 2024, nilai ekspor Negara Z turun 10%, sedangkan nilai impornya naik 10%. Kondisi neraca perdagangan Negara Z pada tahun 2024 adalah ...", "options": ["aktif dengan surplus US$ 18 miliar", "pasif dengan defisit US$ 18 miliar", "aktif dengan surplus US$ 20 miliar", "pasif dengan defisit US$ 20 miliar"], "correct": "pasif dengan defisit US$ 18 miliar"}, {"subject": "Perdagangan Internasional", "no": 24, "type": "pg", "text": "Perhatikan data neraca perdagangan Negara P berikut!\n<b>Nilai ekspor dan impor Negara P (miliar US$)<\/b><div class=\"tblwrap\"><table class=\"qtable\"><tr><th><b>Tahun<\/b><\/th><th><b>Nilai ekspor<\/b><\/th><th><b>Nilai impor<\/b><\/th><\/tr><tr><td>2022<\/td><td>60<\/td><td>55<\/td><\/tr><tr><td>2023<\/td><td>58<\/td><td>62<\/td><\/tr><tr><td>2024<\/td><td>70<\/td><td>64<\/td><\/tr><\/table><\/div>Simpulan yang paling tepat berdasarkan data tersebut adalah ...", "options": ["Pada tahun 2022 neraca perdagangan Negara P pasif dengan defisit US$ 5 miliar.", "Pada tahun 2023 neraca perdagangan Negara P aktif dengan surplus US$ 4 miliar.", "Pada tahun 2024 neraca perdagangan Negara P aktif dengan surplus US$ 6 miliar.", "Pada tahun 2022 sampai 2024 neraca perdagangan Negara P selalu pasif."], "correct": "Pada tahun 2024 neraca perdagangan Negara P aktif dengan surplus US$ 6 miliar."}, {"subject": "Perdagangan Internasional", "no": 25, "type": "pg", "text": "Perhatikan contoh kebijakan perdagangan internasional berikut!\n\n1) Pemerintah membatasi impor gula paling banyak 1 juta ton per tahun.\n2) Pemerintah memberikan bantuan dana kepada eksportir kopi agar harga jualnya bersaing di pasar dunia.\n3) Pemerintah menjual barang atau komoditas ekspor di luar negeri dengan harga lebih murah dibanding di dalam negeri.\n\nJenis kebijakan yang sesuai dengan ketiga contoh tersebut secara berurutan adalah ...", "options": ["1) tarif, 2) subsidi, 3) embargo", "1) kuota, 2) dumping, 3) embargo", "1) embargo, 2) subsidi, 3) kuota", "1) kuota, 2) subsidi, 3) dumping"], "correct": "1) kuota, 2) subsidi, 3) dumping"}, {"subject": "Uang & Lembaga Keuangan", "no": 26, "type": "multi", "text": "Bank Indonesia mengeluarkan biaya Rp750,00 untuk mencetak selembar uang kertas Rp10.000,00. Untuk membuat satu keping uang logam Rp1.000,00, biaya yang dikeluarkan juga Rp1.000,00.\nPernyataan yang tepat berdasarkan data tersebut adalah ....", "options": ["nilai intrinsik uang kertas Rp10.000,00 sebesar Rp10.000,00", "nilai nominal uang logam Rp1.000,00 lebih kecil daripada nilai intrinsiknya", "uang kertas Rp10.000,00 termasuk uang tanda (token money)", "uang logam Rp1.000,00 termasuk uang bernilai penuh (full bodied money)"], "correct": ["uang kertas Rp10.000,00 termasuk uang tanda (token money)", "uang logam Rp1.000,00 termasuk uang bernilai penuh (full bodied money)"], "hint": "Pilih semua jawaban yang benar (lebih dari satu)"}, {"subject": "Uang & Lembaga Keuangan", "no": 27, "type": "multi", "text": "Pak Rangga ingin membeli sepeda motor, tetapi uangnya belum cukup sehingga ia berencana membayarnya dengan cicilan bertahap. Ia juga ingin memiliki jaminan keuangan apabila suatu saat mengalami kecelakaan, serta menyiapkan dana masa tua dari pemotongan gajinya setiap bulan.\nLembaga keuangan bukan bank yang sesuai dengan kebutuhan Pak Rangga adalah ....", "options": ["perusahaan asuransi", "pegadaian", "perusahaan dana pensiun", "perusahaan sewa guna (leasing)"], "correct": ["perusahaan asuransi", "perusahaan sewa guna (leasing)"], "hint": "Pilih semua jawaban yang benar (lebih dari satu)"}, {"subject": "Ekonomi Digital & Literasi Finansial", "no": 28, "type": "multi", "text": "Dalam sebuah unggahan di media sosial, terjadi perbedaan pendapat di kolom komentar. Beberapa pengguna menulis komentar kasar, ada yang membagikan kabar yang belum jelas kebenarannya, dan ada yang menyebarkan data pribadi pengguna lain.\nTindakan yang sesuai dengan prinsip <i>Respect, Educate, dan Protect<\/i> menurut Mike Ribble adalah ....", "options": ["menjaga kata sandi akun dan tidak menyebarkan informasi pribadi secara bebas", "memeriksa kebenaran suatu kabar sebelum membagikannya kepada orang lain", "membalas komentar kasar dengan kata kasar karena tidak saling mengenal", "menyampaikan pendapat dengan bahasa yang sopan meskipun berbeda pandangan"], "correct": ["menjaga kata sandi akun dan tidak menyebarkan informasi pribadi secara bebas", "memeriksa kebenaran suatu kabar sebelum membagikannya kepada orang lain", "menyampaikan pendapat dengan bahasa yang sopan meskipun berbeda pandangan"], "hint": "Pilih semua jawaban yang benar (lebih dari satu)"}, {"subject": "Ekonomi Digital & Literasi Finansial", "no": 29, "type": "multi", "text": "Pak Wisnu tergiur sebuah tawaran investasi yang menjanjikan keuntungan sangat besar dalam waktu singkat. Ia tidak mengetahui bentuk usahanya dan tidak memeriksa izinnya, tetapi tetap memakai seluruh tabungannya untuk ikut serta.\nPernyataan yang tepat untuk mengevaluasi keputusan Pak Wisnu adalah ....", "options": ["literasi finansial hanya diperlukan oleh orang yang berpenghasilan besar", "pada investasi bodong, bisnis yang dijanjikan tidak ada atau palsu sehingga uang yang ditanam dapat hilang", "literasi finansial yang baik akan membantunya menempatkan investasi sesuai karakter dan perencanaan keuangannya", "keputusan tersebut berisiko membuatnya terjebak investasi bodong"], "correct": ["pada investasi bodong, bisnis yang dijanjikan tidak ada atau palsu sehingga uang yang ditanam dapat hilang", "literasi finansial yang baik akan membantunya menempatkan investasi sesuai karakter dan perencanaan keuangannya", "keputusan tersebut berisiko membuatnya terjebak investasi bodong"], "hint": "Pilih semua jawaban yang benar (lebih dari satu)"}, {"subject": "Ekonomi Digital & Literasi Finansial", "no": 30, "type": "multi", "text": "Hasil pemantauan terhadap pelaku usaha mikro di sebuah wilayah menunjukkan kondisi berikut :\n\n(1) Sinyal internet di beberapa dusun masih lemah.\n(2) Banyak pelaku usaha belum memahami cara memakai aplikasi penjualan daring.\n(3) Sejumlah pembeli melaporkan penipuan dan kebocoran data pribadi.\n\nUpaya yang tepat untuk mengatasi kondisi-kondisi tersebut adalah ....", "options": ["menghentikan seluruh transaksi nontunai agar tidak ada penipuan", "meningkatkan keamanan siber dan melindungi privasi data", "meningkatkan literasi digital masyarakat", "memperluas akses internet dan perangkat elektronik"], "correct": ["meningkatkan keamanan siber dan melindungi privasi data", "meningkatkan literasi digital masyarakat", "memperluas akses internet dan perangkat elektronik"], "hint": "Pilih semua jawaban yang benar (lebih dari satu)"}, {"subject": "Kependudukan, IPM & Kesejahteraan", "no": 31, "type": "multi", "text": "Indeks Pembangunan Manusia (IPM) digunakan oleh UNDP untuk mengukur kualitas hidup penduduk suatu negara. Komponen yang diukur dalam IPM adalah ....", "options": ["Kesehatan, diukur melalui harapan hidup saat kelahiran", "Pendidikan, diukur melalui tingkat pencapaian pendidikan", "Standar hidup, diukur melalui pendapatan per kapita", "Luas wilayah, diukur melalui jumlah pulau"], "correct": ["Kesehatan, diukur melalui harapan hidup saat kelahiran", "Pendidikan, diukur melalui tingkat pencapaian pendidikan", "Standar hidup, diukur melalui pendapatan per kapita"], "hint": "Pilih 3 jawaban yang benar"}, {"subject": "Kependudukan, IPM & Kesejahteraan", "no": 32, "type": "multi", "text": "Pemerintah Kabupaten Sukamaju ingin meningkatkan dimensi pengetahuan dalam IPM. Program yang paling langsung berpengaruh terhadap dimensi tersebut adalah ....", "options": ["Pelaksanaan imunisasi lengkap dan penambahan jumlah posyandu balita.", "Pemberian beasiswa agar lulusan SD melanjutkan pendidikan ke jenjang SMP.", "Pelatihan kewirausahaan dan perluasan pasar bagi pelaku UMKM.", "Penyelenggaraan program Paket B dan Paket C bagi penduduk dewasa yang putus sekolah."], "correct": ["Pemberian beasiswa agar lulusan SD melanjutkan pendidikan ke jenjang SMP.", "Penyelenggaraan program Paket B dan Paket C bagi penduduk dewasa yang putus sekolah."], "hint": "Pilih 2 jawaban yang benar"}, {"subject": "Kependudukan, IPM & Kesejahteraan", "no": 33, "type": "multi", "text": "Perhatikan data komposisi penduduk Indonesia pada Juni 2025 berikut!<div class=\"tblwrap\"><table class=\"qtable\"><tr><th><b>Kelompok Usia<\/b><\/th><th><b>Jumlah (juta jiwa)<\/b><\/th><th><b>Persentase<\/b><\/th><\/tr><tr><td>Belum produktif<\/td><td>67,16<\/td><td>24,39%<\/td><\/tr><tr><td>Produktif<\/td><td>190,83<\/td><td>69,30%<\/td><\/tr><tr><td>Tidak produktif<\/td><td>17,38<\/td><td>6,31%<\/td><\/tr><tr><td>Total<\/td><td>275,36<\/td><td>100%<\/td><\/tr><\/table><\/div>Kesimpulan yang tepat berdasarkan data tersebut adalah ....", "options": ["Jumlah penduduk usia produktif jauh lebih banyak daripada usia tidak produktif sehingga rasio ketergantungan relatif rendah", "Penduduk usia tidak produktif lebih banyak daripada penduduk usia produktif", "Kondisi tersebut berpeluang menjadi bonus demografi apabila penduduk usia produktif memiliki keahlian dan terserap lapangan kerja", "Setiap 100 penduduk usia produktif hanya menanggung sekitar 4 penduduk usia tidak produktif"], "correct": ["Jumlah penduduk usia produktif jauh lebih banyak daripada usia tidak produktif sehingga rasio ketergantungan relatif rendah", "Kondisi tersebut berpeluang menjadi bonus demografi apabila penduduk usia produktif memiliki keahlian dan terserap lapangan kerja"], "hint": "Pilih 2 jawaban yang benar"}, {"subject": "Kependudukan, IPM & Kesejahteraan", "no": 34, "type": "multi", "text": "Perhatikan data berikut!<div class=\"tblwrap\"><table class=\"qtable\"><tr><th><b>Kecamatan<\/b><\/th><th><b>Usia 0–14 tahun (jiwa)<\/b><\/th><th><b>Usia 15–64 tahun (jiwa)<\/b><\/th><th><b>Usia 65+ tahun (jiwa)<\/b><\/th><\/tr><tr><td>Anggrek<\/td><td>15.000<\/td><td>50.000<\/td><td>5.000<\/td><\/tr><tr><td>Bakung<\/td><td>28.000<\/td><td>70.000<\/td><td>7.000<\/td><\/tr><tr><td>Cempaka<\/td><td>36.000<\/td><td>60.000<\/td><td>12.000<\/td><\/tr><\/table><\/div>Berdasarkan data komposisi penduduk tiga kecamatan tersebut, pernyataan yang benar adalah ....", "options": ["Rasio Ketergantungan Kecamatan Cempaka sebesar 60.", "Rasio Ketergantungan Kecamatan Anggrek sebesar 40.", "Kecamatan Anggrek dan Kecamatan Bakung sama-sama telah memasuki periode bonus demografi.", "Kecamatan Cempaka menanggung beban terberat: setiap 100 penduduk usia produktif menanggung 80 penduduk usia tidak produktif."], "correct": ["Rasio Ketergantungan Kecamatan Anggrek sebesar 40.", "Kecamatan Cempaka menanggung beban terberat: setiap 100 penduduk usia produktif menanggung 80 penduduk usia tidak produktif."], "hint": "Pilih 2 jawaban yang benar"}, {"subject": "Perdagangan Internasional", "no": 35, "type": "multi", "text": "Indonesia sebenarnya mampu memproduksi tekstil dan peralatan elektronik, tetapi masih mengimpor kedua jenis barang tersebut dari luar negeri. Alasan yang tepat terjadinya kegiatan impor tersebut adalah ....", "options": ["Tekstil impor harganya lebih murah sehingga produsen dalam negeri sulit bersaing", "Peralatan elektronik impor dinilai memiliki kualitas yang lebih baik daripada produk dalam negeri", "Iklim tropis Indonesia membuat tekstil dan peralatan elektronik tidak mungkin diproduksi", "Pemerintah melarang seluruh industri dalam negeri memproduksi barang tersebut"], "correct": ["Tekstil impor harganya lebih murah sehingga produsen dalam negeri sulit bersaing", "Peralatan elektronik impor dinilai memiliki kualitas yang lebih baik daripada produk dalam negeri"], "hint": "Pilih 2 jawaban yang benar"}, {"subject": "Perdagangan Internasional", "no": 36, "type": "multi", "text": "Sejak tahun 2019, pemerintah mewajibkan perusahaan membangun smelter sehingga nikel tidak boleh dijual sebagai bahan mentah. Uni Eropa menggugat kebijakan ini ke WTO dan WTO memutuskan bahwa kebijakan tersebut melanggar ketentuan WTO. Meskipun demikian, Indonesia tetap melanjutkan hilirisasi nikel. Ekspor produk nikel meningkat pesat pada tahun 2021, tetapi pengolahannya masih bekerja sama dengan perusahaan dari Tiongkok, Korea Selatan, Brazil, dan Jepang karena keterbatasan tenaga ahli, teknologi, dan infrastruktur.\nAnalisis yang tepat berdasarkan bacaan tersebut adalah ....", "options": ["Kewajiban smelter bertujuan meningkatkan nilai jual nikel karena dijual setelah diolah dan dimurnikan", "Kebijakan hilirisasi nikel tidak menimbulkan tantangan karena diterima oleh seluruh mitra dagang", "Keterbatasan tenaga ahli, teknologi, dan infrastruktur membuat Indonesia masih bergantung pada kerja sama dengan negara lain", "Kebijakan hilirisasi tetap dipertahankan Indonesia meskipun menghadapi gugatan dari negara lain", "Meningkatnya ekspor membuktikan bahwa Indonesia sudah sepenuhnya mandiri dalam mengolah nikel"], "correct": ["Kewajiban smelter bertujuan meningkatkan nilai jual nikel karena dijual setelah diolah dan dimurnikan", "Keterbatasan tenaga ahli, teknologi, dan infrastruktur membuat Indonesia masih bergantung pada kerja sama dengan negara lain", "Kebijakan hilirisasi tetap dipertahankan Indonesia meskipun menghadapi gugatan dari negara lain"], "hint": "Pilih 3 jawaban yang benar"}, {"subject": "Perdagangan Internasional", "no": 37, "type": "multi", "text": "Dengan jumlah tenaga kerja dan modal yang sama, Negara P mampu menghasilkan 100 ton beras, sedangkan Negara Q hanya menghasilkan 60 ton beras. Di sisi lain, biaya tenaga kerja untuk memproduksi tekstil di Negara Q jauh lebih murah daripada di Negara P.\nAnalisis yang tepat berdasarkan teori keunggulan dalam perdagangan internasional adalah ....", "options": ["Negara P memiliki keunggulan mutlak dalam produksi beras", "Negara Q memiliki keunggulan komparatif dalam produksi tekstil", "Keunggulan komparatif terjadi apabila suatu negara menghasilkan lebih banyak barang dengan sumber daya yang sama", "Karena Negara P unggul dalam beras dan Negara Q unggul dalam tekstil, kedua negara tidak akan berdagang"], "correct": ["Negara P memiliki keunggulan mutlak dalam produksi beras", "Negara Q memiliki keunggulan komparatif dalam produksi tekstil"], "hint": "Pilih 2 jawaban yang benar"}, {"subject": "Poros Maritim & Ekonomi Kreatif", "no": 38, "type": "multi", "pre": "Perhatikan ilustrasi batas maritim berikut!", "img": "../../assets/img/IPS_9_38.png", "text": "Pernyataan yang tepat tentang batas maritim Indonesia adalah ....", "options": ["Garis dasar ditarik pada pantai saat air laut surut dengan menghubungkan titik-titik terluar pulau", "Di laut teritorial, Indonesia memiliki kedaulatan penuh tetapi wajib menjamin hak lintas damai kapal asing", "Di ZEE, Indonesia berhak memanfaatkan sumber daya alam yang ada di dalamnya", "Kapal nelayan asing bebas menangkap ikan di laut teritorial Indonesia"], "correct": ["Garis dasar ditarik pada pantai saat air laut surut dengan menghubungkan titik-titik terluar pulau", "Di laut teritorial, Indonesia memiliki kedaulatan penuh tetapi wajib menjamin hak lintas damai kapal asing", "Di ZEE, Indonesia berhak memanfaatkan sumber daya alam yang ada di dalamnya"], "hint": "Pilih 3 jawaban yang benar"}, {"subject": "Poros Maritim & Ekonomi Kreatif", "no": 39, "type": "multi", "text": "Pemerintah daerah ingin mengembangkan industri batik sebagai subsektor ekonomi kreatif sekaligus melestarikan budaya. Strategi yang paling tepat dan sesuai dengan strategi pemerintah dalam mengembangkan ekonomi kreatif adalah ....", "options": ["Menyediakan insentif dan menyusun peta jalan (roadmap) industri kreatif berbasis budaya bersama pihak swasta", "Memberikan perlindungan hukum melalui Hak Kekayaan Intelektual atas motif batik ciptaan pengrajin", "Menghubungkan pengrajin, swasta, dan pemerintah melalui wadah seperti Indonesia Creative Council", "Membatasi pelatihan desain dan pemasaran agar jumlah pengrajin tidak bertambah"], "correct": ["Menyediakan insentif dan menyusun peta jalan (roadmap) industri kreatif berbasis budaya bersama pihak swasta", "Memberikan perlindungan hukum melalui Hak Kekayaan Intelektual atas motif batik ciptaan pengrajin", "Menghubungkan pengrajin, swasta, dan pemerintah melalui wadah seperti Indonesia Creative Council"], "hint": "Pilih 3 jawaban yang benar"}, {"subject": "Uang & Lembaga Keuangan", "no": 40, "type": "matrix", "rows": [{"label": "A", "text": "Kurs US$1 = Rp18.200,00 merupakan contoh nilai eksternal uang.", "cols": ["Benar", "Salah"], "correct": "Benar"}, {"label": "B", "text": "Kenaikan harga beras menunjukkan bahwa nilai internal uang naik.", "cols": ["Benar", "Salah"], "correct": "Salah"}, {"label": "C", "text": "Nilai nominal uang kertas tersebut adalah Rp3.000,00.", "cols": ["Benar", "Salah"], "correct": "Salah"}, {"label": "D", "text": "Nilai intrinsik uang kertas tersebut adalah Rp3.000,00.", "cols": ["Benar", "Salah"], "correct": "Benar"}], "text": "Sebuah uang kertas bertuliskan Rp50.000,00 dibuat dari bahan seharga Rp3.000,00. Harga beras naik dari Rp12.000,00 menjadi Rp14.000,00 per kilogram. Pada hari yang sama, kurs US$1 = Rp18.200,00.\n<b>Tentukan apakah pernyataan berikut Benar atau Salah!<\/b>", "options": null, "correct": null}, {"subject": "Uang & Lembaga Keuangan", "no": 41, "type": "matrix", "rows": [{"label": "A", "text": "Bank Indonesia memiliki hak oktroi, tetapi pelaksanaan pencetakan uang ditunjuk kepada Perum Peruri.", "cols": ["Benar", "Salah"], "correct": "Benar"}, {"label": "B", "text": "Bank konvensional beroperasi dengan sistem bagi hasil, sedangkan bank syariah beroperasi dengan sistem bunga.", "cols": ["Benar", "Salah"], "correct": "Salah"}, {"label": "C", "text": "Pegadaian memberikan pinjaman dana tanpa mensyaratkan jaminan berupa barang berharga.", "cols": ["Benar", "Salah"], "correct": "Salah"}, {"label": "D", "text": "Bank Mandiri dan BNI termasuk bank pemerintah, BCA termasuk bank swasta nasional, dan Bukopin termasuk bank milik koperasi.", "cols": ["Benar", "Salah"], "correct": "Benar"}], "text": "Bacalah pernyataan berikut tentang bank dan lembaga keuangan!\n<b>Tentukan apakah pernyataan berikut Benar atau Salah!<\/b>", "options": null, "correct": null}, {"subject": "Ekonomi Digital & Literasi Finansial", "no": 42, "type": "matrix", "rows": [{"label": "A", "text": "Membagikan pesan tanpa memeriksa kebenarannya berpotensi menyebarkan hoaks dan dapat menjerat Dimas pada kasus hukum.", "cols": ["Benar", "Salah"], "correct": "Benar"}, {"label": "B", "text": "UU No. 11 Tahun 2008 tentang ITE hanya mengatur transaksi jual beli daring dan tidak mengatur perlindungan data pribadi.", "cols": ["Benar", "Salah"], "correct": "Salah"}, {"label": "C", "text": "Komentar yang merendahkan suku tertentu melanggar etika bermedia sosial karena termasuk penyebaran SARA.", "cols": ["Benar", "Salah"], "correct": "Benar"}, {"label": "D", "text": "Membagikan nomor telepon teman tanpa izin dibenarkan karena media sosial adalah ruang terbuka.", "cols": ["Benar", "Salah"], "correct": "Salah"}], "text": "Dimas membagikan ulang pesan berantai tentang bantuan dana pemerintah tanpa memeriksa kebenarannya. Ia juga menulis komentar yang merendahkan suku tertentu di unggahan orang lain dan membagikan nomor telepon temannya tanpa izin karena menganggap media sosial adalah ruang terbuka.\n<b>Tentukan apakah pernyataan berikut Benar atau Salah!<\/b>", "options": null, "correct": null}, {"subject": "Ekonomi Digital & Literasi Finansial", "no": 43, "type": "matrix", "rows": [{"label": "A", "text": "Risiko penipuan dan ketidaksesuaian produk pada e-commerce dapat dikurangi dengan memilih toko daring yang terpercaya.", "cols": ["Benar", "Salah"], "correct": "Benar"}, {"label": "B", "text": "Penyelenggara sistem pembayaran, baik bank maupun bukan bank, harus memiliki izin dari Otoritas Jasa Keuangan (OJK).", "cols": ["Benar", "Salah"], "correct": "Benar"}, {"label": "C", "text": "Harga barang di e-commerce selalu lebih mahal daripada di toko fisik karena penjual harus menyewa toko di pusat kota.", "cols": ["Benar", "Salah"], "correct": "Salah"}, {"label": "D", "text": "Investasi digital seperti reksadana dan saham hanya dapat dilakukan dengan modal yang besar.", "cols": ["Benar", "Salah"], "correct": "Salah"}], "text": "Seorang peserta diskusi mengemukakan sejumlah pendapat tentang ekonomi digital.\n<b>Tentukan apakah pendapat berikut Benar atau Salah!<\/b>", "options": null, "correct": null}, {"subject": "Ekonomi Digital & Literasi Finansial", "no": 44, "type": "matrix", "rows": [{"label": "A", "text": "Menyisihkan Rp10.000,00 untuk sedekah termasuk kegiatan berbagi (sharing).", "cols": ["Benar", "Salah"], "correct": "Benar"}, {"label": "B", "text": "Sisa uang Taufiq setelah membeli kebutuhan primer adalah Rp80.000,00.", "cols": ["Benar", "Salah"], "correct": "Benar"}, {"label": "C", "text": "Dana yang tersisa untuk membeli jajan dan barang yang diinginkan adalah Rp50.000,00.", "cols": ["Benar", "Salah"], "correct": "Salah"}, {"label": "D", "text": "Jika seluruh sisa Rp80.000,00 dipakai untuk jajan, Taufiq telah mendahulukan kebutuhan daripada keinginan.", "cols": ["Benar", "Salah"], "correct": "Salah"}], "text": "Taufiq menerima uang saku Rp200.000,00 per minggu. Ia membelanjakan Rp120.000,00 untuk kebutuhan primer (makan dan transportasi). Dari sisa uangnya, ia menabung Rp30.000,00 dan menyisihkan Rp10.000,00 untuk berbagi (sedekah). Sisanya ia pakai untuk membeli jajan dan barang yang diinginkan.\n<b>Tentukan apakah pernyataan berikut Benar atau Salah!<\/b>", "options": null, "correct": null}, {"subject": "Ekonomi Digital & Literasi Finansial", "no": 45, "type": "matrix", "rows": [{"label": "A", "text": "Semua instrumen investasi memiliki karakter yang sama sehingga Sofia boleh memilih secara asal.", "cols": ["Benar", "Salah"], "correct": "Salah"}, {"label": "B", "text": "Sofia tidak perlu memeriksa izin penyelenggara karena keuntungan 20% per minggu sudah menjamin investasinya aman.", "cols": ["Benar", "Salah"], "correct": "Salah"}, {"label": "C", "text": "Saran tersebut berisiko karena dapat mengarah pada investasi bodong yang bisnisnya tidak ada atau palsu.", "cols": ["Benar", "Salah"], "correct": "Benar"}, {"label": "D", "text": "Literasi finansial membantu Sofia memilih produk investasi yang sesuai dengan kebutuhan dan kemampuannya.", "cols": ["Benar", "Salah"], "correct": "Benar"}], "text": "Seorang kakak menyarankan Sofia, \"Pakai saja semua tabunganmu untuk ikut investasi daring yang menjanjikan untung 20% setiap minggu. Tidak usah memeriksa izinnya, yang penting cepat kaya.\"\n<b>Tentukan apakah pernyataan berikut Benar atau Salah!<\/b>", "options": null, "correct": null}, {"subject": "Kependudukan, IPM & Kesejahteraan", "no": 46, "type": "matrix", "rows": [{"label": "A", "text": "Pinjaman modal yang diterima Bu Winnie merupakan contoh kredit mikro.", "cols": ["Benar", "Salah"], "correct": "Benar"}, {"label": "B", "text": "Uang tunai yang diterima keluarga Pak Zidan merupakan contoh Bantuan Langsung Tunai (BLT).", "cols": ["Benar", "Salah"], "correct": "Benar"}, {"label": "C", "text": "Pupuk dengan harga lebih murah merupakan contoh jaminan sosial.", "cols": ["Benar", "Salah"], "correct": "Salah"}, {"label": "D", "text": "Ketiga program tersebut bertujuan menyalurkan kembali pendapatan dari masyarakat berpenghasilan tinggi kepada masyarakat berpenghasilan rendah.", "cols": ["Benar", "Salah"], "correct": "Benar"}], "text": "Bu Winnie, pemilik warung kecil, memperoleh pinjaman modal dari pemerintah dengan cicilan ringan tanpa agunan. Keluarga Pak Zidan menerima uang tunai dari pemerintah karena terdata dalam database penerima bantuan. Petani di desa mereka membeli pupuk dengan harga lebih murah karena dibantu pemerintah.\nTentukan benar atau salah setiap pernyataan berikut!", "options": null, "correct": null}, {"subject": "Perdagangan Internasional", "no": 47, "type": "matrix", "rows": [{"label": "A", "text": "WTO berfungsi antara lain menyelesaikan sengketa dagang antarnegara anggota.", "cols": ["Benar", "Salah"], "correct": "Benar"}, {"label": "B", "text": "CAFTA adalah kerja sama perdagangan bebas antara Cina dan negara-negara Eropa.", "cols": ["Benar", "Salah"], "correct": "Salah"}, {"label": "C", "text": "Salah satu ciri perdagangan bebas adalah campur tangan pemerintah yang sangat besar.", "cols": ["Benar", "Salah"], "correct": "Salah"}, {"label": "D", "text": "Perdagangan bebas dapat berdampak negatif berupa monopoli dan kesenjangan ekonomi.", "cols": ["Benar", "Salah"], "correct": "Benar"}], "text": "Tentukan benar atau salah setiap pernyataan tentang perdagangan bebas berikut!", "options": null, "correct": null}, {"subject": "Perdagangan Internasional", "no": 48, "type": "matrix", "rows": [{"label": "A", "text": "Penghapusan tarif melalui perjanjian perdagangan bebas merupakan faktor pendorong perdagangan internasional.", "cols": ["Benar", "Salah"], "correct": "Benar"}, {"label": "B", "text": "Birokrasi ekspor-impor yang memerlukan waktu lama merupakan faktor penghambat perdagangan internasional.", "cols": ["Benar", "Salah"], "correct": "Benar"}, {"label": "C", "text": "Perbedaan dan fluktuasi nilai tukar mata uang mempermudah transaksi pembayaran antarnegara.", "cols": ["Benar", "Salah"], "correct": "Salah"}, {"label": "D", "text": "Kebijakan kuota dan proteksi merupakan contoh kebijakan yang mendorong kelancaran perdagangan bebas.", "cols": ["Benar", "Salah"], "correct": "Salah"}], "text": "Dua negara menandatangani perjanjian perdagangan bebas yang menghapus tarif barang. Namun, pengurusan dokumen ekspor-impor di salah satu negara memerlukan waktu sangat lama, dan nilai tukar mata uang kedua negara berfluktuasi.\nTentukan benar atau salah setiap pernyataan berikut!", "options": null, "correct": null}, {"subject": "Perdagangan Internasional", "no": 49, "type": "matrix", "rows": [{"label": "A", "text": "Kondisi tersebut menunjukkan dampak negatif perdagangan internasional berupa menurunnya penjualan produk lokal.", "cols": ["Benar", "Salah"], "correct": "Benar"}, {"label": "B", "text": "Industri bermodal kecil cenderung kalah bersaing dalam perdagangan internasional.", "cols": ["Benar", "Salah"], "correct": "Benar"}, {"label": "C", "text": "Banyaknya pilihan produk bagi konsumen merupakan dampak negatif perdagangan internasional.", "cols": ["Benar", "Salah"], "correct": "Salah"}, {"label": "D", "text": "Jika kondisi tersebut dibiarkan, tidak ada risiko ketergantungan terhadap negara lain.", "cols": ["Benar", "Salah"], "correct": "Salah"}], "text": "Di sebuah daerah, banyak pabrik tekstil lokal menutup usahanya karena pasar dibanjiri tekstil impor berharga murah. Pengusaha kecil kesulitan bersaing, sedangkan konsumen memiliki lebih banyak pilihan produk.\nTentukan benar atau salah setiap pernyataan berikut!", "options": null, "correct": null}, {"subject": "Poros Maritim & Ekonomi Kreatif", "no": 50, "type": "matrix", "rows": [{"label": "A", "text": "Letak geostrategis menjadikan wilayah laut Indonesia sebagai urat nadi perdagangan dunia.", "cols": ["Benar", "Salah"], "correct": "Benar"}, {"label": "B", "text": "Lima pilar poros maritim mencakup budaya maritim, sumber daya maritim, infrastruktur dan konektivitas maritim, diplomasi maritim, serta pertahanan maritim.", "cols": ["Benar", "Salah"], "correct": "Benar"}, {"label": "C", "text": "Untuk menjadi poros maritim, Indonesia sebaiknya hanya mengandalkan daratan dan mengabaikan pengelolaan laut.", "cols": ["Benar", "Salah"], "correct": "Salah"}, {"label": "D", "text": "Prinsip ekonomi biru berarti memaksimalkan hasil tangkapan ikan tanpa memperhatikan keberlanjutan.", "cols": ["Benar", "Salah"], "correct": "Salah"}], "text": "Seorang pengamat menyatakan bahwa letak Indonesia di antara dua benua dan dua samudra merupakan modal besar untuk menjadi poros maritim dunia.\nTentukan benar atau salah setiap pernyataan berikut sebagai penilaian terhadap pernyataan pengamat tersebut!", "options": null, "correct": null}]</script>
+<script src="../../assets/js/data-siswa.js"></script>
+<script>
+(function(){
+"use strict";
+
+/* ================= CONFIG ================= */
+const SUBJECT_ORDER = ["Uang & Lembaga Keuangan","Ekonomi Digital & Literasi Finansial","Perdagangan Internasional","Kependudukan, IPM & Kesejahteraan","Poros Maritim & Ekonomi Kreatif"];
+const DURATION_SEC = 90*60;
+const MIN_SUBMIT_SEC = 40*60;   // batas minimal sebelum jawaban boleh dikirim (40 menit)
+const MAPEL = "IPS";
+const ASESMEN = "ASAS";
+const KELAS_TINGKAT = "IX";
+const MATERI = "Perkembangan Ekonomi Era Digital";
+const JUDUL = "ASAS IPS KELAS 9";
+const VALID_TOKEN = "PSL9KRS";
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzTbLsyinnNGJI6ynUK287JyE0P7KhtUpGmuYw5gGOKfJ-9LuPXwCxVOwhZ7NsqXPGqUw/exec";
+
+const RAW_QUESTIONS = JSON.parse(document.getElementById('questions-data').textContent);
+document.getElementById('infoJumlah').textContent = RAW_QUESTIONS.length + " Soal";
+/* Data siswa dimuat dari ../../assets/js/data-siswa.js (const DATA_SISWA); hanya rombel kelas IX yang dipakai */
+const STUDENTS = {};
+if(typeof DATA_SISWA !== 'undefined'){ Object.keys(DATA_SISWA).filter(k=>k.indexOf('IX')===0).forEach(k=>{ STUDENTS[k]=DATA_SISWA[k]; }); }
+const EMBEDDED_IMAGES = {};
+
+/* ================= STATE ================= */
+let examQuestions = [];
+let answers = {};
+let current = 0;
+let violCount = 0;
+let timeLeft = DURATION_SEC;
+let timerHandle = null;
+let studentName = "", studentClass = "";
+let examStarted = false;
+let examFinished = false;
+
+/* ================= UTIL ================= */
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; }
+  return a;
+}
+function fmtTime(s){ const m=Math.floor(s/60), sec=s%60; return String(m).padStart(2,'0')+":"+String(sec).padStart(2,'0'); }
+function escapeHtml(str){ return String(str).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function renderText(t){ return String(t).replace(/\n/g,'<br>'); }
+function imgList(img){ if(!img) return []; return Array.isArray(img) ? img : [img]; }
+function imgSrc(name){ return EMBEDDED_IMAGES[name] || encodeURI(name); }
+function typesetMath(){}
+
+/* ================= LIGHTBOX (tap-to-zoom for question images) ================= */
+document.getElementById('lightboxClose').addEventListener('click',()=>{
+  document.getElementById('lightbox').classList.remove('open','zoom');
+});
+document.getElementById('lightbox').addEventListener('click',(e)=>{
+  const lb = document.getElementById('lightbox');
+  if(e.target.id==='lightboxImg'){ lb.classList.toggle('zoom'); return; }
+  if(e.target.id==='lightbox'){ lb.classList.remove('open','zoom'); }
+});
+
+/* ================= TABS (start screen) ================= */
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-'+btn.dataset.tab).classList.add('active');
+  });
+});
+
+/* ================= STUDENT DROPDOWNS ================= */
+(function populateClassDropdown(){
+  const selKelas = document.getElementById('inputKelas');
+  Object.keys(STUDENTS).forEach(kelas=>{
+    const opt = document.createElement('option');
+    opt.value = kelas; opt.textContent = kelas;
+    selKelas.appendChild(opt);
+  });
+
+  selKelas.addEventListener('change',()=>{
+    const selNama = document.getElementById('inputNama');
+    const kelas = selKelas.value;
+    selNama.innerHTML = '';
+    if(!kelas){
+      const opt = document.createElement('option'); opt.value=''; opt.textContent='— Pilih kelas terlebih dahulu —';
+      selNama.appendChild(opt); selNama.disabled = true; return;
+    }
+    const opt0 = document.createElement('option'); opt0.value=''; opt0.textContent='— Pilih Nama —';
+    selNama.appendChild(opt0);
+    (STUDENTS[kelas]||[]).forEach(nm=>{
+      const opt = document.createElement('option'); opt.value = nm; opt.textContent = nm;
+      selNama.appendChild(opt);
+    });
+    selNama.disabled = false;
+  });
+
+  /* Prefill dari menu Kelas (kelas-9.html): ?kelas=IX%20A&nama=NAMA%20SISWA */
+  const params = new URLSearchParams(window.location.search);
+  const pKelas = params.get('kelas');
+  const pNama = params.get('nama');
+  if(pKelas && STUDENTS[pKelas]){
+    selKelas.value = pKelas;
+    selKelas.dispatchEvent(new Event('change'));
+    const norm = s => String(s||'').replace(/\s+/g,' ').trim().toUpperCase();
+    const match = pNama ? STUDENTS[pKelas].find(n=>norm(n)===norm(pNama)) : null;
+    if(match){
+      document.getElementById('inputNama').value = match;
+      document.getElementById('idNama').textContent = match;
+      document.getElementById('idKelas').textContent = pKelas;
+      document.getElementById('idBox').classList.remove('hidden');
+      document.getElementById('pickWrap').classList.add('hidden');
+    }
+    document.querySelector('.tab-btn[data-tab="mulai"]').click();
+    document.getElementById('inputToken').focus();
+  }
+})();
+
+/* Tampilkan pilihan manual hanya bila nama/kelas tidak terbaca dari Menu Kelas 9 */
+if(!document.getElementById('inputNama').value){ document.getElementById('pickWrap').classList.remove('hidden'); }
+
+/* ================= BUILD EXAM (shuffle) ================= */
+function buildExam(){
+  const all = RAW_QUESTIONS.map((q,i)=>({q,i}));
+  const shuffledAll = shuffle(all);
+  examQuestions = shuffledAll.map(o=>{
+    const q = JSON.parse(JSON.stringify(o.q));
+    q._id = o.i;
+    if((q.type==='pg' || q.type==='multi') && Array.isArray(q.options)){
+      q.options = shuffle(q.options);
+    }
+    if(q.type==='matrix' && Array.isArray(q.rows)){ q.rows = shuffle(q.rows); }
+    return q;
+  });
+}
+
+/* ================= NAV PANEL ================= */
+function renderNavPanel(){
+  const panel = document.getElementById('navPanel');
+  let html = '<h3>Nomor Soal (1–'+examQuestions.length+')</h3>';
+  html += '<div class="legend"><span><i class="dot" style="background:#2e8b57"></i>Terjawab</span><span><i class="dot" style="background:#fff;border:1.5px solid #f2d2a9"></i>Belum</span></div>';
+  let grid = '';
+  examQuestions.forEach((q,idx)=>{
+    const answered = isAnswered(q);
+    grid += '<button class="navbtn'+(answered?' answered':'')+(idx===current?' current':'')+'" data-idx="'+idx+'">'+(idx+1)+'</button>';
+  });
+  html += '<div class="navgrid">'+grid+'</div>';
+  html += '<button id="navSubmitBtn">✅ Kirim Jawaban</button>';
+  panel.innerHTML = html;
+  panel.querySelectorAll('.navbtn').forEach(b=>{
+    b.addEventListener('click',()=>{ current=parseInt(b.dataset.idx,10); renderQuestion(); closeMobilePanel(); });
+  });
+  document.getElementById('navSubmitBtn').addEventListener('click', confirmSubmit);
+  updateSubmitLock();
+}
+function closeMobilePanel(){ document.getElementById('navPanel').classList.remove('open'); }
+
+function isAnswered(q){
+  const v = answers[q._id];
+  if(q.type==='pg') return !!v;
+  if(q.type==='multi') return Array.isArray(v) && v.length>0;
+  if(q.type==='matrix'){ if(!v) return false; return q.rows.every(r=>v[r.label]); }
+  return false;
+}
+
+/* ================= RENDER QUESTION ================= */
+function renderQuestion(){
+  const q = examQuestions[current];
+  const wrap = document.getElementById('qwrap');
+  let html = '';
+  html += '<div class="qnum">Soal '+(current+1)+' dari '+examQuestions.length+'</div>';
+  if(q.stimulus) html += '<div class="stimulus"><div class="st-title">📖 Bacaan / Teks Soal</div>'+renderText(q.stimulus)+'</div>';
+  html += '<div class="qtext">'+renderText(q.pre || q.text)+'</div>';
+  const imgs = imgList(q.img);
+  if(imgs.length){
+    html += '<div class="qimg-wrap">';
+    imgs.forEach(name=>{
+      const src = imgSrc(name);
+      html += '<div class="imgbox" data-full="'+src+'">'+
+        '<img src="'+src+'" alt="'+escapeHtml(name)+'" loading="lazy" '+
+        'onerror="this.parentElement.outerHTML=\'<div class=&quot;imgph&quot;>🖼️ '+escapeHtml(name)+'<br>(gambar menyusul dari guru)</div>\'">'+
+        '<span class="zoomhint">🔍 Ketuk untuk perbesar</span></div>';
+    });
+    html += '</div>';
+  }
+  if(q.pre) html += '<div class="qtext">'+renderText(q.text)+'</div>';
+  if(q.type==='multi') html += '<div class="qtype-hint">☑ Pilihan Ganda Kompleks — '+(q.hint||'pilih semua jawaban yang benar')+'</div>';
+  if(q.type==='matrix') html += '<div class="qtype-hint">☑ Benar/Salah — tentukan Benar atau Salah untuk setiap pernyataan (4 pernyataan)</div>';
+
+  if(q.type==='pg') html += renderPG(q);
+  else if(q.type==='multi') html += renderMulti(q);
+  else if(q.type==='matrix') html += renderMatrix(q);
+
+  wrap.innerHTML = html;
+  typesetMath();
+  attachOptionEvents(q);
+  wrap.querySelectorAll('.imgbox').forEach(box=>{
+    box.addEventListener('click',()=>{
+      document.getElementById('lightboxImg').src = box.dataset.full;
+      document.getElementById('lightbox').classList.add('open');
+    });
+  });
+
+  document.getElementById('btnPrev').disabled = (current===0);
+  document.getElementById('btnNext').textContent = (current===examQuestions.length-1) ? 'Selesai →' : 'Selanjutnya →';
+  document.querySelectorAll('.navbtn').forEach(b=>b.classList.toggle('current', parseInt(b.dataset.idx,10)===current));
+  document.getElementById('questionArea').scrollTop = 0;
+}
+
+const LETTERS = ['A','B','C','D','E','F'];
+
+function renderPG(q){
+  const v = answers[q._id]; let html='';
+  q.options.forEach((opt,i)=>{
+    const selected = v===opt;
+    html += '<label class="option'+(selected?' selected':'')+'"><input type="radio" name="pg" value="'+i+'" '+(selected?'checked':'')+'>'+
+      '<span class="otext"><span class="olabel">'+LETTERS[i]+'.</span>'+opt+'</span></label>';
+  });
+  return html;
+}
+function renderMulti(q){
+  const v = answers[q._id] || []; let html='';
+  q.options.forEach((opt,i)=>{
+    const selected = v.includes(opt);
+    html += '<label class="option'+(selected?' selected':'')+'"><input type="checkbox" name="multi" value="'+i+'" '+(selected?'checked':'')+'>'+
+      '<span class="otext"><span class="olabel">'+LETTERS[i]+'.</span>'+opt+'</span></label>';
+  });
+  return html;
+}
+function renderMatrix(q){
+  const v = answers[q._id] || {};
+  let html = '<table class="matrix"><thead><tr><th style="text-align:left">Pernyataan</th>';
+  q.rows[0].cols.forEach(c=>{ html += '<th>'+escapeHtml(c)+'</th>'; });
+  html += '</tr></thead><tbody>';
+  q.rows.forEach((r,ri)=>{
+    html += '<tr><td class="stmt">'+(ri+1)+'. '+r.text+'</td>';
+    r.cols.forEach(c=>{
+      const checked = v[r.label]===c;
+      html += '<td><input type="radio" name="row_'+r.label+'" value="'+escapeHtml(c)+'" data-row="'+escapeHtml(r.label)+'" '+(checked?'checked':'')+'></td>';
+    });
+    html += '</tr>';
+  });
+  html += '</tbody></table>';
+  return html;
+}
+function attachOptionEvents(q){
+  if(q.type==='pg'){
+    document.querySelectorAll('input[name=pg]').forEach(inp=>{
+      inp.addEventListener('change',()=>{ answers[q._id]=q.options[parseInt(inp.value,10)]; renderQuestion(); renderNavPanel(); });
+    });
+  } else if(q.type==='multi'){
+    document.querySelectorAll('input[name=multi]').forEach(inp=>{
+      inp.addEventListener('change',()=>{
+        let cur = answers[q._id] ? answers[q._id].slice() : [];
+        const val = q.options[parseInt(inp.value,10)];
+        if(inp.checked){ if(!cur.includes(val)) cur.push(val); } else { cur = cur.filter(x=>x!==val); }
+        answers[q._id]=cur; renderQuestion(); renderNavPanel();
+      });
+    });
+  } else if(q.type==='matrix'){
+    document.querySelectorAll('table.matrix input').forEach(inp=>{
+      inp.addEventListener('change',()=>{
+        const rowLabel = inp.dataset.row;
+        const cur = answers[q._id] ? Object.assign({},answers[q._id]) : {};
+        cur[rowLabel] = inp.value; answers[q._id]=cur; renderQuestion(); renderNavPanel();
+      });
+    });
+  }
+}
+
+/* ================= NAVIGATION ================= */
+document.getElementById('btnPrev').addEventListener('click',()=>{ if(current>0){ current--; renderQuestion(); } });
+document.getElementById('btnNext').addEventListener('click',()=>{
+  if(current<examQuestions.length-1){ current++; renderQuestion(); } else { confirmSubmit(); }
+});
+document.getElementById('panelToggle').addEventListener('click',()=>{ document.getElementById('navPanel').classList.toggle('open'); });
+
+/* ================= TIMER (berbasis jam sistem, tetap akurat walau tab di-throttle) ================= */
+let startTs = 0, endTs = 0;
+function elapsedSec(){ return Math.floor((Date.now()-startTs)/1000); }
+function canSubmitNow(){ return elapsedSec() >= MIN_SUBMIT_SEC; }
+function updateSubmitLock(){
+  const b = document.getElementById('navSubmitBtn');
+  if(!b || !examStarted) return;
+  const rem = MIN_SUBMIT_SEC - elapsedSec();
+  if(rem > 0){ b.textContent = '🔒 Kirim dibuka dalam '+fmtTime(rem); b.classList.add('locked'); }
+  else { b.textContent = '✅ Kirim Jawaban'; b.classList.remove('locked'); }
+}
+function tick(){
+  timeLeft = Math.max(0, Math.ceil((endTs-Date.now())/1000));
+  const box = document.getElementById('timerBox');
+  box.textContent = fmtTime(timeLeft);
+  if(timeLeft<=300) box.classList.add('low');
+  updateSubmitLock();
+  if(timeLeft<=0){ clearInterval(timerHandle); finishExam(true); }
+}
+function startTimer(){
+  startTs = Date.now(); endTs = startTs + DURATION_SEC*1000;
+  tick(); timerHandle = setInterval(tick,1000);
+}
+
+/* ================= LAYAR PENUH & PENCATATAN PELANGGARAN ================= */
+const logPelanggaran = [];
+let dialogOpen = false, lastViolAt = 0, splitActive = false, blurTimer = null;
+const areaMax = {portrait:0, landscape:0};
+
+function enterFullscreen(){
+  const el = document.documentElement;
+  const req = el.requestFullscreen||el.webkitRequestFullscreen||el.msRequestFullscreen;
+  if(req){ try{ const p = req.call(el); if(p && p.catch) p.catch(()=>{}); }catch(e){} }
+}
+function isFullscreen(){ return !!(document.fullscreenElement||document.webkitFullscreenElement||document.msFullscreenElement); }
+function showWarn(title,text,onOk){
+  const ov = document.getElementById('warnOverlay');
+  document.getElementById('warnTitle').textContent = title;
+  document.getElementById('warnText').textContent = text;
+  ov.style.display='flex';
+  document.getElementById('warnBtn').onclick = ()=>{ ov.style.display='none'; if(onOk) onOk(); };
+}
+function safeAlert(msg){ dialogOpen = true; try{ alert(msg); } finally { dialogOpen = false; } }
+function safeConfirm(msg){ dialogOpen = true; try{ return confirm(msg); } finally { dialogOpen = false; } }
+
+// Jenis: "Pindah tab", "Keluar fullscreen", "Salin teks", "Screenshot", "Split screen", "Kehilangan fokus jendela"
+function catatPelanggaran(jenis){
+  if(!examStarted || examFinished) return;
+  const last = logPelanggaran[logPelanggaran.length-1];
+  if(last && last.jenis===jenis && Date.now()-new Date(last.waktu).getTime() < 1500) return; // satu kejadian, satu catatan
+  logPelanggaran.push({ jenis: jenis, waktu: new Date().toISOString() });
+  violCount = logPelanggaran.length;
+  lastViolAt = Date.now();
+  const badge = document.getElementById('violationBadge');
+  badge.style.display='inline-block';
+  document.getElementById('violCount').textContent = violCount;
+  showWarn('⚠ Pelanggaran Terdeteksi ('+violCount+')',
+    'Sistem mendeteksi: '+jenis+'. Tindakan ini tercatat dan akan dilaporkan kepada guru bersama hasil ujianmu. Tetaplah pada halaman ujian hingga selesai.',
+    ()=>{ if(!isFullscreen()) enterFullscreen(); });
+}
+function ringkasPelanggaran(){
+  const c = {}; logPelanggaran.forEach(p=>{ c[p.jenis]=(c[p.jenis]||0)+1; });
+  return Object.keys(c).map(k=>k+' ×'+c[k]).join('; ') || '-';
+}
+
+// 1) pindah tab / minimize
+document.addEventListener('visibilitychange',()=>{
+  if(document.hidden && examStarted && !examFinished) catatPelanggaran('Pindah tab');
+});
+// 2) keluar layar penuh
+function onFsChange(){ if(!isFullscreen() && examStarted && !examFinished) catatPelanggaran('Keluar fullscreen'); }
+document.addEventListener('fullscreenchange', onFsChange);
+document.addEventListener('webkitfullscreenchange', onFsChange);
+// 3) menyalin teks
+['copy','cut'].forEach(ev=>document.addEventListener(ev,e=>{
+  if(examStarted && !examFinished){ e.preventDefault(); catatPelanggaran('Salin teks'); }
+}));
+document.addEventListener('contextmenu',e=>{ if(examStarted && !examFinished) e.preventDefault(); });
+document.addEventListener('selectstart',e=>{ if(examStarted && !examFinished) e.preventDefault(); });
+document.addEventListener('dragstart',e=>{ if(examStarted && !examFinished) e.preventDefault(); });
+// 4) screenshot & pintasan terlarang
+function clearClip(){ try{ navigator.clipboard && navigator.clipboard.writeText('').catch(()=>{}); }catch(e){} }
+document.addEventListener('keydown',e=>{
+  if(!examStarted || examFinished) return;
+  const k = (e.key||'').toLowerCase();
+  if(e.key==='F12' || (e.ctrlKey&&e.shiftKey&&['i','j','c'].includes(k)) || (e.altKey&&e.key==='Tab')) e.preventDefault();
+  if((e.ctrlKey||e.metaKey) && ['p','s','u'].includes(k)) e.preventDefault();
+  if((e.ctrlKey||e.metaKey) && ['c','x','a'].includes(k)){ e.preventDefault(); if(k!=='a') catatPelanggaran('Salin teks'); }
+  if(e.key==='PrintScreen' || (e.metaKey&&e.shiftKey&&k==='s') || (e.metaKey&&e.shiftKey&&['Digit3','Digit4','Digit5'].includes(e.code))){
+    catatPelanggaran('Screenshot'); clearClip();
+  }
+});
+document.addEventListener('keyup',e=>{
+  if(!examStarted || examFinished) return;
+  if(e.key==='PrintScreen'){ catatPelanggaran('Screenshot'); clearClip(); }
+});
+// 5) split screen: ukuran jendela (piksel perangkat, tahan terhadap zoom) turun tajam dibanding ukuran terbesar
+function cekSplitScreen(){
+  if(!examStarted || examFinished) return;
+  const dpr = window.devicePixelRatio || 1;
+  const o = window.innerWidth > window.innerHeight ? 'landscape' : 'portrait';
+  const a = (window.innerWidth*dpr)*(window.innerHeight*dpr);
+  if(a > areaMax[o]) areaMax[o] = a;
+  if(areaMax[o] > 0 && a < areaMax[o]*0.8){
+    if(!splitActive){ splitActive = true; catatPelanggaran('Split screen'); }
+  } else if(a > areaMax[o]*0.9){ splitActive = false; }
+}
+let resizeT = null;
+window.addEventListener('resize',()=>{ clearTimeout(resizeT); resizeT = setTimeout(cekSplitScreen,400); });
+setInterval(cekSplitScreen,3000);
+// 6) jendela kehilangan fokus (mis. membuka aplikasi lain berdampingan)
+window.addEventListener('blur',()=>{
+  if(!examStarted || examFinished) return;
+  document.getElementById('screen-exam').classList.add('blurred');
+  clearTimeout(blurTimer);
+  blurTimer = setTimeout(()=>{
+    if(dialogOpen || examFinished || document.hidden) return;
+    if(!document.hasFocus() && Date.now()-lastViolAt > 4000) catatPelanggaran('Kehilangan fokus jendela');
+  },1500);
+});
+window.addEventListener('focus',()=>{
+  clearTimeout(blurTimer);
+  document.getElementById('screen-exam').classList.remove('blurred');
+});
+window.addEventListener('beforeunload',(e)=>{ if(examStarted && !examFinished){ e.preventDefault(); e.returnValue=''; } });
+
+/* ================= START EXAM ================= */
+document.getElementById('btnStart').addEventListener('click',()=>{
+  const token = document.getElementById('inputToken').value.trim();
+  const nama = document.getElementById('inputNama').value.trim();
+  const kelas = document.getElementById('inputKelas').value.trim();
+  const err = document.getElementById('startErr');
+  if(!token){ err.textContent='Token ujian wajib diisi.'; return; }
+  if(token !== VALID_TOKEN){ err.textContent='Token salah. Tanyakan token yang benar kepada gurumu.'; return; }
+  if(!kelas || !nama){ err.textContent='Nama dan kelas belum terbaca. Buka ujian dari Menu Kelas 9 atau pilih nama & kelas pada kolom yang tersedia.'; return; }
+  err.textContent='';
+  studentName = nama; studentClass = kelas;
+  buildExam();
+  answers = {}; current=0; logPelanggaran.length=0; violCount=0; examStarted=true; examFinished=false;
+  areaMax.portrait = 0; areaMax.landscape = 0; splitActive = false;
+
+  document.getElementById('screen-start').style.display='none';
+  document.getElementById('screen-exam').style.display='flex';
+  document.getElementById('brandStudent').textContent = nama+' · Kelas '+kelas;
+  startTimer(); renderNavPanel(); renderQuestion(); enterFullscreen();
+  setTimeout(cekSplitScreen, 1800);
+});
+
+/* ================= SUBMIT / SCORING ================= */
+function confirmSubmit(){
+  if(!canSubmitNow()){
+    safeAlert('Jawaban baru dapat dikirim setelah 40 menit pengerjaan. Sisa waktu tunggu: '+fmtTime(MIN_SUBMIT_SEC-elapsedSec())+'. Silakan periksa kembali jawabanmu.');
+    return;
+  }
+  const unansweredIdx = examQuestions.findIndex(q=>!isAnswered(q));
+  if(unansweredIdx !== -1){
+    const unansweredCount = examQuestions.filter(q=>!isAnswered(q)).length;
+    safeAlert('Masih ada '+unansweredCount+' soal yang belum dijawab. Silakan lengkapi semua soal terlebih dahulu sebelum mengirim jawaban. Kamu akan diarahkan ke soal pertama yang belum dijawab.');
+    current = unansweredIdx;
+    renderQuestion(); renderNavPanel(); closeMobilePanel();
+    return;
+  }
+  if(safeConfirm('Semua soal telah dijawab. Kirim jawaban sekarang? Jawaban tidak dapat diubah setelah dikirim.')) finishExam(false);
+}
+/* ---- Penilaian PARSIAL ----
+   Soal PG: 1 (benar) atau 0 (salah).
+   Soal PG Kompleks / Matrix: dinilai per-opsi/per-pernyataan, bukan semua-atau-tidak.
+   scoreFrac = (jumlah opsi/pernyataan yang cocok dengan kunci) / (jumlah opsi/pernyataan).
+   Contoh: dari 4 opsi, siswa benar menandai 3 -> scoreFrac = 0.75 (bukan 0). */
+function scoreFrac(q){
+  const v = answers[q._id];
+  if(q.type==='pg'){
+    return (v===q.correct) ? 1 : 0;
+  }
+  if(q.type==='multi'){
+    if(!Array.isArray(v) || v.length===0) return 0;
+    const n = q.options.length;
+    let matches = 0;
+    for(let i=0;i<n;i++){
+      const opt = q.options[i];
+      const correctFlag = q.correct.includes(opt);
+      const studentFlag = Array.isArray(v) && v.includes(opt);
+      if(correctFlag === studentFlag) matches++;
+    }
+    return n ? matches/n : 0;
+  }
+  if(q.type==='matrix'){
+    if(!v) return 0;
+    let matches = 0;
+    q.rows.forEach(r=>{ if(v[r.label]===r.correct) matches++; });
+    return q.rows.length ? matches/q.rows.length : 0;
+  }
+  return 0;
+}
+// isCorrect: dipakai untuk pelaporan "benar/salah" per-soal (mis. sheet Excel) — soal dianggap
+// "benar penuh" hanya jika scoreFrac mencapai 1 (semua opsi/pernyataan tepat).
+function isCorrect(q){ return scoreFrac(q) >= 0.999; }
+
+function finishExam(autoSubmit){
+  examFinished = true;
+  clearInterval(timerHandle);
+  if(isFullscreen()){ (document.exitFullscreen||document.webkitExitFullscreen||function(){}).call(document); }
+  document.getElementById('screen-exam').style.display='none';
+  document.getElementById('warnOverlay').style.display='none';
+
+  const totalMaks = examQuestions.length;
+  const weight = totalMaks ? 100/totalMaks : 0;
+  const perSubject = {};
+  SUBJECT_ORDER.forEach(s=>perSubject[s]={score:0,max:0,total:0,penuh:0});
+  let totalScore = 0, fullCount = 0;
+  const perQuestion = [];
+  examQuestions.forEach(q=>{
+    if(!perSubject[q.subject]){ perSubject[q.subject]={score:0,max:0,total:0,penuh:0}; if(!SUBJECT_ORDER.includes(q.subject)) SUBJECT_ORDER.push(q.subject); }
+    const frac = scoreFrac(q);
+    const qScore = frac*weight;
+    totalScore += qScore;
+    if(frac>=0.999) fullCount++;
+    perSubject[q.subject].total++;
+    perSubject[q.subject].score += qScore;
+    perSubject[q.subject].max += weight;
+    if(frac>=0.999) perSubject[q.subject].penuh++;
+    perQuestion.push({q, frac, qScore});
+  });
+  totalScore = Math.round(totalScore*100)/100;
+  let grade='D', gradeLabel='Perlu Bimbingan';
+  if(totalScore>=90){grade='A';gradeLabel='Sangat Baik';}
+  else if(totalScore>=75){grade='B';gradeLabel='Baik';}
+  else if(totalScore>=60){grade='C';gradeLabel='Cukup';}
+
+  document.getElementById('resScore').textContent = totalScore.toFixed(2)+' / 100';
+  document.getElementById('resGrade').textContent = 'Predikat '+grade+' — '+gradeLabel+' · '+fullCount+' dari '+totalMaks+' soal terjawab sempurna (penilaian bersifat parsial per opsi)' + (autoSubmit?' · waktu habis, jawaban terkirim otomatis':'');
+  document.getElementById('rNama').textContent = studentName;
+  document.getElementById('rKelas').textContent = studentClass;
+  document.getElementById('rViol').textContent = violCount;
+
+  let tbl = '<tr><th>Materi</th><th>Skor</th><th>Maks</th></tr>';
+  const detailParts = [];
+  SUBJECT_ORDER.forEach(s=>{
+    const sc = Math.round(perSubject[s].score*100)/100, mx = Math.round(perSubject[s].max*100)/100;
+    tbl += '<tr><td>'+escapeHtml(s)+'</td><td>'+sc+'</td><td>'+mx+'</td></tr>';
+    detailParts.push(s+' '+sc+'/'+mx);
+  });
+  document.getElementById('resTable').innerHTML = tbl;
+
+  window._examResult = {
+    nama: studentName, kelas: studentClass, skor: totalScore, skorMaks: 100, pct: totalScore,
+    grade: grade+' ('+gradeLabel+')', detail: detailParts.join(' | ') + ' | Pelanggaran: '+violCount+'x',
+    perSubject: perSubject, violasi: logPelanggaran.length, jenisPelanggaran: logPelanggaran.slice(), ringkasanPelanggaran: ringkasPelanggaran(), durasiDetik: Math.min(elapsedSec(),DURATION_SEC),
+    skorPerSoal: perQuestion.map(p=>Math.round(p.qScore*100)/100)
+  };
+
+  document.getElementById('screen-result').style.display='block';
+  autoSubmitToSheet();
+}
+
+/* ================= GOOGLE APPS SCRIPT AUTO-SUBMIT (real-time to Google Sheets) ================= */
+function setSubmitStatus(state, text){
+  const el = document.getElementById('submitStatus');
+  el.className = 'submit-status '+state;
+  document.getElementById('submitStatusText').textContent = text;
+  document.getElementById('btnRetrySubmit').classList.toggle('hidden', state==='sending');
+}
+function buildAnswerDetail(){
+  return examQuestions.slice().sort((a,b)=>a._id-b._id).map((q,idx)=>{
+    const v = answers[q._id];
+    let jawaban = '(kosong)';
+    if(q.type==='pg'){ jawaban = v || '(kosong)'; }
+    else if(q.type==='multi'){ jawaban = (v&&v.length) ? v.join(' ; ') : '(kosong)'; }
+    else if(q.type==='matrix'){ jawaban = v ? q.rows.map(r=>r.label+':'+(v[r.label]||'-')).join(' ; ') : '(kosong)'; }
+    return { no: q.no, posisiDiLayar: examQuestions.indexOf(q)+1, subject: q.subject, jawaban: jawaban, benar: Math.round(scoreFrac(q)*100)/100 };
+  });
+}
+function autoSubmitToSheet(){
+  if(!navigator.onLine){
+    setSubmitStatus('fail','❌ Gagal terkirim — perangkat sedang offline. Sambungkan internet lalu klik "Kirim Ulang".');
+    return;
+  }
+  if(!APPS_SCRIPT_URL || APPS_SCRIPT_URL.indexOf('PASTE_YOUR_DEPLOYMENT_ID_HERE')>-1){
+    setSubmitStatus('fail','⚠ URL Google Apps Script belum dipasang oleh guru. Gunakan "Unduh Hasil (Excel)" sebagai cadangan.');
+    return;
+  }
+  setSubmitStatus('sending','Mengirim jawaban ke guru...');
+  const r = window._examResult;
+  const payload = {
+    timestamp: new Date().toISOString(),
+    mapel: MAPEL, jenisAsesmen: ASESMEN, judul: JUDUL, materi: MATERI, tingkat: KELAS_TINGKAT,
+    nama: r.nama, kelas: r.kelas, skor: r.skor, skorMaks: r.skorMaks, persentase: r.pct,
+    grade: r.grade, pelanggaran: logPelanggaran.length, jenisPelanggaran: logPelanggaran, ringkasanPelanggaran: r.ringkasanPelanggaran, durasiDetik: r.durasiDetik, detailPerMapel: r.detail,
+    jawaban: buildAnswerDetail()
+  };
+  fetch(APPS_SCRIPT_URL, {
+    method: 'POST', mode: 'no-cors',
+    headers: {'Content-Type':'text/plain;charset=utf-8'},
+    body: JSON.stringify(payload)
+  }).then(()=>{
+    setSubmitStatus('ok','✅ Jawaban berhasil terkirim ke Google Spreadsheet guru.');
+  }).catch(()=>{
+    setSubmitStatus('fail','❌ Gagal terkirim (masalah jaringan). Klik "Kirim Ulang" untuk mencoba lagi.');
+  });
+}
+document.getElementById('btnRetrySubmit').addEventListener('click', autoSubmitToSheet);
+
+/* ================= EXCEL EXPORT (backup) ================= */
+document.getElementById('btnExcel').addEventListener('click',()=>{
+  const r = window._examResult;
+  const rows = [];
+  rows.push(['Nama','Kelas','No','Materi','Soal','Jawaban Siswa','Kunci Jawaban','Skor Soal (0-1, parsial)']);
+  function answerLabel(q){
+    if(q.type==='pg') return q.correct;
+    if(q.type==='multi') return q.correct.join(' ; ');
+    if(q.type==='matrix') return q.rows.map(row=>row.label+':'+row.correct).join(' ; ');
+    return '';
+  }
+  examQuestions.slice().sort((a,b)=>a._id-b._id).forEach((q,idx)=>{
+    let jawabanSiswa='';
+    const v = answers[q._id];
+    if(q.type==='pg'){ jawabanSiswa = v || '(kosong)'; }
+    else if(q.type==='multi'){ jawabanSiswa = (v&&v.length)? v.join(' ; ') : '(kosong)'; }
+    else if(q.type==='matrix'){ jawabanSiswa = v ? q.rows.map(row=>row.label+':'+(v[row.label]||'-')).join(' ; ') : '(kosong)'; }
+    const shortText = (q.pre?q.pre+' ':'')+q.text.replace(/<[^>]*>/g,' ').replace(/\s+/g,' ').slice(0,80)+'...';
+    rows.push([r.nama, r.kelas, q.no, q.subject, shortText, jawabanSiswa, answerLabel(q), Math.round(scoreFrac(q)*100)/100]);
+  });
+  rows.push([]);
+  rows.push(['RINGKASAN']);
+  rows.push(['Nama','Kelas','Skor Akhir (0-100)','Grade','Pelanggaran','Jenis Pelanggaran']);
+  rows.push([r.nama, r.kelas, r.skor, r.grade, r.violasi, r.ringkasanPelanggaran]);
+
+  const ws = XLSX.utils.aoa_to_sheet(rows);
+  ws['!cols'] = [{wch:18},{wch:8},{wch:5},{wch:22},{wch:60},{wch:30},{wch:30},{wch:10}];
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Hasil ASAS IPS K9');
+  const fname = 'Hasil_ASAS_IPS_Kelas9_'+r.nama.replace(/[^a-zA-Z0-9]/g,'_')+'.xlsx';
+  XLSX.writeFile(wb, fname);
+});
+
+})();
+</script>
 </body>
 </html>
